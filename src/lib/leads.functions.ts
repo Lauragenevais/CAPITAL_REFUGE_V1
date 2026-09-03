@@ -241,20 +241,23 @@ export const submitLead = createServerFn({ method: "POST" })
       }
     }
 
-    // 3. Notification email (non bloquant)
+    // 3. Notification email via la passerelle Resend (non bloquant)
     const resendKey = process.env["RESEND_API_KEY"];
+    const lovableApiKey = process.env["LOVABLE_API_KEY"];
     const notifyTo = process.env["LEAD_NOTIFICATION_EMAIL"];
-    if (resendKey && notifyTo) {
+    if (resendKey && lovableApiKey && notifyTo) {
       try {
-        const resp = await fetch("https://api.resend.com/emails", {
+        const resp = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${resendKey}`,
+            Authorization: `Bearer ${lovableApiKey}`,
+            "X-Connection-Api-Key": resendKey,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Amazon <onboarding@resend.dev>",
             to: [notifyTo],
+
             subject: `[NOUVEAU LEAD - ${OPERATION}] ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
             text:
               `Nouveau lead enregistré:\n\n` +
