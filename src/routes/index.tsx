@@ -464,8 +464,15 @@ function Landing() {
           <p className="text-xs">
             Données collectées : nom, prénom, email, téléphone, adresse IP — conservées 3 ans
             maximum, utilisées pour la vérification d&apos;éligibilité et la mise en relation avec
-            un conseiller partenaire. Droits d&apos;accès, de rectification et d&apos;opposition à
-            l&apos;adresse ci-dessus.
+            un conseiller partenaire. Pour plus de détails et exercer vos droits d&apos;accès, de
+            rectification et d&apos;opposition, consultez notre{" "}
+            <Link
+              to="/politique-confidentialite"
+              className="underline underline-offset-2 transition-colors hover:text-primary"
+            >
+              politique de confidentialité
+            </Link>
+            .
           </p>
         </div>
       </footer>
