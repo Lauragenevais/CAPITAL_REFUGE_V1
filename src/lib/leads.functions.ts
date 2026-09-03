@@ -155,6 +155,16 @@ function parisTimestamp(): string {
   return `${p['year']}/${p['month']}/${p['day']} ${p['hour'] === "24" ? "00" : p['hour']}:${p['minute']}:${p['second']}`;
 }
 
+/** Accepte un ID brut ou une URL complète de Google Sheet. */
+function normalizeSheetId(value: string | undefined): string {
+  if (!value) return "";
+  const fromUrl = value.match(/\/d\/([A-Za-z0-9_-]+)/);
+  if (fromUrl?.[1]) return fromUrl[1];
+  const firstSegment = value.match(/([A-Za-z0-9_-]{20,})/);
+  return firstSegment?.[1] ?? value.trim();
+}
+
+
 /** ---------- Server function ---------- */
 
 export const submitLead = createServerFn({ method: "POST" })
@@ -210,8 +220,9 @@ export const submitLead = createServerFn({ method: "POST" })
     // 2. Google Sheet (non bloquant)
     let sheetStatus = "⏭️ Non configuré";
     const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
-    const sheetId = process.env["GOOGLE_SHEET_ID"];
+    const sheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
     const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
+
     if (serviceAccountKey && sheetId) {
       try {
         const token = await getGoogleAccessToken(serviceAccountKey);
@@ -241,20 +252,23 @@ export const submitLead = createServerFn({ method: "POST" })
       }
     }
 
-    // 3. Notification email (non bloquant)
+    // 3. Notification email via la passerelle Resend (non bloquant)
     const resendKey = process.env["RESEND_API_KEY"];
+    const lovableApiKey = process.env["LOVABLE_API_KEY"];
     const notifyTo = process.env["LEAD_NOTIFICATION_EMAIL"];
-    if (resendKey && notifyTo) {
+    if (resendKey && lovableApiKey && notifyTo) {
       try {
-        const resp = await fetch("https://api.resend.com/emails", {
+        const resp = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${resendKey}`,
+            Authorization: `Bearer ${lovableApiKey}`,
+            "X-Connection-Api-Key": resendKey,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Amazon <onboarding@resend.dev>",
             to: [notifyTo],
+
             subject: `[NOUVEAU LEAD - ${OPERATION}] ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
             text:
               `Nouveau lead enregistré:\n\n` +
