@@ -128,7 +128,7 @@ export function LeadForm() {
               placeholder="Votre nom *"
               autoComplete="family-name"
               {...register("lastName")}
-              className="h-12 border-black/15 bg-black/[0.03] text-panel-foreground placeholder:opacity-50"
+              className="h-12 border-black/30 bg-black/[0.07] text-panel-foreground placeholder:text-black/70"
             />
             {errors.lastName && (
               <p className="mt-1 text-xs text-destructive">{errors.lastName.message}</p>
