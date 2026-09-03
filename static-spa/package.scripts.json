@@ -1,0 +1,18 @@
+{
+  "_comment": "Extrait à reporter dans package.json du projet statique",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependenciesAAjouter": {
+    "react-router-dom": "^7.1.1"
+  },
+  "dependenciesASupprimer": [
+    "@tanstack/react-start",
+    "@tanstack/react-router",
+    "@tanstack/router-plugin",
+    "@lovable.dev/vite-tanstack-config",
+    "nitro"
+  ]
+}
