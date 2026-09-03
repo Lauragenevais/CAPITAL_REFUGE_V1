@@ -5,8 +5,5 @@
   "assets": {
     "directory": "./dist",
     "not_found_handling": "single-page-application"
-  },
-  "vars": {
-    "VITE_API_BASE_URL": "https://amazoncapital.lovable.app"
   }
 }
