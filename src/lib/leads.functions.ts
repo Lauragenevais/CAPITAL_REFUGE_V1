@@ -31,7 +31,7 @@ function base64urlJson(obj: Record<string, unknown>): string {
   return base64urlEncode(new TextEncoder().encode(JSON.stringify(obj)));
 }
 
-async function getGoogleAccessToken(serviceAccountKey: string): Promise<string> {
+export async function getGoogleAccessToken(serviceAccountKey: string): Promise<string> {
   const sa = JSON.parse(serviceAccountKey) as { client_email: string; private_key: string };
   const now = Math.floor(Date.now() / 1000);
   const header = base64urlJson({ alg: "RS256", typ: "JWT" });
@@ -72,6 +72,33 @@ async function getGoogleAccessToken(serviceAccountKey: string): Promise<string> 
     throw new Error(`Google token error [${resp.status}]: ${JSON.stringify(json)}`);
   }
   return json.access_token;
+}
+
+async function ensureOperationHeader(
+  accessToken: string,
+  sheetId: string,
+  sheetTitle: string,
+): Promise<void> {
+  const range = sheetTitle ? `'${sheetTitle}'!K1` : "K1";
+  const readResp = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`,
+    { headers: { Authorization: `Bearer ${accessToken}` } },
+  );
+  if (readResp.ok) {
+    const data = (await readResp.json()) as { values?: string[][] };
+    if (data.values?.[0]?.[0]) return;
+  }
+  const writeResp = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?valueInputOption=RAW`,
+    {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ values: [["Opération"]] }),
+    },
+  );
+  if (!writeResp.ok) {
+    throw new Error(`Google Sheets header error [${writeResp.status}]: ${await writeResp.text()}`);
+  }
 }
 
 async function insertAtTopOfGoogleSheet(
@@ -156,7 +183,7 @@ function parisTimestamp(): string {
 }
 
 /** Accepte un ID brut ou une URL complète de Google Sheet. */
-function normalizeSheetId(value: string | undefined): string {
+export function normalizeSheetId(value: string | undefined): string {
   if (!value) return "";
   const fromUrl = value.match(/\/d\/([A-Za-z0-9_-]+)/);
   if (fromUrl?.[1]) return fromUrl[1];
@@ -226,6 +253,7 @@ export const submitLead = createServerFn({ method: "POST" })
     if (serviceAccountKey && sheetId) {
       try {
         const token = await getGoogleAccessToken(serviceAccountKey);
+        await ensureOperationHeader(token, sheetId, sheetTab);
         await insertAtTopOfGoogleSheet(
           token,
           sheetId,
@@ -241,6 +269,7 @@ export const submitLead = createServerFn({ method: "POST" })
               data.source ?? "",
               data.click_id ?? "",
               parisTimestamp(),
+              OPERATION,
             ],
           ],
           sheetTab,
