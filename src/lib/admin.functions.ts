@@ -91,7 +91,7 @@ export const updateLead = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     await requireAdmin();
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const patch: Record<string, string> = {};
+    const patch: { status?: string; notes?: string } = {};
     if (data.status !== undefined) patch["status"] = data.status;
     if (data.notes !== undefined) patch["notes"] = data.notes;
     const { error } = await supabaseAdmin.from("leads").update(patch).eq("id", data.id);
