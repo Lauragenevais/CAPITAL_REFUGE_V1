@@ -24,10 +24,13 @@ export type Database = {
           id: string
           ip_address: string
           last_name: string
+          notes: string
           operation: string
           pays: string
           phone: string
           source: string
+          status: string
+          updated_at: string
         }
         Insert: {
           click_id?: string
@@ -38,10 +41,13 @@ export type Database = {
           id?: string
           ip_address?: string
           last_name: string
+          notes?: string
           operation?: string
           pays?: string
           phone: string
           source?: string
+          status?: string
+          updated_at?: string
         }
         Update: {
           click_id?: string
@@ -52,10 +58,13 @@ export type Database = {
           id?: string
           ip_address?: string
           last_name?: string
+          notes?: string
           operation?: string
           pays?: string
           phone?: string
           source?: string
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
