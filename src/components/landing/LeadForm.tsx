@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 import { CheckCircle2, Lock, ShieldCheck, BadgeCheck, Sparkles, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
@@ -9,7 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { submitLead } from "@/lib/leads.functions";
+import { apiUrl } from "@/lib/api";
 
 const formSchema = z.object({
   lastName: z.string().trim().min(2, "Le nom doit contenir au moins 2 caractères"),
@@ -35,7 +34,6 @@ function getTrackingParams() {
 
 export function LeadForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const send = useServerFn(submitLead);
 
   const {
     register,
@@ -53,20 +51,27 @@ export function LeadForm() {
   const onSubmit = async (values: FormData) => {
     const { clickId, source } = getTrackingParams();
     try {
-      const result = await send({
-        data: {
+      const response = await fetch(apiUrl("/api/public/lead-form"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           first_name: values.firstName,
           last_name: values.lastName,
           email: values.email,
           phone: values.phone,
-          consent: true as const,
+          consent: true,
           source,
           click_id: clickId,
-        },
+        }),
       });
 
-      if (!result.ok) {
-        toast.error(result.message);
+      const result = (await response.json().catch(() => ({}))) as {
+        ok?: boolean;
+        message?: string;
+      };
+
+      if (!response.ok || !result.ok) {
+        toast.error(result.message ?? "Une erreur est survenue. Merci de réessayer.");
         return;
       }
 
@@ -77,6 +82,7 @@ export function LeadForm() {
       toast.error("Une erreur est survenue. Merci de réessayer.");
     }
   };
+
 
   if (isSubmitted) {
     return (
