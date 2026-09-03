@@ -128,7 +128,7 @@ export function LeadForm() {
               placeholder="Votre nom *"
               autoComplete="family-name"
               {...register("lastName")}
-              className="h-12 border-black/15 bg-black/[0.03] text-panel-foreground placeholder:opacity-50"
+              className="h-12 border-black/30 bg-black/[0.07] text-panel-foreground placeholder:text-black/70"
             />
             {errors.lastName && (
               <p className="mt-1 text-xs text-destructive">{errors.lastName.message}</p>
@@ -139,7 +139,7 @@ export function LeadForm() {
               placeholder="Votre prénom *"
               autoComplete="given-name"
               {...register("firstName")}
-              className="h-12 border-black/15 bg-black/[0.03] text-panel-foreground placeholder:opacity-50"
+              className="h-12 border-black/30 bg-black/[0.07] text-panel-foreground placeholder:text-black/70"
             />
             {errors.firstName && (
               <p className="mt-1 text-xs text-destructive">{errors.firstName.message}</p>
@@ -153,7 +153,7 @@ export function LeadForm() {
             placeholder="Votre téléphone *"
             autoComplete="tel"
             {...register("phone")}
-            className="h-12 border-black/15 bg-black/[0.03] text-panel-foreground placeholder:opacity-50"
+            className="h-12 border-black/30 bg-black/[0.07] text-panel-foreground placeholder:text-black/70"
           />
           {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone.message}</p>}
         </div>
@@ -164,7 +164,7 @@ export function LeadForm() {
             placeholder="Votre email *"
             autoComplete="email"
             {...register("email")}
-            className="h-12 border-black/15 bg-black/[0.03] text-panel-foreground placeholder:opacity-50"
+            className="h-12 border-black/30 bg-black/[0.07] text-panel-foreground placeholder:text-black/70"
           />
           {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email.message}</p>}
         </div>
@@ -174,9 +174,9 @@ export function LeadForm() {
             id="consent"
             checked={consentValue}
             onCheckedChange={(checked) => setValue("consent", checked === true)}
-            className="mt-0.5 border-black/25 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
+            className="mt-0.5 border-black/40 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
           />
-          <label htmlFor="consent" className="cursor-pointer text-xs leading-relaxed opacity-70">
+          <label htmlFor="consent" className="cursor-pointer text-xs leading-relaxed text-black/80">
             J&apos;accepte les conditions générales d&apos;utilisation et d&apos;être recontacté par
             nos partenaires afin de recevoir des informations sur l&apos;Amazon Coin.
           </label>
