@@ -164,7 +164,7 @@ export function LeadForm() {
             placeholder="Votre email *"
             autoComplete="email"
             {...register("email")}
-            className="h-12 border-black/15 bg-black/[0.03] text-panel-foreground placeholder:opacity-50"
+            className="h-12 border-black/30 bg-black/[0.07] text-panel-foreground placeholder:text-black/70"
           />
           {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email.message}</p>}
         </div>
