@@ -90,8 +90,10 @@ const CODES: { code: string; label: string; desc: string }[] = [
 ];
 
 function ApiDocsPage() {
-  const base =
-    typeof window !== "undefined" ? window.location.origin : "https://votre-domaine.lovable.app";
+  const [base, setBase] = useState("https://votre-domaine.lovable.app");
+  useEffect(() => {
+    setBase(window.location.origin);
+  }, []);
   const endpoint = `${base}/api/public/leads`;
 
   const curl = `curl -X POST "${endpoint}" \\
