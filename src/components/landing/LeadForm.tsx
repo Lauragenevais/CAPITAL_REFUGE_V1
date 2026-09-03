@@ -174,9 +174,9 @@ export function LeadForm() {
             id="consent"
             checked={consentValue}
             onCheckedChange={(checked) => setValue("consent", checked === true)}
-            className="mt-0.5 border-black/25 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
+            className="mt-0.5 border-black/40 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
           />
-          <label htmlFor="consent" className="cursor-pointer text-xs leading-relaxed opacity-70">
+          <label htmlFor="consent" className="cursor-pointer text-xs leading-relaxed text-black/80">
             J&apos;accepte les conditions générales d&apos;utilisation et d&apos;être recontacté par
             nos partenaires afin de recevoir des informations sur l&apos;Amazon Coin.
           </label>
