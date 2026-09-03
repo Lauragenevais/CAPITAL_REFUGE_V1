@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const OPERATION = "AMAZON";
 
-const leadSchema = z.object({
+export const leadSchema = z.object({
   first_name: z.string().trim().min(2).max(60),
   last_name: z.string().trim().min(2).max(60),
   email: z.string().trim().email().max(120),
