@@ -26,48 +26,52 @@ const SECTIONS = [
   {
     title: "Responsable du traitement",
     content: [
-      "La société Amazon Capital, éditrice du site, est responsable du traitement des données personnelles collectées via les formulaires présents sur ce site.",
+      "ROBUSTRANQUILITY",
+      "Rua Joaquim António de Aguiar 43, 1070-150 Lisboa - Portugal",
+      "Contact : jonathan@easy-borne.com",
     ],
   },
   {
-    title: "Données collectées",
+    title: "Collecte des données personnelles",
     content: [
-      "Dans le cadre de la vérification d'éligibilité, nous collectons : votre nom, votre prénom, votre adresse email, votre numéro de téléphone et votre adresse IP.",
-      "Aucune donnée bancaire ni aucun document d'identité n'est demandé via ce site.",
+      "Nous collectons les informations que vous nous fournissez volontairement via notre formulaire de contact : nom, prénom, email, téléphone, adresse IP.",
     ],
   },
   {
-    title: "Finalités du traitement",
+    title: "Utilisation des données",
     content: [
-      "Vos données sont utilisées exclusivement pour : vérifier votre éligibilité au programme présenté, vous mettre en relation avec un conseiller partenaire, et répondre à vos demandes.",
-      "Vos données ne font l'objet d'aucune revente à des tiers à des fins commerciales.",
+      "Vos données sont utilisées uniquement pour :",
+      "- Vous recontacter suite à votre demande d'information",
+      "- Vous envoyer la brochure demandée",
+      "- Vous tenir informé de nos offres (avec votre consentement)",
+      "- Transmettre vos coordonnées à nos partenaires commerciaux",
     ],
   },
   {
-    title: "Durée de conservation",
+    title: "Conservation des données",
     content: [
-      "Vos données personnelles sont conservées pour une durée maximale de 3 ans à compter de votre dernière interaction avec nos services, conformément aux recommandations applicables à la prospection.",
-    ],
-  },
-  {
-    title: "Sécurité",
-    content: [
-      "Les informations transmises via les formulaires sont chiffrées et hébergées sur une infrastructure sécurisée située au sein de l'Union européenne.",
-      "L'accès aux données est strictement limité aux personnes habilitées dans le cadre de leurs missions.",
+      "Vos données sont conservées pendant une durée maximale de 3 ans à compter de votre dernier contact avec nous.",
     ],
   },
   {
     title: "Vos droits",
     content: [
-      "Conformément au Règlement général sur la protection des données (RGPD) et à la loi Informatique et Libertés, vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition, de limitation et de portabilité concernant vos données personnelles.",
-      "Pour exercer ces droits, vous pouvez adresser votre demande par courrier au siège social de l'éditeur, accompagnée d'un justificatif d'identité.",
-      "Vous disposez également du droit d'introduire une réclamation auprès de la CNIL (www.cnil.fr).",
+      "Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données. Pour exercer ces droits, contactez-nous à jonathan@easy-borne.com.",
     ],
   },
   {
-    title: "Cookies",
+    title: "Sécurité",
     content: [
-      "Ce site n'utilise pas de cookies publicitaires ni de traceurs de mesure d'audience tiers.",
+      "Nous mettons en œuvre des mesures techniques et organisationnelles pour protéger vos données contre tout accès non autorisé.",
+    ],
+  },
+  {
+    title: "Politique des cookies",
+    content: [
+      "Qu'est-ce qu'un cookie ? Un cookie est un petit fichier texte déposé sur votre appareil lors de la visite d'un site web.",
+      "Cookies utilisés sur ce site : cookies essentiels (nécessaires au fonctionnement du site), cookies analytiques (ils nous aident à comprendre comment vous utilisez le site), cookies marketing (utilisés pour vous proposer des publicités pertinentes).",
+      "Gestion des cookies : vous pouvez à tout moment modifier vos préférences en matière de cookies via les paramètres de votre navigateur.",
+      "Durée de conservation : les cookies sont conservés pour une durée maximale de 13 mois.",
     ],
   },
 ];

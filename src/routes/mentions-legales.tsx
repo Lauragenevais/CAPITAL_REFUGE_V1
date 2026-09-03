@@ -26,37 +26,35 @@ const SECTIONS = [
   {
     title: "Éditeur du site",
     content: [
-      "Le présent site est édité par la société Amazon Capital, société par actions simplifiée au capital de 50 000 €, immatriculée au registre du commerce et des sociétés de Paris sous le numéro 912 345 678.",
-      "Siège social : 24 avenue de l'Opéra, 75001 Paris, France.",
-      "Directeur de la publication : le représentant légal de la société.",
+      "Le site Mon Véhicule Électrique est édité par la société ROBUSTRANQUILITY, dont le siège social est situé au Rua Joaquim António de Aguiar 43, 1070-150 Lisboa - Portugal.",
     ],
   },
   {
-    title: "Hébergement",
+    title: "Hébergeur",
     content: [
-      "Le site est hébergé par Lovable Cloud, dont l'infrastructure repose sur des centres de données situés au sein de l'Union européenne.",
-      "Les données transmises via les formulaires sont traitées dans le respect du Règlement général sur la protection des données (RGPD).",
+      "Le site est hébergé par Scaleway, Société par actions simplifiée au capital de 214 410,50 €, dont le siège social est situé au 8 rue de la Ville l'Évêque, 75008 Paris, France.",
     ],
+  },
+  {
+    title: "Contact",
+    content: ["Email : jonathan@easy-borne.com"],
   },
   {
     title: "Propriété intellectuelle",
     content: [
-      "L'ensemble des éléments constituant ce site (textes, illustrations, logos, mise en page) est protégé par le droit de la propriété intellectuelle.",
-      "Toute reproduction, représentation ou diffusion, totale ou partielle, sans autorisation préalable écrite est interdite et constituerait une contrefaçon.",
+      "L'ensemble des éléments du site (textes, images, graphismes, logos, structure, code HTML/CSS/JS, etc.) sont protégés par le droit d'auteur et demeurent la propriété exclusive de ROBUSTRANQUILITY ou de ses partenaires.",
     ],
   },
   {
-    title: "Limites de responsabilité",
+    title: "Responsabilités",
     content: [
-      "Les informations diffusées sur ce site sont fournies à titre indicatif et ne constituent en aucun cas un conseil en investissement, une offre d'achat ou de vente d'instruments financiers.",
-      "Les performances évoquées reposent sur des projections et ne préjugent pas des résultats futurs. Tout investissement en cryptomonnaies comporte un risque de perte partielle ou totale du capital engagé.",
-      "L'éditeur ne saurait être tenu responsable des décisions prises sur la base des contenus publiés sur ce site.",
+      "Le contenu du site est fourni à titre informatif. Malgré le soin apporté à sa rédaction, ROBUSTRANQUILITY ne saurait être tenu responsable d'éventuelles erreurs, omissions ou d'une indisponibilité temporaire des informations.",
     ],
   },
   {
-    title: "Droit applicable",
+    title: "Données personnelles",
     content: [
-      "Le présent site est soumis au droit français. Tout litige relatif à son utilisation sera porté devant les tribunaux compétents du ressort du siège social de l'éditeur.",
+      "Les données collectées sur le site font l'objet d'un traitement conforme au Règlement Général sur la Protection des Données (RGPD) et à la loi « Informatique et Libertés ». Vous disposez d'un droit d'accès, de rectification, d'opposition, d'effacement, de limitation et de portabilité de vos données. Pour exercer ces droits, contactez-nous à jonathan@easy-borne.com.",
     ],
   },
 ];
