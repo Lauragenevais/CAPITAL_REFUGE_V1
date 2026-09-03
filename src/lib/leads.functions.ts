@@ -210,8 +210,9 @@ export const submitLead = createServerFn({ method: "POST" })
     // 2. Google Sheet (non bloquant)
     let sheetStatus = "⏭️ Non configuré";
     const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
-    const sheetId = process.env["GOOGLE_SHEET_ID"];
+    const sheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
     const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
+
     if (serviceAccountKey && sheetId) {
       try {
         const token = await getGoogleAccessToken(serviceAccountKey);
