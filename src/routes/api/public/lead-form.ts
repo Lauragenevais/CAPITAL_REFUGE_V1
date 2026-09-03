@@ -99,6 +99,18 @@ export const Route = createFileRoute("/api/public/lead-form")({
           return json({ ok: true }, 201);
         } catch (err) {
           console.error("Lead form error:", err);
+          const msg = err instanceof Error ? err.message : "";
+          if (msg.includes("Missing Supabase environment variable")) {
+            return json(
+              {
+                ok: false,
+                error: "backend_not_configured",
+                message:
+                  "Le backend n'est pas configuré sur cet hébergement (variables d'environnement manquantes).",
+              },
+              503,
+            );
+          }
           return json({ ok: false, error: "server_error" }, 500);
         }
       },
