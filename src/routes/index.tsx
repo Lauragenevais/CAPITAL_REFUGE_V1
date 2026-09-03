@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   BrainCircuit,
@@ -443,12 +443,17 @@ function Landing() {
             <span className="font-display text-base font-bold text-foreground">
               Amazon Capital
             </span>
-            <a
-              href="mailto:contact@amazon-capital.fr"
-              className="transition-colors hover:text-primary"
-            >
-              contact@amazon-capital.fr
-            </a>
+            <nav className="flex gap-6">
+              <Link to="/mentions-legales" className="transition-colors hover:text-primary">
+                Mentions légales
+              </Link>
+              <Link
+                to="/politique-confidentialite"
+                className="transition-colors hover:text-primary"
+              >
+                Politique de confidentialité
+              </Link>
+            </nav>
           </div>
           <p className="max-w-3xl text-xs leading-relaxed">
             Les informations diffusées sur ce site sont fournies à titre indicatif et ne
@@ -459,8 +464,15 @@ function Landing() {
           <p className="text-xs">
             Données collectées : nom, prénom, email, téléphone, adresse IP — conservées 3 ans
             maximum, utilisées pour la vérification d&apos;éligibilité et la mise en relation avec
-            un conseiller partenaire. Droits d&apos;accès, de rectification et d&apos;opposition à
-            l&apos;adresse ci-dessus.
+            un conseiller partenaire. Pour plus de détails et exercer vos droits d&apos;accès, de
+            rectification et d&apos;opposition, consultez notre{" "}
+            <Link
+              to="/politique-confidentialite"
+              className="underline underline-offset-2 transition-colors hover:text-primary"
+            >
+              politique de confidentialité
+            </Link>
+            .
           </p>
         </div>
       </footer>
