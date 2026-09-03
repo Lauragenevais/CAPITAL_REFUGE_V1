@@ -443,12 +443,17 @@ function Landing() {
             <span className="font-display text-base font-bold text-foreground">
               Amazon Capital
             </span>
-            <a
-              href="mailto:contact@amazon-capital.fr"
-              className="transition-colors hover:text-primary"
-            >
-              contact@amazon-capital.fr
-            </a>
+            <nav className="flex gap-6">
+              <Link to="/mentions-legales" className="transition-colors hover:text-primary">
+                Mentions légales
+              </Link>
+              <Link
+                to="/politique-confidentialite"
+                className="transition-colors hover:text-primary"
+              >
+                Politique de confidentialité
+              </Link>
+            </nav>
           </div>
           <p className="max-w-3xl text-xs leading-relaxed">
             Les informations diffusées sur ce site sont fournies à titre indicatif et ne
