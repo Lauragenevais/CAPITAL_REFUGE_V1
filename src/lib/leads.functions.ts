@@ -155,6 +155,16 @@ function parisTimestamp(): string {
   return `${p['year']}/${p['month']}/${p['day']} ${p['hour'] === "24" ? "00" : p['hour']}:${p['minute']}:${p['second']}`;
 }
 
+/** Accepte un ID brut ou une URL complète de Google Sheet. */
+function normalizeSheetId(value: string | undefined): string {
+  if (!value) return "";
+  const fromUrl = value.match(/\/d\/([A-Za-z0-9_-]+)/);
+  if (fromUrl?.[1]) return fromUrl[1];
+  const firstSegment = value.match(/([A-Za-z0-9_-]{20,})/);
+  return firstSegment?.[1] ?? value.trim();
+}
+
+
 /** ---------- Server function ---------- */
 
 export const submitLead = createServerFn({ method: "POST" })
