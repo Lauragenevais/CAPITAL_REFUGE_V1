@@ -66,8 +66,18 @@ const FIELDS: { name: string; type: string; required: boolean; desc: string }[] 
     required: true,
     desc: "Doit valoir true : consentement explicite du prospect (RGPD).",
   },
-  { name: "source", type: "string", required: false, desc: "Origine du trafic, 60 caractères max." },
-  { name: "click_id", type: "string", required: false, desc: "Identifiant de clic affilié, 120 caractères max." },
+  {
+    name: "source",
+    type: "string",
+    required: false,
+    desc: "Origine du trafic, 60 caractères max. Cette valeur doit être demandée à Com&Click.",
+  },
+  {
+    name: "click_id",
+    type: "string",
+    required: false,
+    desc: "Champ libre, 120 caractères max. Identifiant de clic ou de campagne au choix du partenaire.",
+  },
 ];
 
 const CODES: { code: string; label: string; desc: string }[] = [
