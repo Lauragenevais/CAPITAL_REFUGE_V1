@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as EmailTemplateRouteImport } from './routes/email-template'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
+import { Route as ApiPublicLeadsRouteImport } from './routes/api/public/leads'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,6 +42,11 @@ const PolitiqueConfidentialiteRoute =
     path: '/politique-confidentialite',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicLeadsRoute = ApiPublicLeadsRouteImport.update({
+  id: '/api/public/leads',
+  path: '/api/public/leads',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -48,6 +54,7 @@ export interface FileRoutesByFullPath {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
+  '/api/public/leads': typeof ApiPublicLeadsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -55,6 +62,7 @@ export interface FileRoutesByTo {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
+  '/api/public/leads': typeof ApiPublicLeadsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -63,6 +71,7 @@ export interface FileRoutesById {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
+  '/api/public/leads': typeof ApiPublicLeadsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -72,6 +81,7 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/politique-confidentialite'
+    | '/api/public/leads'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -79,6 +89,7 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/politique-confidentialite'
+    | '/api/public/leads'
   id:
     | '__root__'
     | '/'
@@ -86,6 +97,7 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/politique-confidentialite'
+    | '/api/public/leads'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +106,7 @@ export interface RootRouteChildren {
   EmailTemplateRoute: typeof EmailTemplateRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
+  ApiPublicLeadsRoute: typeof ApiPublicLeadsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -133,6 +146,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PolitiqueConfidentialiteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/leads': {
+      id: '/api/public/leads'
+      path: '/api/public/leads'
+      fullPath: '/api/public/leads'
+      preLoaderRoute: typeof ApiPublicLeadsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -142,6 +162,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmailTemplateRoute: EmailTemplateRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
+  ApiPublicLeadsRoute: ApiPublicLeadsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
