@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useServerFn } from "@tanstack/react-start";
 import * as z from "zod";
 import { CheckCircle2, Lock, ShieldCheck, BadgeCheck, Sparkles, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
@@ -9,7 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { submitLead } from "@/lib/leads.functions";
+import { apiUrl } from "@/lib/api";
 
 const formSchema = z.object({
   lastName: z.string().trim().min(2, "Le nom doit contenir au moins 2 caractères"),
