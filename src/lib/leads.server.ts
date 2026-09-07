@@ -319,6 +319,25 @@ export async function processLead(
     }
   }
 
+  // Pixel AdkConvert — uniquement pour la source 3uqdgsil
+  let adkPixelStatus = "⏭️ Non déclenché (source non concernée)";
+  if (data.source === "3uqdgsil") {
+    const adkClickId = data.click_id || "";
+    const adkPixelUrl = `https://track.adkconvert.com/?e=2&clickid=${encodeURIComponent(adkClickId)}`;
+    try {
+      const adkResp = await fetch(adkPixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      adkPixelStatus = adkResp.ok
+        ? `✅ Pixel AdkConvert déclenché (clickid: ${adkClickId || "-"})`
+        : `❌ Pixel AdkConvert erreur HTTP ${adkResp.status} (clickid: ${adkClickId || "-"})`;
+    } catch (err) {
+      adkPixelStatus = `❌ Pixel AdkConvert erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel AdkConvert error (non bloquant):", err);
+    }
+  }
+
   // Notification email (non bloquant)
   const resendKey = process.env["RESEND_API_KEY"];
   const lovableApiKey = process.env["LOVABLE_API_KEY"];
@@ -344,7 +363,8 @@ export async function processLead(
             `Téléphone: ${data.phone}\nSource: ${data.source || "direct"}\n` +
             `Click ID: ${data.click_id || "aucun"}\nIP: ${ipAddress}\n\n` +
             `Google Sheet: ${sheetStatus}\n` +
-            `Pixel Com&Click: ${pixelStatus}`,
+            `Pixel Com&Click: ${pixelStatus}\n` +
+            `Pixel AdkConvert: ${adkPixelStatus}`,
         }),
       });
       if (!resp.ok) {
