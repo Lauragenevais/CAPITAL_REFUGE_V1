@@ -363,7 +363,8 @@ export async function processLead(
             `Téléphone: ${data.phone}\nSource: ${data.source || "direct"}\n` +
             `Click ID: ${data.click_id || "aucun"}\nIP: ${ipAddress}\n\n` +
             `Google Sheet: ${sheetStatus}\n` +
-            `Pixel Com&Click: ${pixelStatus}`,
+            `Pixel Com&Click: ${pixelStatus}\n` +
+            `Pixel AdkConvert: ${adkPixelStatus}`,
         }),
       });
       if (!resp.ok) {
