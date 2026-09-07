@@ -280,8 +280,8 @@ export async function processLead(
     }
   }
 
-  // Pixel de conversion Com&Click — uniquement pour les leads du formulaire (hors API)
-  let pixelStatus = "⏭️ Non déclenché (lead API)";
+  // Pixels de conversion Com&Click — un par canal
+  let pixelStatus = "⏭️ Non déclenché";
   if (channel === "form") {
     const productId = data.email;
     const pixelUrl =
@@ -293,11 +293,29 @@ export async function processLead(
         headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
       });
       pixelStatus = pixelResp.ok
-        ? `✅ Déclenché (ProductID: ${productId})`
-        : `❌ Erreur HTTP ${pixelResp.status} (ProductID: ${productId})`;
+        ? `✅ Pixel formulaire déclenché (ProductID: ${productId})`
+        : `❌ Pixel formulaire erreur HTTP ${pixelResp.status} (ProductID: ${productId})`;
     } catch (err) {
-      pixelStatus = `❌ Erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click error (non bloquant):", err);
+      pixelStatus = `❌ Pixel formulaire erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click formulaire error (non bloquant):", err);
+    }
+  } else if (channel === "api") {
+    const pixelUrl =
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `&CampaignID=jqyvg8ky&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}` +
+      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
+    try {
+      const pixelResp = await fetch(pixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      pixelStatus = pixelResp.ok
+        ? `✅ Pixel API déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
+        : `❌ Pixel API erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
+    } catch (err) {
+      pixelStatus = `❌ Pixel API erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click API error (non bloquant):", err);
     }
   }
 
