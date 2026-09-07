@@ -280,6 +280,27 @@ export async function processLead(
     }
   }
 
+  // Pixel de conversion Com&Click — uniquement pour les leads du formulaire (hors API)
+  let pixelStatus = "⏭️ Non déclenché (lead API)";
+  if (channel === "form") {
+    const productId = process.env["COMANDCLICK_PRODUCT_ID"] ?? OPERATION;
+    const pixelUrl =
+      `https://comandclick.com/scripts/sale.php?AccountId=5db4e65a&TotalCost=35` +
+      `&CampaignID=jqyvg8ky&ProductID=${encodeURIComponent(productId)}`;
+    try {
+      const pixelResp = await fetch(pixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      pixelStatus = pixelResp.ok
+        ? `✅ Déclenché (ProductID: ${productId})`
+        : `❌ Erreur HTTP ${pixelResp.status} (ProductID: ${productId})`;
+    } catch (err) {
+      pixelStatus = `❌ Erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click error (non bloquant):", err);
+    }
+  }
+
   // Notification email (non bloquant)
   const resendKey = process.env["RESEND_API_KEY"];
   const lovableApiKey = process.env["LOVABLE_API_KEY"];
