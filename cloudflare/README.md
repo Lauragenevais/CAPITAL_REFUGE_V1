@@ -40,5 +40,7 @@ npm run deploy    # build + wrangler deploy (nécessite wrangler login)
 - Si le domaine du site change, ajouter la nouvelle origine au secret
   `ALLOWED_ORIGINS` du backend Lovable (sinon le formulaire renverra
   `403 origin_not_allowed`).
-- La page `/api-docs` est incluse (documentation publique, sans secret). La page
-  `/admin` reste accessible uniquement sur l'URL Lovable.
+- Les pages `/api-docs` et `/admin` sont incluses. L'administration ne contient
+  aucun secret : elle appelle `POST /api/public/admin` sur le backend Lovable
+  (mot de passe `ADMIN_PASSWORD` → jeton signé valable 12 h).
+
