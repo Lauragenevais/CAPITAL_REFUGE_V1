@@ -15,6 +15,7 @@ import { Route as ApiDocsRouteImport } from './routes/api-docs'
 import { Route as EmailTemplateRouteImport } from './routes/email-template'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
+import { Route as ApiPublicAdminRouteImport } from './routes/api/public/admin'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicLeadsRouteImport } from './routes/api/public/leads'
 
@@ -49,6 +50,11 @@ const PolitiqueConfidentialiteRoute =
     path: '/politique-confidentialite',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicAdminRoute = ApiPublicAdminRouteImport.update({
+  id: '/api/public/admin',
+  path: '/api/public/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicLeadFormRoute = ApiPublicLeadFormRouteImport.update({
   id: '/api/public/lead-form',
   path: '/api/public/lead-form',
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
+  '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
 }
@@ -77,6 +84,7 @@ export interface FileRoutesByTo {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
+  '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
 }
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
+  '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
 }
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/politique-confidentialite'
+    | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
   fileRoutesByTo: FileRoutesByTo
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/politique-confidentialite'
+    | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
   id:
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/politique-confidentialite'
+    | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
   fileRoutesById: FileRoutesById
@@ -131,6 +143,7 @@ export interface RootRouteChildren {
   EmailTemplateRoute: typeof EmailTemplateRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
+  ApiPublicAdminRoute: typeof ApiPublicAdminRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   ApiPublicLeadsRoute: typeof ApiPublicLeadsRoute
 }
@@ -179,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PolitiqueConfidentialiteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/admin': {
+      id: '/api/public/admin'
+      path: '/api/public/admin'
+      fullPath: '/api/public/admin'
+      preLoaderRoute: typeof ApiPublicAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/lead-form': {
       id: '/api/public/lead-form'
       path: '/api/public/lead-form'
@@ -203,6 +223,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmailTemplateRoute: EmailTemplateRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
+  ApiPublicAdminRoute: ApiPublicAdminRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   ApiPublicLeadsRoute: ApiPublicLeadsRoute,
 }

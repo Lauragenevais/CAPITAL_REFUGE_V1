@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
 import Home from "@/pages/Home";
+import Admin from "@/pages/Admin";
 import ApiDocs from "@/pages/ApiDocs";
 import MentionsLegales from "@/pages/MentionsLegales";
 import PolitiqueConfidentialite from "@/pages/PolitiqueConfidentialite";
@@ -10,10 +11,12 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/admin" element={<Admin />} />
       <Route path="/api-docs" element={<ApiDocs />} />
       <Route path="/mentions-legales" element={<MentionsLegales />} />
       <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
       <Route path="*" element={<NotFound />} />
+
     </Routes>
   );
 }
