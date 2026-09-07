@@ -325,7 +325,8 @@ export async function processLead(
             `Nom: ${data.last_name}\nPrénom: ${data.first_name}\nEmail: ${data.email}\n` +
             `Téléphone: ${data.phone}\nSource: ${data.source || "direct"}\n` +
             `Click ID: ${data.click_id || "aucun"}\nIP: ${ipAddress}\n\n` +
-            `Google Sheet: ${sheetStatus}`,
+            `Google Sheet: ${sheetStatus}\n` +
+            `Pixel Com&Click: ${pixelStatus}`,
         }),
       });
       if (!resp.ok) {
