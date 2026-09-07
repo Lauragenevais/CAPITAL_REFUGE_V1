@@ -52,6 +52,14 @@ function selectClass(extra = "") {
   return `h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring ${extra}`;
 }
 
+function loginErrorMessage(message: string): string {
+  if (message === "invalid_password") return "Mot de passe incorrect";
+  if (message === "not_configured") return "Accès admin non configuré";
+  if (message === "origin_not_allowed") return "Adresse Cloudflare non autorisée";
+  if (message === "server_error") return "Erreur côté service admin";
+  return "Connexion impossible";
+}
+
 export default function Admin() {
   useHead({
     title: "Suivi des leads — Amazon Capital",
@@ -98,11 +106,7 @@ function LoginScreen({ onSuccess }: { onSuccess: (token: string) => void }) {
       const res = await callAdmin<{ token: string }>({ action: "login", password });
       onSuccess(res.token);
     } catch (err) {
-      toast.error(
-        (err as Error).message === "invalid_password"
-          ? "Mot de passe incorrect"
-          : "Connexion impossible",
-      );
+      toast.error(loginErrorMessage((err as Error).message));
     } finally {
       setLoading(false);
     }
