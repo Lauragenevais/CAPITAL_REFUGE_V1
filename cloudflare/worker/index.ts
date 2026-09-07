@@ -18,7 +18,7 @@ export default {
 
       const headers = new Headers(request.headers);
       headers.set("host", new URL(BACKEND_ORIGIN).host);
-      headers.set("origin", url.origin);
+      headers.delete("origin");
       headers.set("x-forwarded-host", url.host);
 
       const proxied = new Request(target.toString(), {
