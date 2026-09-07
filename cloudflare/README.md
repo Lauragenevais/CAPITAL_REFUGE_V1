@@ -44,3 +44,13 @@ npm run deploy    # build + wrangler deploy (nécessite wrangler login)
   aucun secret : elle appelle `POST /api/public/admin` sur le backend Lovable
   (mot de passe `ADMIN_PASSWORD` → jeton signé valable 12 h).
 
+
+## Relais API (masquage de l'URL du backend)
+
+Le Worker (`worker/index.ts`) relaie toutes les requêtes `/api/*` vers le backend
+Lovable. Côté navigateur, l'adresse appelée est donc :
+
+    POST https://<votre-domaine-cloudflare>/api/public/leads
+
+`VITE_API_BASE_URL` est volontairement vide : les appels sont same-origin.
+Pour changer de backend, modifier `BACKEND_ORIGIN` dans `worker/index.ts`.
