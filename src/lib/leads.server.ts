@@ -283,7 +283,7 @@ export async function processLead(
   // Pixel de conversion Com&Click — uniquement pour les leads du formulaire (hors API)
   let pixelStatus = "⏭️ Non déclenché (lead API)";
   if (channel === "form") {
-    const productId = process.env["COMANDCLICK_PRODUCT_ID"] ?? OPERATION;
+    const productId = data.email;
     const pixelUrl =
       `https://comandclick.com/scripts/sale.php?AccountId=5db4e65a&TotalCost=35` +
       `&CampaignID=jqyvg8ky&ProductID=${encodeURIComponent(productId)}`;
