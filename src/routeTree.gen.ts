@@ -16,6 +16,7 @@ import { Route as ChatgptRouteImport } from './routes/chatgpt'
 import { Route as EmailTemplateRouteImport } from './routes/email-template'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as MentionsLegalesChatgptRouteImport } from './routes/mentions-legales-chatgpt'
+import { Route as NvidiaRouteImport } from './routes/nvidia'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
 import { Route as PolitiqueConfidentialiteChatgptRouteImport } from './routes/politique-confidentialite-chatgpt'
 import { Route as ApiPublicAdminRouteImport } from './routes/api/public/admin'
@@ -57,6 +58,11 @@ const MentionsLegalesChatgptRoute = MentionsLegalesChatgptRouteImport.update({
   path: '/mentions-legales-chatgpt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NvidiaRoute = NvidiaRouteImport.update({
+  id: '/nvidia',
+  path: '/nvidia',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PolitiqueConfidentialiteRoute =
   PolitiqueConfidentialiteRouteImport.update({
     id: '/politique-confidentialite',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
+  '/nvidia': typeof NvidiaRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
+  '/nvidia': typeof NvidiaRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
+  '/nvidia': typeof NvidiaRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/mentions-legales-chatgpt'
+    | '/nvidia'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
     | '/api/public/admin'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/mentions-legales-chatgpt'
+    | '/nvidia'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
     | '/api/public/admin'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/mentions-legales-chatgpt'
+    | '/nvidia'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
     | '/api/public/admin'
@@ -181,6 +193,7 @@ export interface RootRouteChildren {
   EmailTemplateRoute: typeof EmailTemplateRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   MentionsLegalesChatgptRoute: typeof MentionsLegalesChatgptRoute
+  NvidiaRoute: typeof NvidiaRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
   PolitiqueConfidentialiteChatgptRoute: typeof PolitiqueConfidentialiteChatgptRoute
   ApiPublicAdminRoute: typeof ApiPublicAdminRoute
@@ -239,6 +252,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MentionsLegalesChatgptRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/nvidia': {
+      id: '/nvidia'
+      path: '/nvidia'
+      fullPath: '/nvidia'
+      preLoaderRoute: typeof NvidiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/politique-confidentialite': {
       id: '/politique-confidentialite'
       path: '/politique-confidentialite'
@@ -285,6 +305,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmailTemplateRoute: EmailTemplateRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
   MentionsLegalesChatgptRoute: MentionsLegalesChatgptRoute,
+  NvidiaRoute: NvidiaRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
   PolitiqueConfidentialiteChatgptRoute: PolitiqueConfidentialiteChatgptRoute,
   ApiPublicAdminRoute: ApiPublicAdminRoute,
