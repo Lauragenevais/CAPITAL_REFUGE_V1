@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ApiDocsRouteImport } from './routes/api-docs'
+import { Route as ChatgptRouteImport } from './routes/chatgpt'
 import { Route as EmailTemplateRouteImport } from './routes/email-template'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
@@ -32,6 +33,11 @@ const AdminRoute = AdminRouteImport.update({
 const ApiDocsRoute = ApiDocsRouteImport.update({
   id: '/api-docs',
   path: '/api-docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatgptRoute = ChatgptRouteImport.update({
+  id: '/chatgpt',
+  path: '/chatgpt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmailTemplateRoute = EmailTemplateRouteImport.update({
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/api-docs': typeof ApiDocsRoute
+  '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/api-docs': typeof ApiDocsRoute
+  '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/api-docs': typeof ApiDocsRoute
+  '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/api-docs'
+    | '/chatgpt'
     | '/email-template'
     | '/mentions-legales'
     | '/politique-confidentialite'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/api-docs'
+    | '/chatgpt'
     | '/email-template'
     | '/mentions-legales'
     | '/politique-confidentialite'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/api-docs'
+    | '/chatgpt'
     | '/email-template'
     | '/mentions-legales'
     | '/politique-confidentialite'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   ApiDocsRoute: typeof ApiDocsRoute
+  ChatgptRoute: typeof ChatgptRoute
   EmailTemplateRoute: typeof EmailTemplateRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
@@ -169,6 +182,13 @@ declare module '@tanstack/react-router' {
       path: '/api-docs'
       fullPath: '/api-docs'
       preLoaderRoute: typeof ApiDocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chatgpt': {
+      id: '/chatgpt'
+      path: '/chatgpt'
+      fullPath: '/chatgpt'
+      preLoaderRoute: typeof ChatgptRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/email-template': {
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   ApiDocsRoute: ApiDocsRoute,
+  ChatgptRoute: ChatgptRoute,
   EmailTemplateRoute: EmailTemplateRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
