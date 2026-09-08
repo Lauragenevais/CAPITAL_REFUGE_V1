@@ -444,11 +444,11 @@ export default function ChatgptLanding() {
               ChatGPT Capital
             </span>
             <nav className="flex gap-6">
-              <Link to="/mentions-legales" className="transition-colors hover:text-primary">
+              <Link to="/mentions-legales-chatgpt" className="transition-colors hover:text-primary">
                 Mentions légales
               </Link>
               <Link
-                to="/politique-confidentialite"
+                to="/politique-confidentialite-chatgpt"
                 className="transition-colors hover:text-primary"
               >
                 Politique de confidentialité
