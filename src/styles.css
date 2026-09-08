@@ -96,6 +96,21 @@
   --foreground: oklch(0.97 0.006 90);
 }
 
+/* Palette dédiée à la page /chatgpt : vert menthe IA au lieu du doré */
+.theme-chatgpt {
+  --primary: oklch(0.78 0.15 168);
+  --primary-foreground: oklch(0.15 0.03 175);
+  --primary-glow: oklch(0.88 0.13 150);
+
+  --accent: oklch(0.75 0.12 225);
+  --accent-foreground: oklch(0.16 0.03 230);
+
+  --ring: oklch(0.78 0.15 168);
+
+  --gradient-gold: linear-gradient(135deg, var(--primary), var(--primary-glow));
+  --shadow-gold: 0 18px 44px -18px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
