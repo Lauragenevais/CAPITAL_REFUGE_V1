@@ -140,7 +140,7 @@ const FAQ = [
 
 function ChatgptLanding() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="theme-chatgpt min-h-screen bg-background">
       {/* Bandeau haut */}
       <div className="bg-surface/80 px-4 py-2 text-center text-xs font-medium tracking-wide text-muted-foreground">
         <Cpu className="mr-1.5 inline h-3.5 w-3.5 text-primary" />
