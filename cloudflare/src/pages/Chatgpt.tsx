@@ -131,7 +131,7 @@ export default function ChatgptLanding() {
       {/* Bandeau haut */}
       <div className="bg-surface/80 px-4 py-2 text-center text-xs font-medium tracking-wide text-muted-foreground">
         <Cpu className="mr-1.5 inline h-3.5 w-3.5 text-primary" />
-        Amazon Capital — l'IA qui façonne l'avenir, votre chance d'être partie prenante
+        ChatGPT Capital — l'IA qui façonne l'avenir, votre chance d'être partie prenante
       </div>
 
       {/* Navigation */}
@@ -141,7 +141,7 @@ export default function ChatgptLanding() {
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold shadow-gold">
               <TrendingUp className="h-5 w-5 text-primary-foreground" />
             </span>
-            <span className="font-display text-lg font-bold">Amazon Capital</span>
+            <span className="font-display text-lg font-bold">ChatGPT Capital</span>
           </a>
           <nav className="hidden items-center gap-7 text-sm text-muted-foreground lg:flex">
             {NAV.map((item) => (
@@ -441,7 +441,7 @@ export default function ChatgptLanding() {
         <div className="mx-auto max-w-6xl space-y-6 px-4 text-sm text-muted-foreground">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <span className="font-display text-base font-bold text-foreground">
-              Amazon Capital
+              ChatGPT Capital
             </span>
             <nav className="flex gap-6">
               <Link to="/mentions-legales" className="transition-colors hover:text-primary">
