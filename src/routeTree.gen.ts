@@ -16,8 +16,11 @@ import { Route as ChatgptRouteImport } from './routes/chatgpt'
 import { Route as EmailTemplateRouteImport } from './routes/email-template'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as MentionsLegalesChatgptRouteImport } from './routes/mentions-legales-chatgpt'
+import { Route as MentionsLegalesNvidiaRouteImport } from './routes/mentions-legales-nvidia'
+import { Route as NvidiaRouteImport } from './routes/nvidia'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
 import { Route as PolitiqueConfidentialiteChatgptRouteImport } from './routes/politique-confidentialite-chatgpt'
+import { Route as PolitiqueConfidentialiteNvidiaRouteImport } from './routes/politique-confidentialite-nvidia'
 import { Route as ApiPublicAdminRouteImport } from './routes/api/public/admin'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicLeadsRouteImport } from './routes/api/public/leads'
@@ -57,6 +60,16 @@ const MentionsLegalesChatgptRoute = MentionsLegalesChatgptRouteImport.update({
   path: '/mentions-legales-chatgpt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MentionsLegalesNvidiaRoute = MentionsLegalesNvidiaRouteImport.update({
+  id: '/mentions-legales-nvidia',
+  path: '/mentions-legales-nvidia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NvidiaRoute = NvidiaRouteImport.update({
+  id: '/nvidia',
+  path: '/nvidia',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PolitiqueConfidentialiteRoute =
   PolitiqueConfidentialiteRouteImport.update({
     id: '/politique-confidentialite',
@@ -67,6 +80,12 @@ const PolitiqueConfidentialiteChatgptRoute =
   PolitiqueConfidentialiteChatgptRouteImport.update({
     id: '/politique-confidentialite-chatgpt',
     path: '/politique-confidentialite-chatgpt',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PolitiqueConfidentialiteNvidiaRoute =
+  PolitiqueConfidentialiteNvidiaRouteImport.update({
+    id: '/politique-confidentialite-nvidia',
+    path: '/politique-confidentialite-nvidia',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicAdminRoute = ApiPublicAdminRouteImport.update({
@@ -93,8 +112,11 @@ export interface FileRoutesByFullPath {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
+  '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
+  '/nvidia': typeof NvidiaRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
+  '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -107,8 +129,11 @@ export interface FileRoutesByTo {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
+  '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
+  '/nvidia': typeof NvidiaRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
+  '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -122,8 +147,11 @@ export interface FileRoutesById {
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
+  '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
+  '/nvidia': typeof NvidiaRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
+  '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -138,8 +166,11 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/mentions-legales-chatgpt'
+    | '/mentions-legales-nvidia'
+    | '/nvidia'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
+    | '/politique-confidentialite-nvidia'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -152,8 +183,11 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/mentions-legales-chatgpt'
+    | '/mentions-legales-nvidia'
+    | '/nvidia'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
+    | '/politique-confidentialite-nvidia'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -166,8 +200,11 @@ export interface FileRouteTypes {
     | '/email-template'
     | '/mentions-legales'
     | '/mentions-legales-chatgpt'
+    | '/mentions-legales-nvidia'
+    | '/nvidia'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
+    | '/politique-confidentialite-nvidia'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -181,8 +218,11 @@ export interface RootRouteChildren {
   EmailTemplateRoute: typeof EmailTemplateRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   MentionsLegalesChatgptRoute: typeof MentionsLegalesChatgptRoute
+  MentionsLegalesNvidiaRoute: typeof MentionsLegalesNvidiaRoute
+  NvidiaRoute: typeof NvidiaRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
   PolitiqueConfidentialiteChatgptRoute: typeof PolitiqueConfidentialiteChatgptRoute
+  PolitiqueConfidentialiteNvidiaRoute: typeof PolitiqueConfidentialiteNvidiaRoute
   ApiPublicAdminRoute: typeof ApiPublicAdminRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   ApiPublicLeadsRoute: typeof ApiPublicLeadsRoute
@@ -239,6 +279,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MentionsLegalesChatgptRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mentions-legales-nvidia': {
+      id: '/mentions-legales-nvidia'
+      path: '/mentions-legales-nvidia'
+      fullPath: '/mentions-legales-nvidia'
+      preLoaderRoute: typeof MentionsLegalesNvidiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nvidia': {
+      id: '/nvidia'
+      path: '/nvidia'
+      fullPath: '/nvidia'
+      preLoaderRoute: typeof NvidiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/politique-confidentialite': {
       id: '/politique-confidentialite'
       path: '/politique-confidentialite'
@@ -251,6 +305,13 @@ declare module '@tanstack/react-router' {
       path: '/politique-confidentialite-chatgpt'
       fullPath: '/politique-confidentialite-chatgpt'
       preLoaderRoute: typeof PolitiqueConfidentialiteChatgptRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politique-confidentialite-nvidia': {
+      id: '/politique-confidentialite-nvidia'
+      path: '/politique-confidentialite-nvidia'
+      fullPath: '/politique-confidentialite-nvidia'
+      preLoaderRoute: typeof PolitiqueConfidentialiteNvidiaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/admin': {
@@ -285,8 +346,11 @@ const rootRouteChildren: RootRouteChildren = {
   EmailTemplateRoute: EmailTemplateRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
   MentionsLegalesChatgptRoute: MentionsLegalesChatgptRoute,
+  MentionsLegalesNvidiaRoute: MentionsLegalesNvidiaRoute,
+  NvidiaRoute: NvidiaRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
   PolitiqueConfidentialiteChatgptRoute: PolitiqueConfidentialiteChatgptRoute,
+  PolitiqueConfidentialiteNvidiaRoute: PolitiqueConfidentialiteNvidiaRoute,
   ApiPublicAdminRoute: ApiPublicAdminRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   ApiPublicLeadsRoute: ApiPublicLeadsRoute,
