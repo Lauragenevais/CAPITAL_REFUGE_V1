@@ -45,6 +45,7 @@ const schema = z.object({
   consent: z.literal(true),
   source: z.string().max(60).optional(),
   click_id: z.string().max(120).optional(),
+  operation: z.enum(["AMAZON", "CHATGPT"]).optional(),
 });
 
 export const Route = createFileRoute("/api/public/lead-form")({
