@@ -32,7 +32,15 @@ function getTrackingParams() {
   };
 }
 
-export function LeadForm() {
+type LeadFormProps = {
+  operation?: "AMAZON" | "CHATGPT";
+  consentLabel?: string;
+};
+
+const DEFAULT_CONSENT_LABEL =
+  "J'accepte les conditions générales d'utilisation et d'être recontacté par nos partenaires afin de recevoir des informations sur l'Amazon Coin.";
+
+export function LeadForm({ operation, consentLabel }: LeadFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const {
@@ -62,6 +70,7 @@ export function LeadForm() {
           consent: true,
           source,
           click_id: clickId,
+          ...(operation ? { operation } : {}),
         }),
       });
 
@@ -183,8 +192,7 @@ export function LeadForm() {
             className="mt-0.5 border-black/40 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
           />
           <label htmlFor="consent" className="cursor-pointer text-xs leading-relaxed text-black/80">
-            J&apos;accepte les conditions générales d&apos;utilisation et d&apos;être recontacté par
-            nos partenaires afin de recevoir des informations sur l&apos;Amazon Coin.
+            {consentLabel ?? DEFAULT_CONSENT_LABEL}
           </label>
         </div>
         {errors.consent && <p className="text-xs text-destructive">{errors.consent.message}</p>}

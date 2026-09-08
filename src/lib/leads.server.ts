@@ -13,6 +13,7 @@ export const leadSchema = z.object({
   consent: z.literal(true),
   source: z.string().max(60).optional(),
   click_id: z.string().max(120).optional(),
+  operation: z.enum(["AMAZON", "CHATGPT"]).optional(),
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
@@ -203,6 +204,8 @@ export async function processLead(
   channel: "form" | "api" = "form",
 ): Promise<ProcessLeadResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const operation = data.operation ?? OPERATION;
+
 
   const { data: existing } = await supabaseAdmin
     .from("leads")
@@ -228,7 +231,7 @@ export async function processLead(
     click_id: data.click_id ?? "",
     ip_address: ipAddress,
     pays: "FR",
-    operation: OPERATION,
+    operation,
   });
 
   if (insertError) {
@@ -268,7 +271,7 @@ export async function processLead(
             data.source ?? "",
             data.click_id ?? "",
             parisTimestamp(),
-            OPERATION,
+            operation,
           ],
         ],
         sheetTab,
@@ -355,10 +358,10 @@ export async function processLead(
         body: JSON.stringify({
           from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Amazon <onboarding@resend.dev>",
           to: [notifyTo],
-          subject: `[NOUVEAU LEAD - ${OPERATION}] ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
+          subject: `[NOUVEAU LEAD - ${operation}] ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
           text:
             `Nouveau lead enregistré:\n\n` +
-            `📌 Provenance: ${origin} (${OPERATION})\n\n` +
+            `📌 Provenance: ${origin} (${operation})\n\n` +
             `Nom: ${data.last_name}\nPrénom: ${data.first_name}\nEmail: ${data.email}\n` +
             `Téléphone: ${data.phone}\nSource: ${data.source || "direct"}\n` +
             `Click ID: ${data.click_id || "aucun"}\nIP: ${ipAddress}\n\n` +
