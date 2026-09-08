@@ -121,9 +121,12 @@ const FAQ = [
 
 export default function ChatgptLanding() {
   useHead({
-    title: "Action ChatGPT : vérifiez votre éligibilité avant l'entrée en bourse",
+    title: "Action ChatGPT (OpenAI) : testez votre éligibilité en 60 s",
     description:
-      "L'action ChatGPT d'OpenAI promet de révolutionner le marché boursier. Vérifiez votre éligibilité en 60 secondes et préparez-vous avant le grand public.",
+      "ChatGPT Capital : découvrez le potentiel de l'action OpenAI et vérifiez gratuitement votre éligibilité en 60 secondes. Accompagnement par un spécialiste, sans engagement.",
+    ogDescription:
+      "Analyse gratuite en 60 secondes : votre profil est-il éligible au programme d'accompagnement sur l'action ChatGPT d'OpenAI ?",
+    siteName: "ChatGPT Capital",
   });
 
   return (

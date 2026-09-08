@@ -29,21 +29,34 @@ import blockAi from "@/assets/block-ai.jpg";
 export const Route = createFileRoute("/chatgpt")({
   head: () => ({
     meta: [
-      { title: "Action ChatGPT : vérifiez votre éligibilité avant l'entrée en bourse" },
+      { title: "Action ChatGPT (OpenAI) : testez votre éligibilité en 60 s" },
       {
         name: "description",
         content:
-          "L'action ChatGPT d'OpenAI promet de révolutionner le marché boursier. Vérifiez votre éligibilité en 60 secondes et préparez-vous avant le grand public.",
+          "ChatGPT Capital : découvrez le potentiel de l'action OpenAI et vérifiez gratuitement votre éligibilité en 60 secondes. Accompagnement par un spécialiste, sans engagement.",
       },
-      { property: "og:title", content: "Action ChatGPT : prenez position avant l'entrée en bourse" },
+      {
+        property: "og:title",
+        content: "Action ChatGPT (OpenAI) : testez votre éligibilité en 60 s",
+      },
       {
         property: "og:description",
         content:
-          "Analyse gratuite en 60 secondes : découvrez si votre profil est éligible au programme de pré-inscription sur l'action ChatGPT.",
+          "Analyse gratuite en 60 secondes : votre profil est-il éligible au programme d'accompagnement sur l'action ChatGPT d'OpenAI ?",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "ChatGPT Capital" },
+      { property: "og:locale", content: "fr_FR" },
+      { property: "og:url", content: "https://amazoncapital.lovable.app/chatgpt" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Action ChatGPT (OpenAI) : testez votre éligibilité" },
+      {
+        name: "twitter:description",
+        content:
+          "Vérifiez en 60 secondes si votre profil est éligible au programme ChatGPT Capital.",
+      },
     ],
+    links: [{ rel: "canonical", href: "https://amazoncapital.lovable.app/chatgpt" }],
   }),
   component: ChatgptLanding,
 });

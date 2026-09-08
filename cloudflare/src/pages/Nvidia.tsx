@@ -120,9 +120,13 @@ const FAQ = [
 
 export default function Nvidia() {
   useHead({
-    title: "Action Nvidia (NVDA) : vérifiez votre éligibilité en 60 secondes",
+    title: "Action Nvidia (NVDA) : éligibilité en 60 s | Nvidia Capital",
     description:
-      "Nvidia, la nouvelle star des cryptos et de l'IA. Découvrez les chiffres de l'action NVDA et vérifiez gratuitement votre éligibilité au programme d'accompagnement.",
+      "Nvidia, la nouvelle star des cryptos et de l'IA : +85 % de chiffre d'affaires et un data center record. Vérifiez gratuitement votre éligibilité à l'action NVDA en 60 secondes.",
+    ogTitle: "Action Nvidia (NVDA) : la nouvelle star des cryptos et de l'IA",
+    ogDescription:
+      "+85 % de chiffre d'affaires, 75,2 Md$ de revenus data center : testez votre éligibilité à l'action Nvidia en 60 secondes.",
+    siteName: "Nvidia Capital",
   });
 
   return (

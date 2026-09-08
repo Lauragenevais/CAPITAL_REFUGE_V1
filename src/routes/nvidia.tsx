@@ -29,21 +29,33 @@ import blockGpu from "@/assets/block-gpu.jpg";
 export const Route = createFileRoute("/nvidia")({
   head: () => ({
     meta: [
-      { title: "Action Nvidia (NVDA) : vérifiez votre éligibilité en 60 secondes" },
+      { title: "Action Nvidia (NVDA) : éligibilité en 60 s | Nvidia Capital" },
       {
         name: "description",
         content:
-          "Nvidia, la nouvelle star des cryptos et de l'IA. Découvrez les chiffres de l'action NVDA et vérifiez gratuitement votre éligibilité au programme d'accompagnement.",
+          "Nvidia, la nouvelle star des cryptos et de l'IA : +85 % de chiffre d'affaires et un data center record. Vérifiez gratuitement votre éligibilité à l'action NVDA en 60 secondes.",
       },
-      { property: "og:title", content: "Action Nvidia (NVDA) : la nouvelle star des cryptos" },
+      {
+        property: "og:title",
+        content: "Action Nvidia (NVDA) : la nouvelle star des cryptos et de l'IA",
+      },
       {
         property: "og:description",
         content:
-          "Chiffre d'affaires en hausse de 85 %, un segment data center record : analysez votre éligibilité à l'action Nvidia en 60 secondes.",
+          "+85 % de chiffre d'affaires, 75,2 Md$ de revenus data center : testez votre éligibilité à l'action Nvidia en 60 secondes.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Nvidia Capital" },
+      { property: "og:locale", content: "fr_FR" },
+      { property: "og:url", content: "https://amazoncapital.lovable.app/nvidia" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Action Nvidia (NVDA) : la nouvelle star des cryptos" },
+      {
+        name: "twitter:description",
+        content: "Testez votre éligibilité à l'action Nvidia en 60 secondes avec Nvidia Capital.",
+      },
     ],
+    links: [{ rel: "canonical", href: "https://amazoncapital.lovable.app/nvidia" }],
   }),
   component: NvidiaLanding,
 });
