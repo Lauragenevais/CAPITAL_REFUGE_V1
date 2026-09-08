@@ -204,6 +204,8 @@ export async function processLead(
   channel: "form" | "api" = "form",
 ): Promise<ProcessLeadResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const operation = data.operation ?? OPERATION;
+
 
   const { data: existing } = await supabaseAdmin
     .from("leads")
