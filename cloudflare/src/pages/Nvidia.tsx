@@ -28,6 +28,96 @@ import { LeadForm } from "@/components/landing/LeadForm";
 import heroNvidia from "@/assets/hero-nvidia.jpg";
 import blockGpu from "@/assets/block-gpu.jpg";
 
+const NAV = [
+  { label: "L'entreprise", href: "#projet" },
+  { label: "Avantages", href: "#avantages" },
+  { label: "Déroulement", href: "#etapes" },
+  { label: "Avis", href: "#avis" },
+  { label: "FAQ", href: "#faq" },
+];
+
+const STATS = [
+  { value: "+85 %", label: "Chiffre d'affaires sur un an" },
+  { value: "75,2 Md$", label: "Revenus data center T1" },
+  { value: "74,9 %", label: "Marge brute" },
+  { value: "60 s", label: "Pour vérifier son profil" },
+];
+
+const BENEFITS = [
+  {
+    icon: Cpu,
+    title: "Le moteur de l'IA mondiale",
+    text: "Nvidia domine le marché des puces qui entraînent les modèles d'intelligence artificielle les plus avancés.",
+  },
+  {
+    icon: Factory,
+    title: "Une machine industrielle rentable",
+    text: "Une marge brute de 74,9 % au dernier trimestre publié, un niveau rare pour un industriel des semi-conducteurs.",
+  },
+  {
+    icon: PieChart,
+    title: "Retour aux actionnaires",
+    text: "Dividende trimestriel relevé à 0,25 $ par action et enveloppe de rachat d'actions de 80 milliards de dollars approuvée.",
+  },
+  {
+    icon: Rocket,
+    title: "Au cœur de l'économie crypto",
+    text: "Les GPU Nvidia irriguent aussi les infrastructures de calcul utilisées par l'écosystème crypto et le Web3.",
+  },
+];
+
+const STEPS = [
+  {
+    title: "Complétez le formulaire",
+    text: "Quatre informations suffisent. Nous vérifions immédiatement si votre profil entre dans le programme.",
+  },
+  {
+    title: "Échangez avec un spécialiste",
+    text: "Un conseiller vous rappelle sous 24h pour construire une stratégie adaptée à vos objectifs.",
+  },
+  {
+    title: "Prenez position",
+    text: "Vous placez le montant que vous décidez et suivez l'évolution de votre portefeuille en temps réel.",
+  },
+];
+
+const TESTIMONIALS = [
+  {
+    name: "Sébastien",
+    meta: "38 ans — Nantes",
+    text: "Je suivais Nvidia depuis le début de la vague IA sans savoir par où commencer. L'échange avec le conseiller m'a permis de clarifier ma stratégie.",
+  },
+  {
+    name: "Nadia",
+    meta: "45 ans — Toulouse",
+    text: "Formulaire rempli le matin, rappel l'après-midi. On m'a expliqué la volatilité du titre avant même de parler de montant.",
+  },
+  {
+    name: "Patrick",
+    meta: "57 ans — Strasbourg",
+    text: "Ce que j'ai apprécié : les chiffres réels de l'entreprise, pas de promesse de gains garantis.",
+  },
+];
+
+const FAQ = [
+  {
+    q: "Pourquoi parle-t-on de Nvidia comme d'une star des cryptos ?",
+    a: "Les cartes graphiques de Nvidia ont longtemps servi au minage et alimentent aujourd'hui l'essentiel des infrastructures de calcul de l'IA et du Web3. L'entreprise est devenue une valeur suivie de près par les investisseurs crypto comme par les investisseurs actions.",
+  },
+  {
+    q: "Quels sont les derniers chiffres publiés ?",
+    a: "Sur son premier trimestre fiscal 2027 (clos le 26 avril 2026), Nvidia a annoncé 81,6 milliards de dollars de chiffre d'affaires, en hausse de 85 % sur un an, dont 75,2 milliards pour le seul segment data center, avec une marge brute de 74,9 %.",
+  },
+  {
+    q: "Quel montant faut-il prévoir ?",
+    a: "Il n'y a pas de montant imposé. Votre conseiller définit avec vous une enveloppe cohérente avec votre situation, en gardant à l'esprit que tout investissement comporte un risque de perte en capital.",
+  },
+  {
+    q: "Mes données sont-elles protégées ?",
+    a: "Vos informations sont transmises de manière chiffrée et utilisées uniquement pour la vérification d'éligibilité et la mise en relation avec un conseiller partenaire.",
+  },
+];
+
 export default function Nvidia() {
   useHead({
     title: "Action Nvidia (NVDA) : vérifiez votre éligibilité en 60 secondes",
