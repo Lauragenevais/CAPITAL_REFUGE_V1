@@ -15,7 +15,9 @@ import { Route as ApiDocsRouteImport } from './routes/api-docs'
 import { Route as ChatgptRouteImport } from './routes/chatgpt'
 import { Route as EmailTemplateRouteImport } from './routes/email-template'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
+import { Route as MentionsLegalesChatgptRouteImport } from './routes/mentions-legales-chatgpt'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
+import { Route as PolitiqueConfidentialiteChatgptRouteImport } from './routes/politique-confidentialite-chatgpt'
 import { Route as ApiPublicAdminRouteImport } from './routes/api/public/admin'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicLeadsRouteImport } from './routes/api/public/leads'
@@ -50,10 +52,21 @@ const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
   path: '/mentions-legales',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MentionsLegalesChatgptRoute = MentionsLegalesChatgptRouteImport.update({
+  id: '/mentions-legales-chatgpt',
+  path: '/mentions-legales-chatgpt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PolitiqueConfidentialiteRoute =
   PolitiqueConfidentialiteRouteImport.update({
     id: '/politique-confidentialite',
     path: '/politique-confidentialite',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PolitiqueConfidentialiteChatgptRoute =
+  PolitiqueConfidentialiteChatgptRouteImport.update({
+    id: '/politique-confidentialite-chatgpt',
+    path: '/politique-confidentialite-chatgpt',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicAdminRoute = ApiPublicAdminRouteImport.update({
@@ -79,7 +92,9 @@ export interface FileRoutesByFullPath {
   '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
+  '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
+  '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -91,7 +106,9 @@ export interface FileRoutesByTo {
   '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
+  '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
+  '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -104,7 +121,9 @@ export interface FileRoutesById {
   '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
   '/mentions-legales': typeof MentionsLegalesRoute
+  '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
+  '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -118,7 +137,9 @@ export interface FileRouteTypes {
     | '/chatgpt'
     | '/email-template'
     | '/mentions-legales'
+    | '/mentions-legales-chatgpt'
     | '/politique-confidentialite'
+    | '/politique-confidentialite-chatgpt'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -130,7 +151,9 @@ export interface FileRouteTypes {
     | '/chatgpt'
     | '/email-template'
     | '/mentions-legales'
+    | '/mentions-legales-chatgpt'
     | '/politique-confidentialite'
+    | '/politique-confidentialite-chatgpt'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -142,7 +165,9 @@ export interface FileRouteTypes {
     | '/chatgpt'
     | '/email-template'
     | '/mentions-legales'
+    | '/mentions-legales-chatgpt'
     | '/politique-confidentialite'
+    | '/politique-confidentialite-chatgpt'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -155,7 +180,9 @@ export interface RootRouteChildren {
   ChatgptRoute: typeof ChatgptRoute
   EmailTemplateRoute: typeof EmailTemplateRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
+  MentionsLegalesChatgptRoute: typeof MentionsLegalesChatgptRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
+  PolitiqueConfidentialiteChatgptRoute: typeof PolitiqueConfidentialiteChatgptRoute
   ApiPublicAdminRoute: typeof ApiPublicAdminRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   ApiPublicLeadsRoute: typeof ApiPublicLeadsRoute
@@ -205,11 +232,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MentionsLegalesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mentions-legales-chatgpt': {
+      id: '/mentions-legales-chatgpt'
+      path: '/mentions-legales-chatgpt'
+      fullPath: '/mentions-legales-chatgpt'
+      preLoaderRoute: typeof MentionsLegalesChatgptRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/politique-confidentialite': {
       id: '/politique-confidentialite'
       path: '/politique-confidentialite'
       fullPath: '/politique-confidentialite'
       preLoaderRoute: typeof PolitiqueConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politique-confidentialite-chatgpt': {
+      id: '/politique-confidentialite-chatgpt'
+      path: '/politique-confidentialite-chatgpt'
+      fullPath: '/politique-confidentialite-chatgpt'
+      preLoaderRoute: typeof PolitiqueConfidentialiteChatgptRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/admin': {
@@ -243,7 +284,9 @@ const rootRouteChildren: RootRouteChildren = {
   ChatgptRoute: ChatgptRoute,
   EmailTemplateRoute: EmailTemplateRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
+  MentionsLegalesChatgptRoute: MentionsLegalesChatgptRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
+  PolitiqueConfidentialiteChatgptRoute: PolitiqueConfidentialiteChatgptRoute,
   ApiPublicAdminRoute: ApiPublicAdminRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   ApiPublicLeadsRoute: ApiPublicLeadsRoute,

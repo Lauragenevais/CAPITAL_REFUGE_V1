@@ -7,6 +7,8 @@ import ApiDocs from "@/pages/ApiDocs";
 import EmailTemplate from "@/pages/EmailTemplate";
 import MentionsLegales from "@/pages/MentionsLegales";
 import PolitiqueConfidentialite from "@/pages/PolitiqueConfidentialite";
+import ChatgptMentionsLegales from "@/pages/ChatgptMentionsLegales";
+import ChatgptPolitiqueConfidentialite from "@/pages/ChatgptPolitiqueConfidentialite";
 import NotFound from "@/pages/NotFound";
 
 export default function App() {
@@ -19,6 +21,8 @@ export default function App() {
       <Route path="/email-template" element={<EmailTemplate />} />
       <Route path="/mentions-legales" element={<MentionsLegales />} />
       <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />
+      <Route path="/mentions-legales-chatgpt" element={<ChatgptMentionsLegales />} />
+      <Route path="/politique-confidentialite-chatgpt" element={<ChatgptPolitiqueConfidentialite />} />
       <Route path="*" element={<NotFound />} />
 
     </Routes>
