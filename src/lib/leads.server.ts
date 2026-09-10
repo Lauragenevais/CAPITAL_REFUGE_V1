@@ -285,7 +285,25 @@ export async function processLead(
 
   // Pixels de conversion Com&Click — un par canal
   let pixelStatus = "⏭️ Non déclenché";
-  if (channel === "form") {
+  if (channel === "form" && operation === "CHATGPT") {
+    const pixelUrl =
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `&CampaignID=mhmcapt7&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}` +
+      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
+    try {
+      const pixelResp = await fetch(pixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      pixelStatus = pixelResp.ok
+        ? `✅ Pixel ChatGPT déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
+        : `❌ Pixel ChatGPT erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
+    } catch (err) {
+      pixelStatus = `❌ Pixel ChatGPT erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click ChatGPT error (non bloquant):", err);
+    }
+  } else if (channel === "form") {
     const productId = data.email;
     const pixelUrl =
       `https://comandclick.com/scripts/sale.php?AccountId=5db4e65a&TotalCost=35` +
