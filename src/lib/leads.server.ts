@@ -303,6 +303,24 @@ export async function processLead(
       pixelStatus = `❌ Pixel ChatGPT erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click ChatGPT error (non bloquant):", err);
     }
+  } else if (channel === "form" && operation === "NVIDIA") {
+    const pixelUrl =
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `&CampaignID=s9e5x30u&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}` +
+      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
+    try {
+      const pixelResp = await fetch(pixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      pixelStatus = pixelResp.ok
+        ? `✅ Pixel Nvidia déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
+        : `❌ Pixel Nvidia erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
+    } catch (err) {
+      pixelStatus = `❌ Pixel Nvidia erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click Nvidia error (non bloquant):", err);
+    }
   } else if (channel === "form") {
     const productId = data.email;
     const pixelUrl =
