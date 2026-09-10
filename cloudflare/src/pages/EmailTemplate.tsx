@@ -4,17 +4,29 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useHead } from "@/hooks/useHead";
 
+const TEMPLATES = [
+  { id: "amazon", label: "Amazon Coin", path: "/email/promo-amazon.html" },
+  { id: "chatgpt", label: "ChatGPT Capital", path: "/email/promo-chatgpt.html" },
+  { id: "nvidia", label: "Nvidia Capital", path: "/email/promo-nvidia.html" },
+] as const;
+
+type TemplateId = (typeof TEMPLATES)[number]["id"];
+
 export default function EmailTemplate() {
   useHead({
-    title: "Template email — Amazon Coin",
+    title: "Templates email — Pré-inscriptions",
     description:
-      "Aperçu et copie du template email promotionnel Amazon Coin : visuels, accroche et boutons d'inscription.",
+      "Aperçu et copie des templates email promotionnels (Amazon Coin, ChatGPT Capital, Nvidia Capital) : visuels, accroche et boutons d'inscription.",
   });
 
+  const [selected, setSelected] = useState<TemplateId>("amazon");
   const [html, setHtml] = useState("");
 
+  const template = TEMPLATES.find((t) => t.id === selected) ?? TEMPLATES[0];
+
   useEffect(() => {
-    fetch("/email/promo-amazon.html")
+    setHtml("");
+    fetch(template.path)
       .then((r) => r.text())
       .then((raw) =>
         setHtml(
@@ -24,7 +36,7 @@ export default function EmailTemplate() {
         ),
       )
       .catch(() => toast.error("Impossible de charger le template"));
-  }, []);
+  }, [template.path]);
 
   const copy = async () => {
     await navigator.clipboard.writeText(html);
@@ -33,26 +45,43 @@ export default function EmailTemplate() {
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
-      <h1 className="text-3xl font-bold">Template email promotionnel</h1>
+      <h1 className="text-3xl font-bold">Templates email promotionnels</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         Fond uni, visuels intégrés et accroche orientée conversion. Les liens pointent vers le
         formulaire de pré-inscription. Remplacez <code>{"{{unsubscribe_url}}"}</code> par le lien de
         désinscription de votre outil d&apos;envoi.
       </p>
 
-      <div className="mt-6 flex flex-wrap gap-3">
+      <div className="mt-6 flex flex-wrap gap-2">
+        {TEMPLATES.map((t) => (
+          <Button
+            key={t.id}
+            variant={t.id === selected ? "default" : "outline"}
+            onClick={() => setSelected(t.id)}
+          >
+            {t.label}
+          </Button>
+        ))}
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-3">
         <Button onClick={copy} disabled={!html}>
           Copier le HTML
         </Button>
         <Button variant="outline" asChild>
-          <a href="/email/promo-amazon.html" target="_blank" rel="noreferrer">
+          <a href={template.path} target="_blank" rel="noreferrer">
             Ouvrir le fichier brut
           </a>
         </Button>
       </div>
 
       <div className="mt-8 overflow-hidden rounded-2xl border border-border">
-        <iframe title="Aperçu email" srcDoc={html} className="h-[1400px] w-full bg-white" />
+        <iframe
+          key={template.id}
+          title={`Aperçu email ${template.label}`}
+          srcDoc={html}
+          className="h-[1400px] w-full bg-white"
+        />
       </div>
     </main>
   );
