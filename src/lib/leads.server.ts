@@ -359,9 +359,9 @@ export async function processLead(
     }
   }
 
-  // Pixel AdkConvert — uniquement pour la source 3uqdgsil
+  // Pixel AdkConvert — pour les sources 3uqdgsil et dry6bpqm
   let adkPixelStatus = "⏭️ Non déclenché (source non concernée)";
-  if (data.source === "3uqdgsil") {
+  if (data.source === "3uqdgsil" || data.source === "dry6bpqm") {
     const adkClickId = data.click_id || "";
     const adkPixelUrl = `https://track.adkconvert.com/?e=2&clickid=${encodeURIComponent(adkClickId)}`;
     try {
