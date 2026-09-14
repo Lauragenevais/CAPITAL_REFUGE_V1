@@ -322,18 +322,19 @@ export async function processLead(
       console.error("Pixel Com&Click Nvidia error (non bloquant):", err);
     }
   } else if (channel === "form") {
-    const productId = data.email;
     const pixelUrl =
-      `https://comandclick.com/scripts/sale.php?AccountId=5db4e65a&TotalCost=35` +
-      `&CampaignID=jqyvg8ky&ProductID=${encodeURIComponent(productId)}`;
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `&CampaignID=jqyvg8ky&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}` +
+      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
     try {
       const pixelResp = await fetch(pixelUrl, {
         method: "GET",
         headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
       });
       pixelStatus = pixelResp.ok
-        ? `✅ Pixel formulaire déclenché (ProductID: ${productId})`
-        : `❌ Pixel formulaire erreur HTTP ${pixelResp.status} (ProductID: ${productId})`;
+        ? `✅ Pixel formulaire déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
+        : `❌ Pixel formulaire erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
     } catch (err) {
       pixelStatus = `❌ Pixel formulaire erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click formulaire error (non bloquant):", err);
