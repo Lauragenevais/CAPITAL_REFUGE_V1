@@ -385,6 +385,8 @@ export async function processLead(
   if (resendKey && lovableApiKey && notifyTo) {
     try {
       const origin = channel === "api" ? "API externe" : "Formulaire landing page";
+      const sheetOk = sheetStatus.startsWith("✅");
+      const pixelOk = pixelStatus.startsWith("✅");
       const resp = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
         method: "POST",
         headers: {
@@ -395,7 +397,7 @@ export async function processLead(
         body: JSON.stringify({
           from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Amazon <onboarding@resend.dev>",
           to: [notifyTo],
-          subject: `[NOUVEAU LEAD - ${operation}] ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
+          subject: `[NOUVEAU LEAD - ${operation}] ${sheetOk ? "✅" : "❌"} Sheet ${pixelOk ? "✅" : "❌"} Pixel - ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
           text:
             `Nouveau lead enregistré:\n\n` +
             `📌 Provenance: ${origin} (${operation})\n\n` +
