@@ -333,8 +333,8 @@ export async function processLead(
         headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
       });
       pixelStatus = pixelResp.ok
-        ? `✅ Pixel formulaire déclenché (ProductID: ${productId})`
-        : `❌ Pixel formulaire erreur HTTP ${pixelResp.status} (ProductID: ${productId})`;
+        ? `✅ Pixel formulaire déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
+        : `❌ Pixel formulaire erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
     } catch (err) {
       pixelStatus = `❌ Pixel formulaire erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click formulaire error (non bloquant):", err);
