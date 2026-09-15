@@ -378,6 +378,28 @@ export async function processLead(
     }
   }
 
+  // Pixel CampCDTrack01 — source jqs8buxy, identifiant selon l'opération
+  let campCdStatus = "⏭️ Non déclenché (source non concernée)";
+  if (data.source === "jqs8buxy" && (operation === "CHATGPT" || operation === "NVIDIA")) {
+    const campCdClickId = data.click_id || "";
+    const campCdId = operation === "CHATGPT" ? "5999" : "6000";
+    const campCdPixelUrl =
+      `https://www.camp-cd-track01.com/tracking/cpx.php?idc=${campCdId}&type=cpl&tracking=nodata` +
+      `&direct=${encodeURIComponent(campCdClickId)}`;
+    try {
+      const campCdResp = await fetch(campCdPixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      campCdStatus = campCdResp.ok
+        ? `✅ Pixel CampCDTrack01 ${operation} déclenché (direct: ${campCdClickId || "-"})`
+        : `❌ Pixel CampCDTrack01 ${operation} erreur HTTP ${campCdResp.status} (direct: ${campCdClickId || "-"})`;
+    } catch (err) {
+      campCdStatus = `❌ Pixel CampCDTrack01 ${operation} erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel CampCDTrack01 error (non bloquant):", err);
+    }
+  }
+
   // Notification email (non bloquant)
   const resendKey = process.env["RESEND_API_KEY"];
   const lovableApiKey = process.env["LOVABLE_API_KEY"];
@@ -406,7 +428,8 @@ export async function processLead(
             `Click ID: ${data.click_id || "aucun"}\nIP: ${ipAddress}\n\n` +
             `Google Sheet: ${sheetStatus}\n` +
             `Pixel Com&Click: ${pixelStatus}\n` +
-            `Pixel AdkConvert: ${adkPixelStatus}`,
+            `Pixel AdkConvert: ${adkPixelStatus}\n` +
+            `Pixel CampCDTrack01: ${campCdStatus}`,
         }),
       });
       if (!resp.ok) {
