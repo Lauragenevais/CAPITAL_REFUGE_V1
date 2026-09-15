@@ -428,7 +428,8 @@ export async function processLead(
             `Click ID: ${data.click_id || "aucun"}\nIP: ${ipAddress}\n\n` +
             `Google Sheet: ${sheetStatus}\n` +
             `Pixel Com&Click: ${pixelStatus}\n` +
-            `Pixel AdkConvert: ${adkPixelStatus}`,
+            `Pixel AdkConvert: ${adkPixelStatus}\n` +
+            `Pixel CampCDTrack01: ${campCdStatus}`,
         }),
       });
       if (!resp.ok) {
