@@ -70,7 +70,7 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
           consent: true,
           source,
           click_id: clickId,
-          ...(operation ? { operation } : {}),
+          operation: operation ?? "AMAZON",
         }),
       });
 
