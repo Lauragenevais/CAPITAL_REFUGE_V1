@@ -344,7 +344,7 @@ export async function processLead(
     }
   } else if (channel === "form" && operation === "ROBOT") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=20` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
       `&CampaignID=7p2u1h5l&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
