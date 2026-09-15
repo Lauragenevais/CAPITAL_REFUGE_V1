@@ -95,7 +95,8 @@ export default function ApiDocs() {
     "phone": "0612345678",
     "consent": true,
     "source": "partenaire-x",
-    "click_id": "abc123"
+    "click_id": "abc123",
+    "operation": "AMAZON"
   }'`;
 
   const jsSnippet = `await fetch("${endpoint}", {
