@@ -78,6 +78,12 @@ const FIELDS: { name: string; type: string; required: boolean; desc: string }[] 
     required: false,
     desc: "Champ libre, 120 caractères max. Identifiant de clic ou de campagne au choix du partenaire.",
   },
+  {
+    name: "operation",
+    type: "string",
+    required: false,
+    desc: "Type d'opération enregistrée : AMAZON, CHATGPT, NVIDIA, LIVRET ou ROBOT. Par défaut : AMAZON.",
+  },
 ];
 
 const CODES: { code: string; label: string; desc: string }[] = [
@@ -106,7 +112,8 @@ function ApiDocsPage() {
     "phone": "0612345678",
     "consent": true,
     "source": "partenaire-x",
-    "click_id": "abc123"
+    "click_id": "abc123",
+    "operation": "AMAZON"
   }'`;
 
   const jsSnippet = `await fetch("${endpoint}", {
@@ -122,6 +129,7 @@ function ApiDocsPage() {
     phone: "+33 6 12 34 56 78",
     consent: true,
     source: "partenaire-x",
+    operation: "AMAZON",
   }),
 });`;
 
