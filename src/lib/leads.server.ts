@@ -409,6 +409,16 @@ export async function processLead(
       const origin = channel === "api" ? "API externe" : "Formulaire landing page";
       const sheetOk = sheetStatus.startsWith("✅");
       const pixelOk = pixelStatus.startsWith("✅");
+      const adkOk = adkPixelStatus.startsWith("✅");
+      const campCdOk = campCdStatus.startsWith("✅");
+
+      const triggered: string[] = [];
+      const notTriggered: string[] = [];
+      if (sheetOk) triggered.push("Google Sheet"); else notTriggered.push("Google Sheet");
+      if (pixelOk) triggered.push("Pixel Com&Click"); else notTriggered.push("Pixel Com&Click");
+      if (adkOk) triggered.push("Pixel AdkConvert"); else notTriggered.push("Pixel AdkConvert");
+      if (campCdOk) triggered.push("Pixel CampCDTrack01"); else notTriggered.push("Pixel CampCDTrack01");
+
       const resp = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
         method: "POST",
         headers: {
@@ -426,6 +436,9 @@ export async function processLead(
             `Nom: ${data.last_name}\nPrénom: ${data.first_name}\nEmail: ${data.email}\n` +
             `Téléphone: ${data.phone}\nSource: ${data.source || "direct"}\n` +
             `Click ID: ${data.click_id || "aucun"}\nIP: ${ipAddress}\n\n` +
+            `--- RÉSUMÉ DES ACTIONS ---\n` +
+            `✅ Déclenchés: ${triggered.length > 0 ? triggered.join(", ") : "aucun"}\n` +
+            `❌ Non déclenchés: ${notTriggered.length > 0 ? notTriggered.join(", ") : "aucun"}\n\n` +
             `Google Sheet: ${sheetStatus}\n` +
             `Pixel Com&Click: ${pixelStatus}\n` +
             `Pixel AdkConvert: ${adkPixelStatus}\n` +
