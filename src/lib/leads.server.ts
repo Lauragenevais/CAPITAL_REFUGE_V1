@@ -251,11 +251,14 @@ export async function processLead(
   const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
   const sheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
   const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
+  const isLivretRobotApi =
+    channel === "api" && (operation === "LIVRET" || operation === "ROBOT");
+  const targetSheetTab = isLivretRobotApi ? "Livret - Robot" : sheetTab;
 
   if (serviceAccountKey && sheetId) {
     try {
       const token = await getGoogleAccessToken(serviceAccountKey);
-      await ensureOperationHeader(token, sheetId, sheetTab);
+      await ensureOperationHeader(token, sheetId, targetSheetTab);
       await insertAtTopOfGoogleSheet(
         token,
         sheetId,
@@ -274,9 +277,9 @@ export async function processLead(
             operation,
           ],
         ],
-        sheetTab,
+        targetSheetTab,
       );
-      sheetStatus = "✅ Ajouté au Google Sheet";
+      sheetStatus = `✅ Ajouté au Google Sheet${targetSheetTab ? ` (onglet "${targetSheetTab}")` : ""}`;
     } catch (err) {
       sheetStatus = `❌ Erreur Google Sheet: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Google Sheet error (non bloquant):", err);
