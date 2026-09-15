@@ -414,6 +414,42 @@ export async function processLead(
       pixelStatus = `❌ Pixel API Robot erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click API Robot error (non bloquant):", err);
     }
+  } else if (channel === "api" && operation === "CHATGPT") {
+    const pixelUrl =
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `&CampaignID=mhmcapt7&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}` +
+      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
+    try {
+      const pixelResp = await fetch(pixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      pixelStatus = pixelResp.ok
+        ? `✅ Pixel API ChatGPT déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
+        : `❌ Pixel API ChatGPT erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
+    } catch (err) {
+      pixelStatus = `❌ Pixel API ChatGPT erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click API ChatGPT error (non bloquant):", err);
+    }
+  } else if (channel === "api" && operation === "NVIDIA") {
+    const pixelUrl =
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `&CampaignID=s9e5x30u&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}` +
+      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
+    try {
+      const pixelResp = await fetch(pixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      pixelStatus = pixelResp.ok
+        ? `✅ Pixel API Nvidia déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
+        : `❌ Pixel API Nvidia erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
+    } catch (err) {
+      pixelStatus = `❌ Pixel API Nvidia erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click API Nvidia error (non bloquant):", err);
+    }
   } else if (channel === "api") {
     const pixelUrl =
       `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
