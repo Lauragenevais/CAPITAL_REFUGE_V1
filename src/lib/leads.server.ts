@@ -432,7 +432,7 @@ export async function processLead(
         body: JSON.stringify({
           from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Amazon <onboarding@resend.dev>",
           to: [notifyTo],
-          subject: `[NOUVEAU LEAD - ${operation}] ${sheetOk ? "✅" : "❌"} Sheet ${pixelOk ? "✅" : "❌"} Pixel - ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
+          subject: `[LEAD ${channel === "api" ? "API" : "FORMULAIRE"} - ${operation}] ${sheetOk ? "✅" : "❌"} Sheet ${pixelOk ? "✅" : "❌"} Pixel - ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
           text:
             `Nouveau lead enregistré:\n\n` +
             `📌 Provenance: ${origin} (${operation})\n\n` +
