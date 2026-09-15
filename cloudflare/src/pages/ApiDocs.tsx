@@ -112,6 +112,7 @@ export default function ApiDocs() {
     phone: "+33 6 12 34 56 78",
     consent: true,
     source: "partenaire-x",
+    operation: "AMAZON",
   }),
 });`;
 
