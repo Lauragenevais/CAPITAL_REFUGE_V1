@@ -58,7 +58,14 @@ const FIELDS: { name: string; type: string; required: boolean; desc: string }[] 
     required: false,
     desc: "Champ libre, 120 caractères max. Identifiant de clic ou de campagne au choix du partenaire.",
   },
+  {
+    name: "operation",
+    type: "string",
+    required: true,
+    desc: "Type d'opération enregistrée : AMAZON, CHATGPT, NVIDIA, LIVRET ou ROBOT.",
+  },
 ];
+
 
 const CODES: { code: string; label: string; desc: string }[] = [
   { code: "201", label: "Créé", desc: "Le lead est enregistré, envoyé dans le Google Sheet et notifié par email." },
@@ -88,7 +95,8 @@ export default function ApiDocs() {
     "phone": "0612345678",
     "consent": true,
     "source": "partenaire-x",
-    "click_id": "abc123"
+    "click_id": "abc123",
+    "operation": "AMAZON"
   }'`;
 
   const jsSnippet = `await fetch("${endpoint}", {
@@ -104,6 +112,7 @@ export default function ApiDocs() {
     phone: "+33 6 12 34 56 78",
     consent: true,
     source: "partenaire-x",
+    operation: "AMAZON",
   }),
 });`;
 
