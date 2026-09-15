@@ -81,8 +81,8 @@ const FIELDS: { name: string; type: string; required: boolean; desc: string }[] 
   {
     name: "operation",
     type: "string",
-    required: false,
-    desc: "Type d'opération enregistrée : AMAZON, CHATGPT, NVIDIA, LIVRET ou ROBOT. Par défaut : AMAZON.",
+    required: true,
+    desc: "Type d'opération enregistrée : AMAZON, CHATGPT, NVIDIA, LIVRET ou ROBOT.",
   },
 ];
 

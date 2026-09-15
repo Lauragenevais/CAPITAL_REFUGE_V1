@@ -13,7 +13,7 @@ export const leadSchema = z.object({
   consent: z.literal(true),
   source: z.string().max(60).optional(),
   click_id: z.string().max(120).optional(),
-  operation: z.enum(["AMAZON", "CHATGPT", "NVIDIA", "LIVRET", "ROBOT"]).optional(),
+  operation: z.enum(["AMAZON", "CHATGPT", "NVIDIA", "LIVRET", "ROBOT"]),
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
