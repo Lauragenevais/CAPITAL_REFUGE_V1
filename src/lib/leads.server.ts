@@ -272,7 +272,7 @@ export async function processLead(
             String(data.consent).toUpperCase(),
             ipAddress,
             data.source ?? "",
-            data.click_id ?? "",
+            data.source === "6g7do0kw" ? "SMS" : (data.click_id ?? ""),
             parisTimestamp(),
             operation,
           ],
