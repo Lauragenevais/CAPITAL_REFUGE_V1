@@ -155,6 +155,7 @@
 /* Palette dédiée à /google : les quatre couleurs du logo Google */
 .theme-google {
   --google-blue: #4285f4;
+  --google-action: #185abc;
   --google-red: #ea4335;
   --google-yellow: #fbbc05;
   --google-green: #34a853;
@@ -172,19 +173,33 @@
   --border: oklch(0.82 0.018 250);
   --input: oklch(0.82 0.018 250);
   --muted: oklch(0.88 0.016 250);
-  --muted-foreground: oklch(0.48 0.025 255);
+  --muted-foreground: oklch(0.39 0.03 255);
 
-  --primary: var(--google-blue);
+  --primary: var(--google-action);
   --primary-foreground: oklch(1 0 0);
   --primary-glow: oklch(0.62 0.2 255);
   --accent: var(--google-green);
   --accent-foreground: oklch(1 0 0);
-  --ring: var(--google-blue);
+  --ring: var(--google-action);
 
   --gradient-gold: linear-gradient(135deg, var(--google-blue), oklch(0.56 0.22 258));
   --gradient-ink: linear-gradient(180deg, oklch(0.935 0.012 250), oklch(0.89 0.02 248));
   --shadow-gold: 0 18px 44px -18px color-mix(in oklab, var(--google-blue) 55%, transparent);
   --shadow-panel: 0 30px 70px -34px oklch(0.28 0.04 255 / 0.28);
+}
+
+.theme-google :where(a, button, input, [role="checkbox"], [data-slot="accordion-trigger"]):focus-visible {
+  outline: 3px solid var(--google-action);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px var(--panel);
+}
+
+.theme-google :where(p, li, dd, blockquote) {
+  line-height: 1.7;
+}
+
+.theme-google :where(a, button) {
+  text-underline-offset: 0.2em;
 }
 
 @layer base {
