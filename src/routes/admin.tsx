@@ -235,7 +235,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
               <Download className="mr-2 h-4 w-4" /> Export CSV
             </Button>
             <Button variant="outline" asChild>
-              <Link to="/admin_/adstrack">
+              <Link to="/admin/adstrack">
                 <Send className="mr-2 h-4 w-4" /> Envois Adstrack
               </Link>
             </Button>
