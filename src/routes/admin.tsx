@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
-import { Download, LockKeyhole, LogOut, RefreshCw, Search } from "lucide-react";
+import { Download, LockKeyhole, LogOut, RefreshCw, Search, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -233,6 +233,11 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             </Button>
             <Button variant="outline" onClick={exportCsv}>
               <Download className="mr-2 h-4 w-4" /> Export CSV
+            </Button>
+            <Button variant="outline" asChild>
+              <Link to="/admin/adstrack">
+                <Send className="mr-2 h-4 w-4" /> Envois Adstrack
+              </Link>
             </Button>
             <Button
               variant="ghost"

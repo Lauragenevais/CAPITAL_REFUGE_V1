@@ -27,6 +27,7 @@ import { Route as PolitiqueConfidentialiteChatgptRouteImport } from './routes/po
 import { Route as PolitiqueConfidentialiteGoogleRouteImport } from './routes/politique-confidentialite-google'
 import { Route as PolitiqueConfidentialiteNvidiaRouteImport } from './routes/politique-confidentialite-nvidia'
 import { Route as PolitiqueConfidentialitePaypalRouteImport } from './routes/politique-confidentialite-paypal'
+import { Route as AdminAdstrackRouteImport } from './routes/admin_.adstrack'
 import { Route as ApiPublicAdminRouteImport } from './routes/api/public/admin'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicLeadsRouteImport } from './routes/api/public/leads'
@@ -126,6 +127,11 @@ const PolitiqueConfidentialitePaypalRoute =
     path: '/politique-confidentialite-paypal',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AdminAdstrackRoute = AdminAdstrackRouteImport.update({
+  id: '/admin_/adstrack',
+  path: '/admin/adstrack',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicAdminRoute = ApiPublicAdminRouteImport.update({
   id: '/api/public/admin',
   path: '/api/public/admin',
@@ -161,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/politique-confidentialite-google': typeof PolitiqueConfidentialiteGoogleRoute
   '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
   '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
+  '/admin/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -184,6 +191,7 @@ export interface FileRoutesByTo {
   '/politique-confidentialite-google': typeof PolitiqueConfidentialiteGoogleRoute
   '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
   '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
+  '/admin/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/politique-confidentialite-google': typeof PolitiqueConfidentialiteGoogleRoute
   '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
   '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
+  '/admin_/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -233,6 +242,7 @@ export interface FileRouteTypes {
     | '/politique-confidentialite-google'
     | '/politique-confidentialite-nvidia'
     | '/politique-confidentialite-paypal'
+    | '/admin/adstrack'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -256,6 +266,7 @@ export interface FileRouteTypes {
     | '/politique-confidentialite-google'
     | '/politique-confidentialite-nvidia'
     | '/politique-confidentialite-paypal'
+    | '/admin/adstrack'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -279,6 +290,7 @@ export interface FileRouteTypes {
     | '/politique-confidentialite-google'
     | '/politique-confidentialite-nvidia'
     | '/politique-confidentialite-paypal'
+    | '/admin_/adstrack'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -303,6 +315,7 @@ export interface RootRouteChildren {
   PolitiqueConfidentialiteGoogleRoute: typeof PolitiqueConfidentialiteGoogleRoute
   PolitiqueConfidentialiteNvidiaRoute: typeof PolitiqueConfidentialiteNvidiaRoute
   PolitiqueConfidentialitePaypalRoute: typeof PolitiqueConfidentialitePaypalRoute
+  AdminAdstrackRoute: typeof AdminAdstrackRoute
   ApiPublicAdminRoute: typeof ApiPublicAdminRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   ApiPublicLeadsRoute: typeof ApiPublicLeadsRoute
@@ -436,6 +449,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PolitiqueConfidentialitePaypalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/adstrack': {
+      id: '/admin_/adstrack'
+      path: '/admin/adstrack'
+      fullPath: '/admin/adstrack'
+      preLoaderRoute: typeof AdminAdstrackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/admin': {
       id: '/api/public/admin'
       path: '/api/public/admin'
@@ -479,6 +499,7 @@ const rootRouteChildren: RootRouteChildren = {
   PolitiqueConfidentialiteGoogleRoute: PolitiqueConfidentialiteGoogleRoute,
   PolitiqueConfidentialiteNvidiaRoute: PolitiqueConfidentialiteNvidiaRoute,
   PolitiqueConfidentialitePaypalRoute: PolitiqueConfidentialitePaypalRoute,
+  AdminAdstrackRoute: AdminAdstrackRoute,
   ApiPublicAdminRoute: ApiPublicAdminRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   ApiPublicLeadsRoute: ApiPublicLeadsRoute,

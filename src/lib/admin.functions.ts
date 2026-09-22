@@ -98,3 +98,33 @@ export const updateLead = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true as const };
   });
+
+export type AdstrackSend = {
+  id: string;
+  channel: string;
+  operation: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  source: string;
+  ip_address: string;
+  ok: boolean;
+  response_status: number | null;
+  response_body: string;
+  created_at: string;
+};
+
+export const listAdstrackSends = createServerFn({ method: "GET" }).handler(async () => {
+  await requireAdmin();
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
+    .from("adstrack_sends")
+    .select(
+      "id, channel, operation, first_name, last_name, email, phone, source, ip_address, ok, response_status, response_body, created_at",
+    )
+    .order("created_at", { ascending: false })
+    .limit(2000);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as AdstrackSend[];
+});

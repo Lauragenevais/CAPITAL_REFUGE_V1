@@ -63,6 +63,7 @@ function tokenValid(token: string | null): boolean {
 const bodySchema = z.discriminatedUnion("action", [
   z.object({ action: z.literal("login"), password: z.string().min(1).max(200) }),
   z.object({ action: z.literal("list") }),
+  z.object({ action: z.literal("adstrack") }),
   z.object({
     action: z.literal("update"),
     id: z.string().uuid(),
@@ -128,6 +129,18 @@ export const Route = createFileRoute("/api/public/admin")({
               .limit(2000);
             if (error) throw new Error(error.message);
             return json({ ok: true, leads: data ?? [] });
+          }
+
+          if (body.action === "adstrack") {
+            const { data, error } = await supabaseAdmin
+              .from("adstrack_sends")
+              .select(
+                "id, channel, operation, first_name, last_name, email, phone, source, ip_address, ok, response_status, response_body, created_at",
+              )
+              .order("created_at", { ascending: false })
+              .limit(2000);
+            if (error) throw new Error(error.message);
+            return json({ ok: true, sends: data ?? [] });
           }
 
           const patch: { status?: string; notes?: string } = {};

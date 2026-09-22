@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Download, LockKeyhole, LogOut, RefreshCw, Search, Send } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ArrowLeft, Download, LockKeyhole, RefreshCw, Search } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -9,27 +9,20 @@ import { useHead } from "@/hooks/useHead";
 import { apiUrl } from "@/lib/api";
 
 const TOKEN_KEY = "ac-admin-token";
-const STATUSES = ["nouveau", "contacté", "converti", "perdu"] as const;
 
-const STATUS_CLASS: Record<string, string> = {
-  nouveau: "bg-muted text-foreground",
-  "contacté": "bg-primary/15 text-primary",
-  converti: "bg-accent/15 text-accent",
-  perdu: "bg-destructive/15 text-destructive",
-};
-
-type AdminLead = {
+type AdstrackSend = {
   id: string;
+  channel: string;
+  operation: string;
   first_name: string;
   last_name: string;
   email: string;
   phone: string;
   source: string;
-  click_id: string;
-  pays: string;
   ip_address: string;
-  status: string;
-  notes: string;
+  ok: boolean;
+  response_status: number | null;
+  response_body: string;
   created_at: string;
 };
 
@@ -61,10 +54,10 @@ function loginErrorMessage(message: string): string {
   return "Connexion impossible";
 }
 
-export default function Admin() {
+export default function AdstrackSends() {
   useHead({
-    title: "Suivi des leads — Amazon Capital",
-    description: "Espace privé de suivi des demandes reçues via le site.",
+    title: "Suivi des envois Adstrack — Amazon Capital",
+    description: "Espace privé de suivi des leads transmis au webservice Adstrack CRP19.",
   });
 
   const [token, setToken] = useState<string | null>(null);
@@ -124,7 +117,7 @@ function LoginScreen({ onSuccess }: { onSuccess: (token: string) => void }) {
         </span>
         <h1 className="mt-5 text-xl font-bold">Espace administrateur</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Saisissez le mot de passe pour accéder au suivi des leads.
+          Saisissez le mot de passe pour accéder au suivi des envois Adstrack.
         </p>
         <Input
           type="password"
@@ -143,24 +136,25 @@ function LoginScreen({ onSuccess }: { onSuccess: (token: string) => void }) {
 }
 
 function Dashboard({ token, onLogout }: { token: string; onLogout: () => void }) {
-  const [leads, setLeads] = useState<AdminLead[]>([]);
+  const [sends, setSends] = useState<AdstrackSend[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("tous");
   const [sourceFilter, setSourceFilter] = useState("toutes");
+  const [resultFilter, setResultFilter] = useState("tous");
+  const [channelFilter, setChannelFilter] = useState("formulaire");
   const [period, setPeriod] = useState("tout");
 
   async function load() {
     setLoading(true);
     try {
-      const res = await callAdmin<{ leads: AdminLead[] }>({ action: "list" }, token);
-      setLeads(res.leads);
+      const res = await callAdmin<{ sends: AdstrackSend[] }>({ action: "adstrack" }, token);
+      setSends(res.sends);
     } catch (err) {
       if ((err as Error).message === "unauthorized") {
         toast.error("Session expirée, reconnectez-vous");
         onLogout();
       } else {
-        toast.error("Impossible de charger les leads");
+        toast.error("Impossible de charger les envois");
       }
     } finally {
       setLoading(false);
@@ -173,8 +167,8 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
   }, []);
 
   const sources = useMemo(
-    () => Array.from(new Set(leads.map((l) => l.source).filter(Boolean))).sort(),
-    [leads],
+    () => Array.from(new Set(sends.map((s) => s.source).filter(Boolean))).sort(),
+    [sends],
   );
 
   const filtered = useMemo(() => {
@@ -189,74 +183,58 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
             ? 2592000000
             : null;
 
-    return leads.filter((l) => {
-      if (statusFilter !== "tous" && l.status !== statusFilter) return false;
-      if (sourceFilter !== "toutes" && l.source !== sourceFilter) return false;
-      if (periodMs && now - new Date(l.created_at).getTime() > periodMs) return false;
+    return sends.filter((s) => {
+      if (channelFilter === "formulaire" && s.channel !== "form") return false;
+      if (channelFilter === "api" && s.channel !== "api") return false;
+      if (sourceFilter !== "toutes" && s.source !== sourceFilter) return false;
+      if (resultFilter === "succes" && !s.ok) return false;
+      if (resultFilter === "echecs" && s.ok) return false;
+      if (periodMs && now - new Date(s.created_at).getTime() > periodMs) return false;
       if (!q) return true;
-      return `${l.first_name} ${l.last_name} ${l.email} ${l.phone} ${l.source}`
+      return `${s.first_name} ${s.last_name} ${s.email} ${s.phone} ${s.source} ${s.response_body}`
         .toLowerCase()
         .includes(q);
     });
-  }, [leads, search, statusFilter, sourceFilter, period]);
+  }, [sends, search, sourceFilter, resultFilter, channelFilter, period]);
 
   const stats = useMemo(() => {
     const now = Date.now();
     return {
-      total: leads.length,
-      today: leads.filter((l) => now - new Date(l.created_at).getTime() < 86400000).length,
-      week: leads.filter((l) => now - new Date(l.created_at).getTime() < 604800000).length,
-      converted: leads.filter((l) => l.status === "converti").length,
+      total: filtered.length,
+      today: filtered.filter((s) => now - new Date(s.created_at).getTime() < 86400000).length,
+      ok: filtered.filter((s) => s.ok).length,
+      ko: filtered.filter((s) => !s.ok).length,
     };
-  }, [leads]);
-
-  async function setStatus(lead: AdminLead, status: string) {
-    setLeads((prev) => prev.map((l) => (l.id === lead.id ? { ...l, status } : l)));
-    try {
-      await callAdmin({ action: "update", id: lead.id, status }, token);
-    } catch {
-      toast.error("Mise à jour impossible");
-      void load();
-    }
-  }
-
-  async function saveNotes(lead: AdminLead, notes: string) {
-    if (notes === lead.notes) return;
-    setLeads((prev) => prev.map((l) => (l.id === lead.id ? { ...l, notes } : l)));
-    try {
-      await callAdmin({ action: "update", id: lead.id, notes }, token);
-      toast.success("Note enregistrée");
-    } catch {
-      toast.error("Enregistrement impossible");
-    }
-  }
+  }, [filtered]);
 
   function exportCsv() {
     const headers = [
       "Date",
+      "Canal",
+      "Opération",
       "Prénom",
       "Nom",
       "Email",
       "Téléphone",
       "Source",
-      "Click ID",
-      "Pays",
       "IP",
-      "Statut",
-      "Notes",
+      "Résultat",
+      "Code HTTP",
+      "Réponse",
     ];
-    const rows = filtered.map((l) => [
-      new Date(l.created_at).toLocaleString("fr-FR"),
-      l.first_name,
-      l.last_name,
-      l.email,
-      l.phone,
-      l.source,
-      l.click_id,
-      l.pays,
-      l.ip_address,
-      l.status,
-      l.notes,
+    const rows = filtered.map((s) => [
+      new Date(s.created_at).toLocaleString("fr-FR"),
+      s.channel === "api" ? "API" : "Formulaire",
+      s.operation,
+      s.first_name,
+      s.last_name,
+      s.email,
+      s.phone,
+      s.source,
+      s.ip_address,
+      s.ok ? "Succès" : "Échec",
+      s.response_status ?? "",
+      s.response_body,
     ]);
     const csv = [headers, ...rows]
       .map((r) => r.map((c) => `"${String(c ?? "").replace(/"/g, '""')}"`).join(";"))
@@ -264,7 +242,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
     const url = URL.createObjectURL(new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `leads-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `adstrack-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -274,23 +252,22 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
       <header className="border-b border-border/60 bg-surface/60">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-5">
           <div>
-            <h1 className="font-display text-xl font-bold">Suivi des leads</h1>
-            <p className="text-sm text-muted-foreground">Espace administrateur — Amazon Capital</p>
+            <h1 className="font-display text-xl font-bold">Suivi des envois Adstrack</h1>
+            <p className="text-sm text-muted-foreground">
+              Campagne CRP19 — chaque lead transmis, sa source, la réponse reçue et la date.
+            </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="ghost" asChild>
+              <Link to="/admin">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Leads
+              </Link>
+            </Button>
             <Button variant="outline" onClick={() => void load()} disabled={loading}>
               <RefreshCw className="mr-2 h-4 w-4" /> Actualiser
             </Button>
             <Button variant="outline" onClick={exportCsv}>
               <Download className="mr-2 h-4 w-4" /> Export CSV
-            </Button>
-            <Button variant="outline" asChild>
-              <Link to="/admin/adstrack">
-                <Send className="mr-2 h-4 w-4" /> Envois Adstrack
-              </Link>
-            </Button>
-            <Button variant="ghost" onClick={onLogout}>
-              <LogOut className="mr-2 h-4 w-4" /> Quitter
             </Button>
           </div>
         </div>
@@ -299,44 +276,41 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
       <main className="mx-auto max-w-7xl px-4 py-8">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {[
-            { label: "Total leads", value: stats.total },
+            { label: "Envois affichés", value: stats.total },
             { label: "Aujourd'hui", value: stats.today },
-            { label: "7 derniers jours", value: stats.week },
-            { label: "Convertis", value: stats.converted },
+            { label: "Succès", value: stats.ok },
+            { label: "Échecs", value: stats.ko },
           ].map((s) => (
             <div key={s.label} className="rounded-2xl border border-border/70 bg-card p-5">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">{s.label}</p>
-              <p className="mt-2 text-3xl font-bold">{s.value}</p>
+              <p className="text-sm text-muted-foreground">{s.label}</p>
+              <p className="mt-1 text-2xl font-bold">{s.value}</p>
             </div>
           ))}
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-6 flex flex-wrap gap-3">
           <div className="relative min-w-[220px] flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher un nom, email, téléphone…"
+              placeholder="Rechercher un nom, email, source…"
               className="pl-9"
             />
           </div>
           <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className={selectClass("w-44")}
+            value={channelFilter}
+            onChange={(e) => setChannelFilter(e.target.value)}
+            className={selectClass("w-[170px]")}
           >
-            <option value="tous">Tous les statuts</option>
-            {STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
+            <option value="formulaire">Formulaire</option>
+            <option value="api">API externe</option>
+            <option value="tous">Tous les canaux</option>
           </select>
           <select
             value={sourceFilter}
             onChange={(e) => setSourceFilter(e.target.value)}
-            className={selectClass("w-44")}
+            className={selectClass("w-[170px]")}
           >
             <option value="toutes">Toutes les sources</option>
             {sources.map((s) => (
@@ -346,9 +320,18 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
             ))}
           </select>
           <select
+            value={resultFilter}
+            onChange={(e) => setResultFilter(e.target.value)}
+            className={selectClass("w-[150px]")}
+          >
+            <option value="tous">Tous résultats</option>
+            <option value="succes">Succès</option>
+            <option value="echecs">Échecs</option>
+          </select>
+          <select
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
-            className={selectClass("w-40")}
+            className={selectClass("w-[150px]")}
           >
             <option value="tout">Toute la période</option>
             <option value="jour">24 heures</option>
@@ -359,75 +342,61 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
 
         <div className="mt-6 overflow-x-auto rounded-2xl border border-border/70 bg-card">
           <table className="w-full min-w-[900px] text-sm">
-            <thead className="border-b border-border/70 text-left text-xs uppercase tracking-wide text-muted-foreground">
+            <thead className="bg-surface/60 text-left text-muted-foreground">
               <tr>
-                <th className="px-4 py-3">Date</th>
-                <th className="px-4 py-3">Contact</th>
-                <th className="px-4 py-3">Téléphone</th>
-                <th className="px-4 py-3">Source</th>
-                <th className="px-4 py-3">Statut</th>
-                <th className="px-4 py-3">Notes</th>
+                <th className="px-4 py-3 font-medium">Date</th>
+                <th className="px-4 py-3 font-medium">Lead</th>
+                <th className="px-4 py-3 font-medium">Source</th>
+                <th className="px-4 py-3 font-medium">Opération</th>
+                <th className="px-4 py-3 font-medium">Canal</th>
+                <th className="px-4 py-3 font-medium">Réponse reçue</th>
               </tr>
             </thead>
             <tbody>
-              {loading && (
+              {loading ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
                     Chargement…
                   </td>
                 </tr>
-              )}
-              {!loading && filtered.length === 0 && (
+              ) : filtered.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
-                    Aucun lead
+                    Aucun envoi pour ces critères.
                   </td>
                 </tr>
+              ) : (
+                filtered.map((s) => (
+                  <tr key={s.id} className="border-t border-border/60 align-top">
+                    <td className="whitespace-nowrap px-4 py-3">
+                      {new Date(s.created_at).toLocaleString("fr-FR")}
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="font-medium">
+                        {s.last_name} {s.first_name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{s.email}</p>
+                      <p className="text-xs text-muted-foreground">{s.phone}</p>
+                    </td>
+                    <td className="px-4 py-3">{s.source || "direct"}</td>
+                    <td className="px-4 py-3">{s.operation || "—"}</td>
+                    <td className="px-4 py-3">{s.channel === "api" ? "API" : "Formulaire"}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+                          s.ok ? "bg-accent/15 text-accent" : "bg-destructive/15 text-destructive"
+                        }`}
+                      >
+                        {s.ok ? "Succès" : "Échec"}
+                        {s.response_status ? ` · ${s.response_status}` : ""}
+                      </span>
+                      <p className="mt-1 max-w-md break-words text-xs text-muted-foreground">
+                        {s.response_body || "réponse vide"}
+                      </p>
+                    </td>
+                  </tr>
+                ))
               )}
-              {filtered.map((lead) => (
-                <tr key={lead.id} className="border-b border-border/40 align-top last:border-0">
-                  <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
-                    {new Date(lead.created_at).toLocaleString("fr-FR", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </td>
-                  <td className="px-4 py-3">
-                    <p className="font-medium">
-                      {lead.first_name} {lead.last_name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">{lead.email}</p>
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-3">{lead.phone}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{lead.source || "—"}</td>
-                  <td className="px-4 py-3">
-                    <select
-                      value={lead.status}
-                      onChange={(e) => void setStatus(lead, e.target.value)}
-                      className={`h-8 w-36 rounded-md border-0 px-2 text-xs font-semibold outline-none ${
-                        STATUS_CLASS[lead.status] ?? "bg-muted"
-                      }`}
-                    >
-                      {STATUSES.map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Input
-                      defaultValue={lead.notes}
-                      placeholder="Ajouter une note…"
-                      className="h-8 w-56 text-xs"
-                      onBlur={(e) => void saveNotes(lead, e.target.value)}
-                    />
-                  </td>
-                </tr>
-              ))}
             </tbody>
           </table>
         </div>

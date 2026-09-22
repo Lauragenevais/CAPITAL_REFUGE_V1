@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      adstrack_sends: {
+        Row: {
+          channel: string
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          ip_address: string
+          last_name: string
+          ok: boolean
+          operation: string
+          phone: string
+          request_url: string
+          response_body: string
+          response_status: number | null
+          source: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          ip_address?: string
+          last_name?: string
+          ok?: boolean
+          operation?: string
+          phone?: string
+          request_url?: string
+          response_body?: string
+          response_status?: number | null
+          source?: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          ip_address?: string
+          last_name?: string
+          ok?: boolean
+          operation?: string
+          phone?: string
+          request_url?: string
+          response_body?: string
+          response_status?: number | null
+          source?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           click_id: string
