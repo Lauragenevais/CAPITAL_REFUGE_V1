@@ -34,14 +34,14 @@ const SECTIONS = [
   {
     title: "Collecte des données personnelles",
     content: [
-      "Nous collectons les informations que vous nous fournissez volontairement via le formulaire Google Capital : nom, prénom, email, téléphone, adresse IP, ainsi que l'opération concernée (Google).",
+      "Nous collectons les informations que vous nous fournissez volontairement via le formulaire Google Capital : nom, prénom, email, téléphone, adresse IP, ainsi que l'opération concernée (GOOGLE).",
     ],
   },
   {
     title: "Utilisation des données",
     content: [
       "Vos données sont utilisées uniquement pour :",
-      "- Vous recontacter suite à votre demande d'information sur l'action Google (GOOGL et GOOG) et son écosystème de recherche, cloud et intelligence artificielle",
+      "- Vous recontacter suite à votre demande d'information sur les actions Alphabet (GOOGL et GOOG) et son écosystème de recherche, cloud et intelligence artificielle",
       "- Vous envoyer la documentation demandée",
       "- Vous tenir informé de nos offres (avec votre consentement)",
       "- Transmettre vos coordonnées à nos partenaires commerciaux dans le cadre du programme Google Capital",
