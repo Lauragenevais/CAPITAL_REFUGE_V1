@@ -2,6 +2,62 @@ import { z } from "zod";
 
 const OPERATION = "AMAZON";
 
+/**
+ * ---------- Configuration de routage des leads ----------
+ *
+ * "CRYPTO_EMAILING" (actif) :
+ *   - Google Sheet dédié, feuille "Crypto - Emailing"
+ *   - Envoi vers le webservice adstrack (campagne CRP19)
+ *   - Pixels Com&Click à TotalCost=30
+ *
+ * "LEGACY" (configuration historique conservée) :
+ *   - Google Sheet / onglet définis par GOOGLE_SHEET_ID / GOOGLE_SHEET_TAB
+ *     (+ onglet "Livret - Robot" pour les leads API LIVRET/ROBOT)
+ *   - Pas d'envoi adstrack
+ *   - Pixels Com&Click aux montants historiques (35, et 20 pour l'API ROBOT)
+ *
+ * Pour rebasculer sur l'ancienne configuration : mettre LEAD_ROUTING_MODE = "LEGACY".
+ */
+const LEAD_ROUTING_MODE: "CRYPTO_EMAILING" | "LEGACY" = "CRYPTO_EMAILING";
+
+const CRYPTO_EMAILING_SHEET_ID = "1704kzFDOEHbp0I-B1DvhD2hQbH_CjSzZAKjLGKv9k_g";
+const CRYPTO_EMAILING_SHEET_TAB = "Crypto - Emailing";
+const CRYPTO_EMAILING_COM_AND_CLICK_COST = 30;
+
+/** Montant Com&Click : 30 en mode Crypto - Emailing, montant historique sinon. */
+function comAndClickCost(
+  _channel: "form" | "api",
+  _operation: string,
+  legacyCost: number,
+): number {
+  return LEAD_ROUTING_MODE === "CRYPTO_EMAILING" ? CRYPTO_EMAILING_COM_AND_CLICK_COST : legacyCost;
+}
+
+/** Envoi du lead au webservice adstrack (campagne CRP19). */
+async function sendToAdstrack(data: LeadInput, ipAddress: string): Promise<string> {
+  const url =
+    `https://adstrack.fr/webservice.php?campname=CRP19&source=653` +
+    `&affiliateid=${encodeURIComponent(data.source ?? "")}` +
+    `&name=${encodeURIComponent(data.first_name)}` +
+    `&lastname=${encodeURIComponent(data.last_name.toUpperCase())}` +
+    `&email=${encodeURIComponent(data.email)}` +
+    `&tel=${encodeURIComponent(data.phone)}` +
+    `&IP=${encodeURIComponent(ipAddress)}`;
+  try {
+    const resp = await fetch(url, {
+      method: "GET",
+      headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+    });
+    const body = (await resp.text()).slice(0, 200).trim();
+    return resp.ok
+      ? `✅ Adstrack CRP19 envoyé (réponse: ${body || "vide"})`
+      : `❌ Adstrack CRP19 erreur HTTP ${resp.status} (${body || "-"})`;
+  } catch (err) {
+    console.error("Adstrack error (non bloquant):", err);
+    return `❌ Adstrack CRP19 erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+  }
+}
+
 export const leadSchema = z.object({
   first_name: z.string().trim().min(2).max(60),
   last_name: z.string().trim().min(2).max(60),
@@ -249,11 +305,14 @@ export async function processLead(
   // Google Sheet (non bloquant)
   let sheetStatus = "⏭️ Non configuré";
   const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
-  const sheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
+  const legacySheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
   const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
   const isLivretRobotApi =
     channel === "api" && (operation === "LIVRET" || operation === "ROBOT");
-  const targetSheetTab = isLivretRobotApi ? "Livret - Robot" : sheetTab;
+  const legacySheetTab = isLivretRobotApi ? "Livret - Robot" : sheetTab;
+  const isCryptoEmailing = LEAD_ROUTING_MODE === "CRYPTO_EMAILING";
+  const sheetId = isCryptoEmailing ? CRYPTO_EMAILING_SHEET_ID : legacySheetId;
+  const targetSheetTab = isCryptoEmailing ? CRYPTO_EMAILING_SHEET_TAB : legacySheetTab;
 
   if (serviceAccountKey && sheetId) {
     try {
@@ -290,7 +349,7 @@ export async function processLead(
   let pixelStatus = "⏭️ Non déclenché";
   if (channel === "form" && operation === "CHATGPT") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=mhmcapt7&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -308,7 +367,7 @@ export async function processLead(
     }
   } else if (channel === "form" && operation === "NVIDIA") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=s9e5x30u&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -326,7 +385,7 @@ export async function processLead(
     }
   } else if (channel === "form" && operation === "LIVRET") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=klq5hwj1&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -344,7 +403,7 @@ export async function processLead(
     }
   } else if (channel === "form" && operation === "ROBOT") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=7p2u1h5l&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -362,7 +421,7 @@ export async function processLead(
     }
   } else if (channel === "form" && operation === "AMAZON") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=jqyvg8ky&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -380,7 +439,7 @@ export async function processLead(
     }
   } else if (channel === "api" && operation === "LIVRET") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=klq5hwj1&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -398,7 +457,7 @@ export async function processLead(
     }
   } else if (channel === "api" && operation === "ROBOT") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=20` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 20)}` +
       `&CampaignID=7p2u1h5l&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -416,7 +475,7 @@ export async function processLead(
     }
   } else if (channel === "api" && operation === "CHATGPT") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=mhmcapt7&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -434,7 +493,7 @@ export async function processLead(
     }
   } else if (channel === "api" && operation === "NVIDIA") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=s9e5x30u&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -452,7 +511,7 @@ export async function processLead(
     }
   } else if (channel === "api" && operation === "AMAZON") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=jqyvg8ky&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -511,6 +570,12 @@ export async function processLead(
     }
   }
 
+  // Webservice adstrack (non bloquant) — uniquement en mode Crypto - Emailing
+  let adstrackStatus = "⏭️ Non déclenché (configuration historique)";
+  if (isCryptoEmailing) {
+    adstrackStatus = await sendToAdstrack(data, ipAddress);
+  }
+
   // Notification email (non bloquant)
   const resendKey = process.env["RESEND_API_KEY"];
   const lovableApiKey = process.env["LOVABLE_API_KEY"];
@@ -522,6 +587,7 @@ export async function processLead(
       const pixelOk = pixelStatus.startsWith("✅");
       const adkOk = adkPixelStatus.startsWith("✅");
       const campCdOk = campCdStatus.startsWith("✅");
+      const adstrackOk = adstrackStatus.startsWith("✅");
 
       const triggered: string[] = [];
       const notTriggered: string[] = [];
@@ -529,6 +595,8 @@ export async function processLead(
       if (pixelOk) triggered.push("Pixel Com&Click"); else notTriggered.push("Pixel Com&Click");
       if (adkOk) triggered.push("Pixel AdkConvert"); else notTriggered.push("Pixel AdkConvert");
       if (campCdOk) triggered.push("Pixel CampCDTrack01"); else notTriggered.push("Pixel CampCDTrack01");
+      if (adstrackOk) triggered.push("Adstrack CRP19"); else notTriggered.push("Adstrack CRP19");
+
 
       const resp = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
         method: "POST",
@@ -553,7 +621,8 @@ export async function processLead(
             `Google Sheet: ${sheetStatus}\n` +
             `Pixel Com&Click: ${pixelStatus}\n` +
             `Pixel AdkConvert: ${adkPixelStatus}\n` +
-            `Pixel CampCDTrack01: ${campCdStatus}`,
+            `Pixel CampCDTrack01: ${campCdStatus}\n` +
+            `Webservice Adstrack: ${adstrackStatus}`,
         }),
       });
       if (!resp.ok) {
