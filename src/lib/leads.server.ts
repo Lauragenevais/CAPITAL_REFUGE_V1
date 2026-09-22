@@ -631,7 +631,7 @@ export async function processLead(
   // Webservice adstrack (non bloquant) — uniquement en mode Crypto - Emailing
   let adstrackStatus = "⏭️ Non déclenché (configuration historique)";
   if (isCryptoEmailing) {
-    adstrackStatus = await sendToAdstrack(data, ipAddress);
+    adstrackStatus = await sendToAdstrack(data, ipAddress, channel, operation);
   }
 
   // Notification email (non bloquant)
