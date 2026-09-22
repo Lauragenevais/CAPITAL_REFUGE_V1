@@ -2,6 +2,62 @@ import { z } from "zod";
 
 const OPERATION = "AMAZON";
 
+/**
+ * ---------- Configuration de routage des leads ----------
+ *
+ * "CRYPTO_EMAILING" (actif) :
+ *   - Google Sheet dédié, feuille "Crypto - Emailing"
+ *   - Envoi vers le webservice adstrack (campagne CRP19)
+ *   - Pixels Com&Click à TotalCost=30
+ *
+ * "LEGACY" (configuration historique conservée) :
+ *   - Google Sheet / onglet définis par GOOGLE_SHEET_ID / GOOGLE_SHEET_TAB
+ *     (+ onglet "Livret - Robot" pour les leads API LIVRET/ROBOT)
+ *   - Pas d'envoi adstrack
+ *   - Pixels Com&Click aux montants historiques (35, et 20 pour l'API ROBOT)
+ *
+ * Pour rebasculer sur l'ancienne configuration : mettre LEAD_ROUTING_MODE = "LEGACY".
+ */
+const LEAD_ROUTING_MODE: "CRYPTO_EMAILING" | "LEGACY" = "CRYPTO_EMAILING";
+
+const CRYPTO_EMAILING_SHEET_ID = "1704kzFDOEHbp0I-B1DvhD2hQbH_CjSzZAKjLGKv9k_g";
+const CRYPTO_EMAILING_SHEET_TAB = "Crypto - Emailing";
+const CRYPTO_EMAILING_COM_AND_CLICK_COST = 30;
+
+/** Montant Com&Click : 30 en mode Crypto - Emailing, montant historique sinon. */
+function comAndClickCost(
+  _channel: "form" | "api",
+  _operation: string,
+  legacyCost: number,
+): number {
+  return LEAD_ROUTING_MODE === "CRYPTO_EMAILING" ? CRYPTO_EMAILING_COM_AND_CLICK_COST : legacyCost;
+}
+
+/** Envoi du lead au webservice adstrack (campagne CRP19). */
+async function sendToAdstrack(data: LeadInput, ipAddress: string): Promise<string> {
+  const url =
+    `https://adstrack.fr/webservice.php?campname=CRP19&source=653` +
+    `&affiliateid=${encodeURIComponent(data.source ?? "")}` +
+    `&name=${encodeURIComponent(data.first_name)}` +
+    `&lastname=${encodeURIComponent(data.last_name.toUpperCase())}` +
+    `&email=${encodeURIComponent(data.email)}` +
+    `&tel=${encodeURIComponent(data.phone)}` +
+    `&IP=${encodeURIComponent(ipAddress)}`;
+  try {
+    const resp = await fetch(url, {
+      method: "GET",
+      headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+    });
+    const body = (await resp.text()).slice(0, 200).trim();
+    return resp.ok
+      ? `✅ Adstrack CRP19 envoyé (réponse: ${body || "vide"})`
+      : `❌ Adstrack CRP19 erreur HTTP ${resp.status} (${body || "-"})`;
+  } catch (err) {
+    console.error("Adstrack error (non bloquant):", err);
+    return `❌ Adstrack CRP19 erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+  }
+}
+
 export const leadSchema = z.object({
   first_name: z.string().trim().min(2).max(60),
   last_name: z.string().trim().min(2).max(60),
