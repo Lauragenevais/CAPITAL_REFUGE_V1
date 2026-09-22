@@ -125,6 +125,29 @@
   --shadow-gold: 0 18px 44px -18px color-mix(in oklab, var(--primary) 55%, transparent);
 }
 
+/* Palette dédiée à /paypal : bleu paiement numérique et cyan lumineux */
+.theme-paypal {
+  --background: oklch(0.14 0.035 255);
+  --surface: oklch(0.19 0.045 252);
+  --card: oklch(0.2 0.04 252);
+  --popover: oklch(0.2 0.04 252);
+  --border: oklch(0.32 0.055 248);
+  --input: oklch(0.32 0.055 248);
+  --muted: oklch(0.26 0.045 250);
+  --muted-foreground: oklch(0.76 0.035 240);
+
+  --primary: oklch(0.74 0.17 226);
+  --primary-foreground: oklch(0.15 0.04 255);
+  --primary-glow: oklch(0.84 0.14 205);
+  --accent: oklch(0.72 0.17 35);
+  --accent-foreground: oklch(0.17 0.03 35);
+  --ring: oklch(0.74 0.17 226);
+
+  --gradient-gold: linear-gradient(135deg, var(--primary), var(--primary-glow));
+  --gradient-ink: linear-gradient(180deg, oklch(0.14 0.035 255), oklch(0.19 0.05 248));
+  --shadow-gold: 0 18px 44px -18px color-mix(in oklab, var(--primary) 60%, transparent);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);

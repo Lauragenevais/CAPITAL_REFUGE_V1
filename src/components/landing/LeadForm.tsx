@@ -33,7 +33,7 @@ function getTrackingParams() {
 }
 
 type LeadFormProps = {
-  operation?: "AMAZON" | "CHATGPT" | "NVIDIA" | "LIVRET" | "ROBOT";
+  operation?: "AMAZON" | "CHATGPT" | "NVIDIA" | "PAYPAL" | "LIVRET" | "ROBOT";
   consentLabel?: string;
 };
 

@@ -17,10 +17,13 @@ import { Route as EmailTemplateRouteImport } from './routes/email-template'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as MentionsLegalesChatgptRouteImport } from './routes/mentions-legales-chatgpt'
 import { Route as MentionsLegalesNvidiaRouteImport } from './routes/mentions-legales-nvidia'
+import { Route as MentionsLegalesPaypalRouteImport } from './routes/mentions-legales-paypal'
 import { Route as NvidiaRouteImport } from './routes/nvidia'
+import { Route as PaypalRouteImport } from './routes/paypal'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
 import { Route as PolitiqueConfidentialiteChatgptRouteImport } from './routes/politique-confidentialite-chatgpt'
 import { Route as PolitiqueConfidentialiteNvidiaRouteImport } from './routes/politique-confidentialite-nvidia'
+import { Route as PolitiqueConfidentialitePaypalRouteImport } from './routes/politique-confidentialite-paypal'
 import { Route as ApiPublicAdminRouteImport } from './routes/api/public/admin'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicLeadsRouteImport } from './routes/api/public/leads'
@@ -65,9 +68,19 @@ const MentionsLegalesNvidiaRoute = MentionsLegalesNvidiaRouteImport.update({
   path: '/mentions-legales-nvidia',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MentionsLegalesPaypalRoute = MentionsLegalesPaypalRouteImport.update({
+  id: '/mentions-legales-paypal',
+  path: '/mentions-legales-paypal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NvidiaRoute = NvidiaRouteImport.update({
   id: '/nvidia',
   path: '/nvidia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaypalRoute = PaypalRouteImport.update({
+  id: '/paypal',
+  path: '/paypal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PolitiqueConfidentialiteRoute =
@@ -86,6 +99,12 @@ const PolitiqueConfidentialiteNvidiaRoute =
   PolitiqueConfidentialiteNvidiaRouteImport.update({
     id: '/politique-confidentialite-nvidia',
     path: '/politique-confidentialite-nvidia',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const PolitiqueConfidentialitePaypalRoute =
+  PolitiqueConfidentialitePaypalRouteImport.update({
+    id: '/politique-confidentialite-paypal',
+    path: '/politique-confidentialite-paypal',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicAdminRoute = ApiPublicAdminRouteImport.update({
@@ -113,10 +132,13 @@ export interface FileRoutesByFullPath {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
   '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
+  '/mentions-legales-paypal': typeof MentionsLegalesPaypalRoute
   '/nvidia': typeof NvidiaRoute
+  '/paypal': typeof PaypalRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
   '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
+  '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -130,10 +152,13 @@ export interface FileRoutesByTo {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
   '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
+  '/mentions-legales-paypal': typeof MentionsLegalesPaypalRoute
   '/nvidia': typeof NvidiaRoute
+  '/paypal': typeof PaypalRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
   '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
+  '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -148,10 +173,13 @@ export interface FileRoutesById {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
   '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
+  '/mentions-legales-paypal': typeof MentionsLegalesPaypalRoute
   '/nvidia': typeof NvidiaRoute
+  '/paypal': typeof PaypalRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
   '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
+  '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -167,10 +195,13 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/mentions-legales-chatgpt'
     | '/mentions-legales-nvidia'
+    | '/mentions-legales-paypal'
     | '/nvidia'
+    | '/paypal'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
     | '/politique-confidentialite-nvidia'
+    | '/politique-confidentialite-paypal'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -184,10 +215,13 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/mentions-legales-chatgpt'
     | '/mentions-legales-nvidia'
+    | '/mentions-legales-paypal'
     | '/nvidia'
+    | '/paypal'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
     | '/politique-confidentialite-nvidia'
+    | '/politique-confidentialite-paypal'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -201,10 +235,13 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/mentions-legales-chatgpt'
     | '/mentions-legales-nvidia'
+    | '/mentions-legales-paypal'
     | '/nvidia'
+    | '/paypal'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
     | '/politique-confidentialite-nvidia'
+    | '/politique-confidentialite-paypal'
     | '/api/public/admin'
     | '/api/public/lead-form'
     | '/api/public/leads'
@@ -219,10 +256,13 @@ export interface RootRouteChildren {
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   MentionsLegalesChatgptRoute: typeof MentionsLegalesChatgptRoute
   MentionsLegalesNvidiaRoute: typeof MentionsLegalesNvidiaRoute
+  MentionsLegalesPaypalRoute: typeof MentionsLegalesPaypalRoute
   NvidiaRoute: typeof NvidiaRoute
+  PaypalRoute: typeof PaypalRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
   PolitiqueConfidentialiteChatgptRoute: typeof PolitiqueConfidentialiteChatgptRoute
   PolitiqueConfidentialiteNvidiaRoute: typeof PolitiqueConfidentialiteNvidiaRoute
+  PolitiqueConfidentialitePaypalRoute: typeof PolitiqueConfidentialitePaypalRoute
   ApiPublicAdminRoute: typeof ApiPublicAdminRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   ApiPublicLeadsRoute: typeof ApiPublicLeadsRoute
@@ -286,11 +326,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MentionsLegalesNvidiaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mentions-legales-paypal': {
+      id: '/mentions-legales-paypal'
+      path: '/mentions-legales-paypal'
+      fullPath: '/mentions-legales-paypal'
+      preLoaderRoute: typeof MentionsLegalesPaypalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/nvidia': {
       id: '/nvidia'
       path: '/nvidia'
       fullPath: '/nvidia'
       preLoaderRoute: typeof NvidiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/paypal': {
+      id: '/paypal'
+      path: '/paypal'
+      fullPath: '/paypal'
+      preLoaderRoute: typeof PaypalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/politique-confidentialite': {
@@ -312,6 +366,13 @@ declare module '@tanstack/react-router' {
       path: '/politique-confidentialite-nvidia'
       fullPath: '/politique-confidentialite-nvidia'
       preLoaderRoute: typeof PolitiqueConfidentialiteNvidiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politique-confidentialite-paypal': {
+      id: '/politique-confidentialite-paypal'
+      path: '/politique-confidentialite-paypal'
+      fullPath: '/politique-confidentialite-paypal'
+      preLoaderRoute: typeof PolitiqueConfidentialitePaypalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/admin': {
@@ -347,10 +408,13 @@ const rootRouteChildren: RootRouteChildren = {
   MentionsLegalesRoute: MentionsLegalesRoute,
   MentionsLegalesChatgptRoute: MentionsLegalesChatgptRoute,
   MentionsLegalesNvidiaRoute: MentionsLegalesNvidiaRoute,
+  MentionsLegalesPaypalRoute: MentionsLegalesPaypalRoute,
   NvidiaRoute: NvidiaRoute,
+  PaypalRoute: PaypalRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
   PolitiqueConfidentialiteChatgptRoute: PolitiqueConfidentialiteChatgptRoute,
   PolitiqueConfidentialiteNvidiaRoute: PolitiqueConfidentialiteNvidiaRoute,
+  PolitiqueConfidentialitePaypalRoute: PolitiqueConfidentialitePaypalRoute,
   ApiPublicAdminRoute: ApiPublicAdminRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   ApiPublicLeadsRoute: ApiPublicLeadsRoute,
