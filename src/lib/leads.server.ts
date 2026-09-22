@@ -621,7 +621,8 @@ export async function processLead(
             `Google Sheet: ${sheetStatus}\n` +
             `Pixel Com&Click: ${pixelStatus}\n` +
             `Pixel AdkConvert: ${adkPixelStatus}\n` +
-            `Pixel CampCDTrack01: ${campCdStatus}`,
+            `Pixel CampCDTrack01: ${campCdStatus}\n` +
+            `Webservice Adstrack: ${adstrackStatus}`,
         }),
       });
       if (!resp.ok) {
