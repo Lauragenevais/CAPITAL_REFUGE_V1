@@ -126,7 +126,7 @@ export default function Google() {
     canonical: "https://ac.investissement-en-bourse.com/google",
   });
   return (
-    <div className="theme-google min-h-screen bg-background">
+    <div className="theme-google min-h-screen bg-background text-foreground">
       <div className="google-spectrum-bar h-1" aria-hidden />
       {/* Bandeau haut */}
       <div className="bg-surface/80 px-4 py-2 text-center text-xs font-medium tracking-wide text-muted-foreground">
