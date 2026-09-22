@@ -47,7 +47,7 @@ export const Route = createFileRoute("/paypal")({
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "PayPal Capital" },
       { property: "og:locale", content: "fr_FR" },
-      { property: "og:url", content: "https://amazoncapital.lovable.app/paypal" },
+      { property: "og:url", content: "https://ac.investissement-en-bourse.com/paypal" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Action PayPal (PYPL) : le paiement numérique en portefeuille" },
       {
@@ -55,7 +55,7 @@ export const Route = createFileRoute("/paypal")({
         content: "Testez votre éligibilité à l'action PayPal en 60 secondes avec PayPal Capital.",
       },
     ],
-    links: [{ rel: "canonical", href: "https://amazoncapital.lovable.app/paypal" }],
+    links: [{ rel: "canonical", href: "https://ac.investissement-en-bourse.com/paypal" }],
   }),
   component: PaypalLanding,
 });
