@@ -148,6 +148,29 @@
   --shadow-gold: 0 18px 44px -18px color-mix(in oklab, var(--primary) 60%, transparent);
 }
 
+/* Palette dédiée à /google : bleu recherche, vert innovation et accent lumineux */
+.theme-google {
+  --background: oklch(0.145 0.025 255);
+  --surface: oklch(0.195 0.032 252);
+  --card: oklch(0.205 0.03 250);
+  --popover: oklch(0.205 0.03 250);
+  --border: oklch(0.34 0.05 245);
+  --input: oklch(0.34 0.05 245);
+  --muted: oklch(0.27 0.035 250);
+  --muted-foreground: oklch(0.76 0.03 238);
+
+  --primary: oklch(0.69 0.18 250);
+  --primary-foreground: oklch(0.98 0.005 250);
+  --primary-glow: oklch(0.78 0.16 210);
+  --accent: oklch(0.74 0.17 145);
+  --accent-foreground: oklch(0.16 0.035 145);
+  --ring: oklch(0.69 0.18 250);
+
+  --gradient-gold: linear-gradient(135deg, var(--primary), var(--primary-glow));
+  --gradient-ink: linear-gradient(180deg, oklch(0.145 0.025 255), oklch(0.19 0.04 248));
+  --shadow-gold: 0 18px 44px -18px color-mix(in oklab, var(--primary) 60%, transparent);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);

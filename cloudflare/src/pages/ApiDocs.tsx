@@ -62,7 +62,7 @@ const FIELDS: { name: string; type: string; required: boolean; desc: string }[] 
     name: "operation",
     type: "string",
     required: true,
-    desc: "Type d'opération enregistrée : AMAZON, CHATGPT, NVIDIA, PAYPAL, LIVRET ou ROBOT.",
+    desc: "Type d'opération enregistrée : AMAZON, CHATGPT, NVIDIA, PAYPAL, GOOGLE, LIVRET ou ROBOT.",
   },
 ];
 
