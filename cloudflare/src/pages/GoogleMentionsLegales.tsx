@@ -24,13 +24,13 @@ const SECTIONS = [
     title: "Propriété intellectuelle",
     content: [
       "L'ensemble des éléments du site (textes, images, graphismes, logos, structure, code HTML/CSS/JS, etc.) sont protégés par le droit d'auteur et demeurent la propriété exclusive de ROBUSTRANQUILITY ou de ses partenaires.",
-      "Les marques Google, Alphabet, YouTube, Android, GOOGL et GOOG appartiennent à leurs propriétaires respectifs et sont mentionnées à titre informatif. Ce site n'est ni affilié à Google Holdings, Inc., ni approuvé par elle.",
+      "Les marques Google, Alphabet, YouTube et Android appartiennent à leurs propriétaires respectifs et sont mentionnées à titre informatif. Ce site n'est ni affilié à Alphabet Inc. ou Google LLC, ni approuvé par elles.",
     ],
   },
   {
     title: "Responsabilités",
     content: [
-      "Le contenu du site est fourni à titre informatif et ne constitue pas un conseil en investissement. Les informations citées au sujet de Google, de l'action GOOGL et GOOG et de ses activités technologiques ne préjugent pas des résultats futurs et ne constituent aucune promesse de rendement.",
+      "Le contenu du site est fourni à titre informatif et ne constitue pas un conseil en investissement. Les informations citées au sujet d'Alphabet, des actions GOOGL et GOOG et de ses activités technologiques ne préjugent pas des résultats futurs et ne constituent aucune promesse de rendement.",
       "Tout investissement en actions comporte un risque de perte partielle ou totale du capital engagé. Malgré le soin apporté à sa rédaction, ROBUSTRANQUILITY ne saurait être tenu responsable d'éventuelles erreurs, omissions ou d'une indisponibilité temporaire des informations.",
     ],
   },
