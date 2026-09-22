@@ -305,11 +305,14 @@ export async function processLead(
   // Google Sheet (non bloquant)
   let sheetStatus = "⏭️ Non configuré";
   const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
-  const sheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
+  const legacySheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
   const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
   const isLivretRobotApi =
     channel === "api" && (operation === "LIVRET" || operation === "ROBOT");
-  const targetSheetTab = isLivretRobotApi ? "Livret - Robot" : sheetTab;
+  const legacySheetTab = isLivretRobotApi ? "Livret - Robot" : sheetTab;
+  const isCryptoEmailing = LEAD_ROUTING_MODE === "CRYPTO_EMAILING";
+  const sheetId = isCryptoEmailing ? CRYPTO_EMAILING_SHEET_ID : legacySheetId;
+  const targetSheetTab = isCryptoEmailing ? CRYPTO_EMAILING_SHEET_TAB : legacySheetTab;
 
   if (serviceAccountKey && sheetId) {
     try {
