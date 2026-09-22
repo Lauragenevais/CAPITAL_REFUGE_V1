@@ -151,6 +151,7 @@ const FAQ = [
 function GoogleLanding() {
   return (
     <div className="theme-google min-h-screen bg-background">
+      <div className="google-spectrum-bar h-1" aria-hidden />
       {/* Bandeau haut */}
       <div className="bg-surface/80 px-4 py-2 text-center text-xs font-medium tracking-wide text-muted-foreground">
         <Globe2 className="mr-1.5 inline h-3.5 w-3.5 text-primary" />
@@ -164,7 +165,17 @@ function GoogleLanding() {
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold shadow-gold">
               <TrendingUp className="h-5 w-5 text-primary-foreground" />
             </span>
-            <span className="font-display text-lg font-bold">Google Capital</span>
+            <span className="font-display text-lg font-bold" aria-label="Google Capital">
+              <span aria-hidden>
+                <span className="text-google-blue">G</span>
+                <span className="text-google-red">o</span>
+                <span className="text-google-yellow">o</span>
+                <span className="text-google-blue">g</span>
+                <span className="text-google-green">l</span>
+                <span className="text-google-red">e</span>
+                <span className="text-foreground"> Capital</span>
+              </span>
+            </span>
           </a>
           <nav className="hidden items-center gap-7 text-sm text-muted-foreground lg:flex">
             {NAV.map((item) => (
@@ -195,7 +206,17 @@ function GoogleLanding() {
               <Zap className="h-3.5 w-3.5" /> Action Alphabet — GOOGL
             </span>
             <h1 className="mt-6 text-4xl leading-[1.05] font-extrabold md:text-6xl">
-              <span className="text-gold">Google</span>, au cœur de l’écosystème numérique
+              <span aria-label="Google">
+                <span aria-hidden>
+                  <span className="text-google-blue">G</span>
+                  <span className="text-google-red">o</span>
+                  <span className="text-google-yellow">o</span>
+                  <span className="text-google-blue">g</span>
+                  <span className="text-google-green">l</span>
+                  <span className="text-google-red">e</span>
+                </span>
+              </span>
+              , au cœur de l’écosystème numérique
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground">
               Alphabet réunit Google Search, YouTube, Android, Google Cloud et des projets d’intelligence artificielle. Vérifiez si votre profil est éligible à notre programme d&apos;accompagnement sur l&apos;action GOOGL.
@@ -212,7 +233,7 @@ function GoogleLanding() {
               </Button>
             </div>
 
-            <dl className="mt-12 grid max-w-lg grid-cols-2 gap-4 sm:grid-cols-4">
+             <dl className="google-color-cycle mt-12 grid max-w-lg grid-cols-2 gap-4 sm:grid-cols-4">
               {STATS.map((stat) => (
                 <div
                   key={stat.label}
@@ -247,7 +268,7 @@ function GoogleLanding() {
             Alphabet bénéficie d&apos;un écosystème mondial et de plusieurs moteurs d&apos;activité, tout en restant exposée à la concurrence, à la réglementation et aux cycles publicitaires.
           </p>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+           <div className="google-color-cycle mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             {BENEFITS.map((benefit) => (
               <article
                 key={benefit.title}

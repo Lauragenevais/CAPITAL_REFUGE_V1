@@ -43,6 +43,10 @@
   --color-surface-foreground: var(--surface-foreground);
   --color-panel: var(--panel);
   --color-panel-foreground: var(--panel-foreground);
+  --color-google-blue: var(--google-blue);
+  --color-google-red: var(--google-red);
+  --color-google-yellow: var(--google-yellow);
+  --color-google-green: var(--google-green);
   --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
@@ -148,27 +152,39 @@
   --shadow-gold: 0 18px 44px -18px color-mix(in oklab, var(--primary) 60%, transparent);
 }
 
-/* Palette dédiée à /google : bleu recherche, vert innovation et accent lumineux */
+/* Palette dédiée à /google : les quatre couleurs du logo Google */
 .theme-google {
-  --background: oklch(0.145 0.025 255);
-  --surface: oklch(0.195 0.032 252);
-  --card: oklch(0.205 0.03 250);
-  --popover: oklch(0.205 0.03 250);
-  --border: oklch(0.34 0.05 245);
-  --input: oklch(0.34 0.05 245);
-  --muted: oklch(0.27 0.035 250);
-  --muted-foreground: oklch(0.76 0.03 238);
+  --google-blue: #4285f4;
+  --google-red: #ea4335;
+  --google-yellow: #fbbc05;
+  --google-green: #34a853;
 
-  --primary: oklch(0.69 0.18 250);
-  --primary-foreground: oklch(0.98 0.005 250);
-  --primary-glow: oklch(0.78 0.16 210);
-  --accent: oklch(0.74 0.17 145);
-  --accent-foreground: oklch(0.16 0.035 145);
-  --ring: oklch(0.69 0.18 250);
+  --background: oklch(0.985 0.004 255);
+  --foreground: oklch(0.23 0.02 255);
+  --surface: oklch(0.96 0.012 250);
+  --surface-foreground: oklch(0.23 0.02 255);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.23 0.02 255);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.23 0.02 255);
+  --panel: oklch(1 0 0);
+  --panel-foreground: oklch(0.23 0.02 255);
+  --border: oklch(0.87 0.012 250);
+  --input: oklch(0.87 0.012 250);
+  --muted: oklch(0.94 0.01 250);
+  --muted-foreground: oklch(0.48 0.025 255);
 
-  --gradient-gold: linear-gradient(135deg, var(--primary), var(--primary-glow));
-  --gradient-ink: linear-gradient(180deg, oklch(0.145 0.025 255), oklch(0.19 0.04 248));
-  --shadow-gold: 0 18px 44px -18px color-mix(in oklab, var(--primary) 60%, transparent);
+  --primary: var(--google-blue);
+  --primary-foreground: oklch(1 0 0);
+  --primary-glow: oklch(0.62 0.2 255);
+  --accent: var(--google-green);
+  --accent-foreground: oklch(1 0 0);
+  --ring: var(--google-blue);
+
+  --gradient-gold: linear-gradient(135deg, var(--google-blue), oklch(0.56 0.22 258));
+  --gradient-ink: linear-gradient(180deg, oklch(0.985 0.004 255), oklch(0.95 0.014 248));
+  --shadow-gold: 0 18px 44px -18px color-mix(in oklab, var(--google-blue) 55%, transparent);
+  --shadow-panel: 0 30px 70px -34px oklch(0.28 0.04 255 / 0.28);
 }
 
 @layer base {
@@ -212,6 +228,31 @@
 
 @utility shadow-panel {
   box-shadow: var(--shadow-panel);
+}
+
+@utility google-spectrum-bar {
+  background: linear-gradient(
+    90deg,
+    var(--google-blue) 0 25%,
+    var(--google-red) 25% 50%,
+    var(--google-yellow) 50% 75%,
+    var(--google-green) 75% 100%
+  );
+}
+
+@utility google-color-cycle {
+  & > :nth-child(4n + 1) {
+    border-top-color: var(--google-blue);
+  }
+  & > :nth-child(4n + 2) {
+    border-top-color: var(--google-red);
+  }
+  & > :nth-child(4n + 3) {
+    border-top-color: var(--google-yellow);
+  }
+  & > :nth-child(4n) {
+    border-top-color: var(--google-green);
+  }
 }
 
 @utility grid-backdrop {
