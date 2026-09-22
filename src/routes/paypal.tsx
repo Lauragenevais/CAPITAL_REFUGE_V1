@@ -49,7 +49,7 @@ export const Route = createFileRoute("/paypal")({
       { property: "og:locale", content: "fr_FR" },
       { property: "og:url", content: "https://amazoncapital.lovable.app/paypal" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Action PayPal (PYPL) : la nouvelle star des cryptos" },
+      { name: "twitter:title", content: "Action PayPal (PYPL) : le paiement numérique en portefeuille" },
       {
         name: "twitter:description",
         content: "Testez votre éligibilité à l'action PayPal en 60 secondes avec PayPal Capital.",
@@ -155,7 +155,7 @@ function PaypalLanding() {
     <div className="theme-paypal min-h-screen bg-background">
       {/* Bandeau haut */}
       <div className="bg-surface/80 px-4 py-2 text-center text-xs font-medium tracking-wide text-muted-foreground">
-        <Cpu className="mr-1.5 inline h-3.5 w-3.5 text-primary" />
+        <CreditCard className="mr-1.5 inline h-3.5 w-3.5 text-primary" />
         PayPal Capital — le paiement numérique au cœur du commerce mondial
       </div>
 
@@ -434,7 +434,7 @@ function PaypalLanding() {
       <section className="pb-24">
         <div className="mx-auto max-w-4xl px-4">
           <div className="rounded-3xl border border-primary/30 bg-surface/70 p-10 text-center">
-            <h2 className="text-3xl font-bold">Places limitées pour cette phase</h2>
+            <h2 className="text-3xl font-bold">Étudiez votre éligibilité gratuitement</h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
               La vérification est gratuite et sans engagement. Il vous faut moins d&apos;une minute
               pour savoir si votre profil est retenu.

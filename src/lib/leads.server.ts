@@ -13,7 +13,7 @@ export const leadSchema = z.object({
   consent: z.literal(true),
   source: z.string().max(60).optional(),
   click_id: z.string().max(120).optional(),
-  operation: z.enum(["AMAZON", "CHATGPT", "NVIDIA", "LIVRET", "ROBOT"]),
+  operation: z.enum(["AMAZON", "CHATGPT", "NVIDIA", "PAYPAL", "LIVRET", "ROBOT"]),
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
@@ -360,7 +360,7 @@ export async function processLead(
       pixelStatus = `❌ Pixel Robot erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click Robot error (non bloquant):", err);
     }
-  } else if (channel === "form") {
+  } else if (channel === "form" && operation === "AMAZON") {
     const pixelUrl =
       `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
       `&CampaignID=jqyvg8ky&status=P` +
@@ -450,7 +450,7 @@ export async function processLead(
       pixelStatus = `❌ Pixel API Nvidia erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click API Nvidia error (non bloquant):", err);
     }
-  } else if (channel === "api") {
+  } else if (channel === "api" && operation === "AMAZON") {
     const pixelUrl =
       `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
       `&CampaignID=jqyvg8ky&status=P` +
