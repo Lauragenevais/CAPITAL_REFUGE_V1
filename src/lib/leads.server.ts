@@ -290,7 +290,7 @@ export async function processLead(
   let pixelStatus = "⏭️ Non déclenché";
   if (channel === "form" && operation === "CHATGPT") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=mhmcapt7&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -308,7 +308,7 @@ export async function processLead(
     }
   } else if (channel === "form" && operation === "NVIDIA") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=s9e5x30u&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -326,7 +326,7 @@ export async function processLead(
     }
   } else if (channel === "form" && operation === "LIVRET") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=klq5hwj1&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -344,7 +344,7 @@ export async function processLead(
     }
   } else if (channel === "form" && operation === "ROBOT") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=7p2u1h5l&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -362,7 +362,7 @@ export async function processLead(
     }
   } else if (channel === "form" && operation === "AMAZON") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=jqyvg8ky&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -380,7 +380,7 @@ export async function processLead(
     }
   } else if (channel === "api" && operation === "LIVRET") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=klq5hwj1&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -398,7 +398,7 @@ export async function processLead(
     }
   } else if (channel === "api" && operation === "ROBOT") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=20` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 20)}` +
       `&CampaignID=7p2u1h5l&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -416,7 +416,7 @@ export async function processLead(
     }
   } else if (channel === "api" && operation === "CHATGPT") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=mhmcapt7&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -434,7 +434,7 @@ export async function processLead(
     }
   } else if (channel === "api" && operation === "NVIDIA") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=s9e5x30u&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
@@ -452,7 +452,7 @@ export async function processLead(
     }
   } else if (channel === "api" && operation === "AMAZON") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=35` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=jqyvg8ky&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
