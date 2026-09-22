@@ -129,13 +129,13 @@ export default function Google() {
     <div className="theme-google min-h-screen bg-background text-foreground">
       <div className="google-spectrum-bar h-1" aria-hidden />
       {/* Bandeau haut */}
-      <div className="bg-surface/80 px-4 py-2 text-center text-xs font-medium tracking-wide text-muted-foreground">
+      <div className="bg-surface px-4 py-2 text-center text-sm font-semibold text-muted-foreground">
         <Globe2 className="mr-1.5 inline h-3.5 w-3.5 text-primary" />
         Google Capital — recherche, cloud et intelligence artificielle
       </div>
 
       {/* Navigation */}
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b-2 border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <a href="#top" className="flex items-center gap-2.5">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold shadow-gold">
@@ -153,9 +153,9 @@ export default function Google() {
               </span>
             </span>
           </a>
-          <nav className="hidden items-center gap-7 text-sm text-muted-foreground lg:flex">
+          <nav aria-label="Navigation principale" className="hidden items-center gap-7 text-sm font-semibold text-muted-foreground lg:flex">
             {NAV.map((item) => (
-              <a key={item.href} href={item.href} className="transition-colors hover:text-primary">
+              <a key={item.href} href={item.href} className="rounded-sm transition-colors hover:text-primary hover:underline">
                 {item.label}
               </a>
             ))}
@@ -176,7 +176,7 @@ export default function Google() {
           height={1280}
           className="pointer-events-none absolute top-0 right-0 hidden h-full w-[46%] object-cover opacity-50 [mask-image:linear-gradient(to_right,transparent,black_45%)] lg:block"
         />
-        <div className="relative mx-auto grid max-w-6xl gap-12 px-4 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 lg:grid-cols-[0.9fr_1.1fr] lg:py-24">
           <div className="animate-rise">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-4 py-1.5 text-[11px] font-bold tracking-[0.18em] text-primary uppercase">
               <Zap className="h-3.5 w-3.5" /> Action Alphabet — GOOGL
@@ -194,7 +194,7 @@ export default function Google() {
               </span>
               , au cœur de l’écosystème numérique
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground">
+            <p className="mt-6 max-w-xl text-lg font-medium leading-8 text-muted-foreground">
               Alphabet réunit Google Search, YouTube, Android, Google Cloud et des projets d’intelligence artificielle. Vérifiez si votre profil est éligible à notre programme d&apos;accompagnement sur l&apos;action GOOGL.
             </p>
 
@@ -213,7 +213,7 @@ export default function Google() {
               {STATS.map((stat) => (
                 <div
                   key={stat.label}
-                  className="rounded-2xl border border-border/70 bg-surface/70 p-4"
+                  className="rounded-2xl border-2 border-border bg-card p-4"
                 >
                   <dt className="font-display text-xl font-bold text-primary">{stat.value}</dt>
                   <dd className="mt-1 text-[11px] leading-tight text-muted-foreground uppercase">
@@ -248,13 +248,13 @@ export default function Google() {
             {BENEFITS.map((benefit) => (
               <article
                 key={benefit.title}
-                className="rounded-2xl border border-border/70 bg-card p-6 transition-colors hover:border-primary/50"
+                   className="rounded-2xl border-2 border-border border-t-primary bg-card p-6 transition-colors hover:border-primary"
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/12 text-primary">
                   <benefit.icon className="h-5 w-5" />
                 </span>
                 <h3 className="mt-5 text-lg font-semibold">{benefit.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{benefit.text}</p>
+                 <p className="mt-2 text-base leading-relaxed text-muted-foreground">{benefit.text}</p>
               </article>
             ))}
           </div>
@@ -269,12 +269,12 @@ export default function Google() {
 
           <ol className="mt-12 grid gap-6 md:grid-cols-3">
             {STEPS.map((step, index) => (
-              <li key={step.title} className="relative rounded-2xl border border-border/70 p-6">
+               <li key={step.title} className="relative rounded-2xl border-2 border-border bg-card p-6">
                 <span className="font-display absolute -top-5 left-6 flex h-10 w-10 items-center justify-center rounded-xl bg-gold text-lg font-bold text-primary-foreground shadow-gold">
                   {index + 1}
                 </span>
                 <h3 className="mt-5 text-lg font-semibold">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.text}</p>
+                 <p className="mt-2 text-base leading-relaxed text-muted-foreground">{step.text}</p>
               </li>
             ))}
           </ol>
@@ -312,7 +312,7 @@ export default function Google() {
                   </span>
                   <div>
                     <p className="font-semibold">{title}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+                    <p className="mt-1 text-base text-muted-foreground">{text}</p>
                   </div>
                 </li>
               ))}
@@ -324,7 +324,7 @@ export default function Google() {
             width={1280}
             height={960}
             loading="lazy"
-            className="animate-float rounded-3xl border border-border/70 shadow-panel"
+             className="animate-float rounded-3xl border-2 border-border shadow-panel"
           />
         </div>
       </section>
@@ -348,17 +348,17 @@ export default function Google() {
                 ["GOOGL", "classe A au Nasdaq"],
                 ["GOOG", "classe C au Nasdaq"],
               ].map(([value, label]) => (
-                <div key={label} className="rounded-2xl border border-border/70 bg-card p-4">
+                 <div key={label} className="rounded-2xl border-2 border-border bg-card p-4">
                   <p className="font-display text-2xl font-bold text-primary">{value}</p>
                   <p className="mt-1 text-xs text-muted-foreground">{label}</p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="order-2 rounded-3xl border border-primary/30 bg-surface/70 p-8 lg:order-1">
+           <div className="order-2 rounded-3xl border-2 border-primary bg-card p-8 lg:order-1">
             <LineChart className="h-8 w-8 text-primary" />
             <h3 className="mt-4 text-xl font-bold">À garder en tête</h3>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+             <p className="mt-3 text-base leading-relaxed text-muted-foreground">
               Alphabet évolue face à la concurrence dans la recherche, le cloud et l’IA, ainsi qu’aux contraintes réglementaires. Aucun rendement n’est garanti : l&apos;action peut baisser et entraîner une perte en capital.
             </p>
             <Button variant="hero" size="lg" className="mt-6" asChild>
@@ -378,14 +378,14 @@ export default function Google() {
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {TESTIMONIALS.map((item) => (
-              <figure key={item.name} className="rounded-2xl border border-border/70 bg-card p-6">
+               <figure key={item.name} className="rounded-2xl border-2 border-border bg-card p-6">
                 <Quote className="h-6 w-6 text-primary/60" />
                 <div className="mt-3 flex gap-0.5 text-primary">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star key={i} className="h-4 w-4 fill-current" />
                   ))}
                 </div>
-                <blockquote className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                 <blockquote className="mt-4 text-base leading-relaxed text-muted-foreground">
                   {item.text}
                 </blockquote>
                 <figcaption className="mt-5 flex items-center gap-3">
@@ -413,10 +413,10 @@ export default function Google() {
           <Accordion type="single" collapsible className="mt-10">
             {FAQ.map((item) => (
               <AccordionItem key={item.q} value={item.q} className="border-border/70">
-                <AccordionTrigger className="text-left text-base font-semibold">
+                 <AccordionTrigger className="rounded-sm text-left text-lg font-bold">
                   {item.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
+                 <AccordionContent className="text-base leading-relaxed text-muted-foreground">
                   {item.a}
                 </AccordionContent>
               </AccordionItem>
@@ -428,9 +428,9 @@ export default function Google() {
       {/* CTA final */}
       <section className="pb-24">
         <div className="mx-auto max-w-4xl px-4">
-          <div className="rounded-3xl border border-primary/30 bg-surface/70 p-10 text-center">
+           <div className="rounded-3xl border-2 border-primary bg-card p-10 text-center">
             <h2 className="text-3xl font-bold">Étudiez votre éligibilité gratuitement</h2>
-            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-muted-foreground">
               La vérification est gratuite et sans engagement. Il vous faut moins d&apos;une minute
               pour savoir si votre profil est retenu.
             </p>
@@ -451,24 +451,24 @@ export default function Google() {
         <div className="mx-auto max-w-6xl space-y-6 px-4 text-sm text-muted-foreground">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <span className="font-display text-base font-bold text-foreground">Google Capital</span>
-            <nav className="flex gap-6">
-              <Link to="/mentions-legales-google" className="transition-colors hover:text-primary">
+             <nav aria-label="Liens légaux" className="flex flex-wrap gap-6">
+               <Link to="/mentions-legales-google" className="rounded-sm font-semibold underline transition-colors hover:text-primary">
                 Mentions légales
               </Link>
               <Link
                 to="/politique-confidentialite-google"
-                className="transition-colors hover:text-primary"
+                 className="rounded-sm font-semibold underline transition-colors hover:text-primary"
               >
                 Politique de confidentialité
               </Link>
             </nav>
           </div>
-          <p className="max-w-3xl text-xs leading-relaxed">
+           <p className="max-w-4xl text-sm leading-relaxed">
             <ShieldCheck className="mr-1.5 inline h-3.5 w-3.5" />
             Les informations diffusées sur ce site sont fournies à titre indicatif et ne constituent
             pas un conseil en investissement. Les éléments présentés ne constituent ni une promesse de rendement ni un conseil personnalisé. Tout investissement en bourse comporte un risque de perte partielle ou totale du capital engagé. Google, Alphabet, YouTube, Android, GOOGL et GOOG sont cités à titre informatif ; ce site n&apos;est ni affilié à Alphabet Inc. ou Google LLC, ni approuvé par elles.
           </p>
-          <p className="text-xs">
+           <p className="text-sm">
             Données collectées : nom, prénom, email, téléphone, adresse IP — conservées 3 ans
             maximum, utilisées pour la vérification d&apos;éligibilité et la mise en relation avec
             un conseiller partenaire. Pour plus de détails et exercer vos droits d&apos;accès, de
@@ -485,7 +485,7 @@ export default function Google() {
       </footer>
 
       {/* Barre CTA mobile */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border/70 bg-background/95 px-4 py-3 backdrop-blur lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t-2 border-border bg-foreground px-4 py-3 text-background shadow-panel lg:hidden">
         <Button variant="hero" size="lg" className="w-full" asChild>
           <a href="#formulaire">Vérifier mon éligibilité</a>
         </Button>
