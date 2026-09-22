@@ -33,8 +33,45 @@ function comAndClickCost(
   return LEAD_ROUTING_MODE === "CRYPTO_EMAILING" ? CRYPTO_EMAILING_COM_AND_CLICK_COST : legacyCost;
 }
 
+/** Journalise l'envoi adstrack en base (non bloquant). */
+async function logAdstrackSend(entry: {
+  channel: "form" | "api";
+  operation: string;
+  data: LeadInput;
+  ipAddress: string;
+  requestUrl: string;
+  ok: boolean;
+  responseStatus: number | null;
+  responseBody: string;
+}): Promise<void> {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.from("adstrack_sends").insert({
+      channel: entry.channel,
+      operation: entry.operation,
+      first_name: entry.data.first_name,
+      last_name: entry.data.last_name,
+      email: entry.data.email,
+      phone: entry.data.phone,
+      source: entry.data.source ?? "",
+      ip_address: entry.ipAddress,
+      request_url: entry.requestUrl,
+      ok: entry.ok,
+      response_status: entry.responseStatus,
+      response_body: entry.responseBody,
+    });
+  } catch (err) {
+    console.error("Log adstrack error (non bloquant):", err);
+  }
+}
+
 /** Envoi du lead au webservice adstrack (campagne CRP19). */
-async function sendToAdstrack(data: LeadInput, ipAddress: string): Promise<string> {
+async function sendToAdstrack(
+  data: LeadInput,
+  ipAddress: string,
+  channel: "form" | "api",
+  operation: string,
+): Promise<string> {
   const url =
     `https://adstrack.fr/webservice.php?campname=CRP19&source=653` +
     `&affiliateid=${encodeURIComponent(data.source ?? "")}` +
@@ -49,12 +86,33 @@ async function sendToAdstrack(data: LeadInput, ipAddress: string): Promise<strin
       headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
     });
     const body = (await resp.text()).slice(0, 200).trim();
+    await logAdstrackSend({
+      channel,
+      operation,
+      data,
+      ipAddress,
+      requestUrl: url,
+      ok: resp.ok,
+      responseStatus: resp.status,
+      responseBody: body,
+    });
     return resp.ok
       ? `✅ Adstrack CRP19 envoyé (réponse: ${body || "vide"})`
       : `❌ Adstrack CRP19 erreur HTTP ${resp.status} (${body || "-"})`;
   } catch (err) {
     console.error("Adstrack error (non bloquant):", err);
-    return `❌ Adstrack CRP19 erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+    const message = err instanceof Error ? err.message : "inconnue";
+    await logAdstrackSend({
+      channel,
+      operation,
+      data,
+      ipAddress,
+      requestUrl: url,
+      ok: false,
+      responseStatus: null,
+      responseBody: `Erreur: ${message}`,
+    });
+    return `❌ Adstrack CRP19 erreur: ${message}`;
   }
 }
 
