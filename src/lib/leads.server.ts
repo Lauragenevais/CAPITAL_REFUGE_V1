@@ -570,6 +570,12 @@ export async function processLead(
     }
   }
 
+  // Webservice adstrack (non bloquant) — uniquement en mode Crypto - Emailing
+  let adstrackStatus = "⏭️ Non déclenché (configuration historique)";
+  if (isCryptoEmailing) {
+    adstrackStatus = await sendToAdstrack(data, ipAddress);
+  }
+
   // Notification email (non bloquant)
   const resendKey = process.env["RESEND_API_KEY"];
   const lovableApiKey = process.env["LOVABLE_API_KEY"];
@@ -581,6 +587,7 @@ export async function processLead(
       const pixelOk = pixelStatus.startsWith("✅");
       const adkOk = adkPixelStatus.startsWith("✅");
       const campCdOk = campCdStatus.startsWith("✅");
+      const adstrackOk = adstrackStatus.startsWith("✅");
 
       const triggered: string[] = [];
       const notTriggered: string[] = [];
@@ -588,6 +595,8 @@ export async function processLead(
       if (pixelOk) triggered.push("Pixel Com&Click"); else notTriggered.push("Pixel Com&Click");
       if (adkOk) triggered.push("Pixel AdkConvert"); else notTriggered.push("Pixel AdkConvert");
       if (campCdOk) triggered.push("Pixel CampCDTrack01"); else notTriggered.push("Pixel CampCDTrack01");
+      if (adstrackOk) triggered.push("Adstrack CRP19"); else notTriggered.push("Adstrack CRP19");
+
 
       const resp = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
         method: "POST",
