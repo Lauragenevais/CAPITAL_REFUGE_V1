@@ -6,6 +6,7 @@ import Nvidia from "@/pages/Nvidia";
 import Paypal from "@/pages/Paypal";
 import Google from "@/pages/Google";
 import Admin from "@/pages/Admin";
+import AdstrackSends from "@/pages/AdstrackSends";
 import ApiDocs from "@/pages/ApiDocs";
 import EmailTemplate from "@/pages/EmailTemplate";
 import MentionsLegales from "@/pages/MentionsLegales";
@@ -29,6 +30,7 @@ export default function App() {
       <Route path="/paypal" element={<Paypal />} />
       <Route path="/google" element={<Google />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/admin/adstrack" element={<AdstrackSends />} />
       <Route path="/api-docs" element={<ApiDocs />} />
       <Route path="/email-template" element={<EmailTemplate />} />
       <Route path="/mentions-legales" element={<MentionsLegales />} />
