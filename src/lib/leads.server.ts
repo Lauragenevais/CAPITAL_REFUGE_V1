@@ -65,15 +65,22 @@ async function logAdstrackSend(entry: {
   }
 }
 
-/** Envoi du lead au webservice adstrack (campagne CRP19). */
+/** Campagne adstrack selon l'opération (défaut : CRP19). */
+const ADSTRACK_CAMPNAME_BY_OPERATION: Record<string, string> = {
+  CHATGPT: "CHT",
+  NVIDIA: "NVIDIA",
+};
+
+/** Envoi du lead au webservice adstrack (campagne selon l'opération). */
 async function sendToAdstrack(
   data: LeadInput,
   ipAddress: string,
   channel: "form" | "api",
   operation: string,
 ): Promise<string> {
+  const campname = ADSTRACK_CAMPNAME_BY_OPERATION[operation] ?? "CRP19";
   const url =
-    `https://adstrack.fr/webservice.php?campname=CRP19&source=653` +
+    `https://adstrack.fr/webservice.php?campname=${campname}&source=653` +
     `&affiliateid=${encodeURIComponent(data.source ?? "")}` +
     `&name=${encodeURIComponent(data.first_name)}` +
     `&lastname=${encodeURIComponent(data.last_name.toUpperCase())}` +
@@ -97,8 +104,8 @@ async function sendToAdstrack(
       responseBody: body,
     });
     return resp.ok
-      ? `✅ Adstrack CRP19 envoyé (réponse: ${body || "vide"})`
-      : `❌ Adstrack CRP19 erreur HTTP ${resp.status} (${body || "-"})`;
+      ? `✅ Adstrack ${campname} envoyé (réponse: ${body || "vide"})`
+      : `❌ Adstrack ${campname} erreur HTTP ${resp.status} (${body || "-"})`;
   } catch (err) {
     console.error("Adstrack error (non bloquant):", err);
     const message = err instanceof Error ? err.message : "inconnue";
@@ -112,7 +119,7 @@ async function sendToAdstrack(
       responseStatus: null,
       responseBody: `Erreur: ${message}`,
     });
-    return `❌ Adstrack CRP19 erreur: ${message}`;
+    return `❌ Adstrack ${campname} erreur: ${message}`;
   }
 }
 
@@ -653,7 +660,8 @@ export async function processLead(
       if (pixelOk) triggered.push("Pixel Com&Click"); else notTriggered.push("Pixel Com&Click");
       if (adkOk) triggered.push("Pixel AdkConvert"); else notTriggered.push("Pixel AdkConvert");
       if (campCdOk) triggered.push("Pixel CampCDTrack01"); else notTriggered.push("Pixel CampCDTrack01");
-      if (adstrackOk) triggered.push("Adstrack CRP19"); else notTriggered.push("Adstrack CRP19");
+      const adstrackLabel = `Adstrack ${ADSTRACK_CAMPNAME_BY_OPERATION[operation] ?? "CRP19"}`;
+      if (adstrackOk) triggered.push(adstrackLabel); else notTriggered.push(adstrackLabel);
 
 
       const resp = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
