@@ -104,8 +104,8 @@ async function sendToAdstrack(
       responseBody: body,
     });
     return resp.ok
-      ? `✅ Adstrack CRP19 envoyé (réponse: ${body || "vide"})`
-      : `❌ Adstrack CRP19 erreur HTTP ${resp.status} (${body || "-"})`;
+      ? `✅ Adstrack ${campname} envoyé (réponse: ${body || "vide"})`
+      : `❌ Adstrack ${campname} erreur HTTP ${resp.status} (${body || "-"})`;
   } catch (err) {
     console.error("Adstrack error (non bloquant):", err);
     const message = err instanceof Error ? err.message : "inconnue";
@@ -119,7 +119,7 @@ async function sendToAdstrack(
       responseStatus: null,
       responseBody: `Erreur: ${message}`,
     });
-    return `❌ Adstrack CRP19 erreur: ${message}`;
+    return `❌ Adstrack ${campname} erreur: ${message}`;
   }
 }
 
