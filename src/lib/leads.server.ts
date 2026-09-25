@@ -660,7 +660,8 @@ export async function processLead(
       if (pixelOk) triggered.push("Pixel Com&Click"); else notTriggered.push("Pixel Com&Click");
       if (adkOk) triggered.push("Pixel AdkConvert"); else notTriggered.push("Pixel AdkConvert");
       if (campCdOk) triggered.push("Pixel CampCDTrack01"); else notTriggered.push("Pixel CampCDTrack01");
-      if (adstrackOk) triggered.push("Adstrack CRP19"); else notTriggered.push("Adstrack CRP19");
+      const adstrackLabel = `Adstrack ${ADSTRACK_CAMPNAME_BY_OPERATION[operation] ?? "CRP19"}`;
+      if (adstrackOk) triggered.push(adstrackLabel); else notTriggered.push(adstrackLabel);
 
 
       const resp = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
