@@ -65,15 +65,22 @@ async function logAdstrackSend(entry: {
   }
 }
 
-/** Envoi du lead au webservice adstrack (campagne CRP19). */
+/** Campagne adstrack selon l'opération (défaut : CRP19). */
+const ADSTRACK_CAMPNAME_BY_OPERATION: Record<string, string> = {
+  CHATGPT: "CHT",
+  NVIDIA: "NVIDIA",
+};
+
+/** Envoi du lead au webservice adstrack (campagne selon l'opération). */
 async function sendToAdstrack(
   data: LeadInput,
   ipAddress: string,
   channel: "form" | "api",
   operation: string,
 ): Promise<string> {
+  const campname = ADSTRACK_CAMPNAME_BY_OPERATION[operation] ?? "CRP19";
   const url =
-    `https://adstrack.fr/webservice.php?campname=CRP19&source=653` +
+    `https://adstrack.fr/webservice.php?campname=${campname}&source=653` +
     `&affiliateid=${encodeURIComponent(data.source ?? "")}` +
     `&name=${encodeURIComponent(data.first_name)}` +
     `&lastname=${encodeURIComponent(data.last_name.toUpperCase())}` +
