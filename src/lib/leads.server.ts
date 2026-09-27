@@ -18,7 +18,7 @@ const OPERATION = "AMAZON";
  *
  * Pour rebasculer sur l'ancienne configuration : mettre LEAD_ROUTING_MODE = "LEGACY".
  */
-const LEAD_ROUTING_MODE: "CRYPTO_EMAILING" | "LEGACY" = "CRYPTO_EMAILING";
+const LEAD_ROUTING_MODE = "LEGACY" as "CRYPTO_EMAILING" | "LEGACY";
 
 const CRYPTO_EMAILING_SHEET_ID = "1704kzFDOEHbp0I-B1DvhD2hQbH_CjSzZAKjLGKv9k_g";
 const CRYPTO_EMAILING_SHEET_TAB = "Crypto - Emailing";
