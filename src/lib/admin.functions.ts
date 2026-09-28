@@ -20,6 +20,39 @@ function passwordMatches(input: string, expected: string): boolean {
   return timingSafeEqual(a, b);
 }
 
+function adstrackSessionConfig() {
+  return { ...sessionConfig(), name: "adstrack-gate" };
+}
+
+async function requireAdstrack() {
+  const session = await useSession<AdminSession>(adstrackSessionConfig());
+  if (!session.data.unlocked) throw new Error("Unauthorized");
+}
+
+export const adstrackLogin = createServerFn({ method: "POST" })
+  .inputValidator((data: { password: string }) =>
+    z.object({ password: z.string().min(1).max(200) }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const expected = process.env["ADSTRACK_ADMIN_PASSWORD"];
+    if (!expected) return { ok: false as const };
+    if (!passwordMatches(data.password, expected)) return { ok: false as const };
+    const session = await useSession<AdminSession>(adstrackSessionConfig());
+    await session.update({ unlocked: true });
+    return { ok: true as const };
+  });
+
+export const adstrackIsUnlocked = createServerFn({ method: "GET" }).handler(async () => {
+  const session = await useSession<AdminSession>(adstrackSessionConfig());
+  return { unlocked: Boolean(session.data.unlocked) };
+});
+
+export const adstrackLogout = createServerFn({ method: "POST" }).handler(async () => {
+  const session = await useSession<AdminSession>(adstrackSessionConfig());
+  await session.clear();
+  return { ok: true as const };
+});
+
 async function requireAdmin() {
   const session = await useSession<AdminSession>(sessionConfig());
   if (!session.data.unlocked) throw new Error("Unauthorized");
@@ -116,7 +149,7 @@ export type AdstrackSend = {
 };
 
 export const listAdstrackSends = createServerFn({ method: "GET" }).handler(async () => {
-  await requireAdmin();
+  await requireAdstrack();
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("adstrack_sends")

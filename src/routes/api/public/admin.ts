@@ -37,31 +37,37 @@ function equals(a: string, b: string): boolean {
   return timingSafeEqual(ha, hb);
 }
 
-function sign(exp: number): string {
+type Scope = "leads" | "adstrack";
+
+function sign(scope: Scope, exp: number): string {
   const secret = process.env["ADMIN_SESSION_SECRET"] ?? "";
-  return createHmac("sha256", secret).update(String(exp)).digest("hex");
+  return createHmac("sha256", secret).update(`${scope}:${exp}`).digest("hex");
 }
 
-function issueToken(): string {
+function issueToken(scope: Scope): string {
   const exp = Date.now() + 12 * 60 * 60 * 1000;
-  return `${exp}.${sign(exp)}`;
+  return `${scope}.${exp}.${sign(scope, exp)}`;
 }
 
-function tokenValid(token: string | null): boolean {
+function tokenValid(token: string | null, scope: Scope): boolean {
   if (!token) return false;
-  const [expRaw, sig] = token.split(".");
-  if (!expRaw || !sig) return false;
+  const [tokScope, expRaw, sig] = token.split(".");
+  if (tokScope !== scope || !expRaw || !sig) return false;
   const exp = Number(expRaw);
   if (!Number.isFinite(exp) || exp < Date.now()) return false;
   try {
-    return equals(sig, sign(exp));
+    return equals(sig, sign(scope, exp));
   } catch {
     return false;
   }
 }
 
 const bodySchema = z.discriminatedUnion("action", [
-  z.object({ action: z.literal("login"), password: z.string().min(1).max(200) }),
+  z.object({
+    action: z.literal("login"),
+    password: z.string().min(1).max(200),
+    scope: z.enum(["leads", "adstrack"]).optional(),
+  }),
   z.object({ action: z.literal("list") }),
   z.object({ action: z.literal("adstrack") }),
   z.object({
@@ -103,18 +109,23 @@ export const Route = createFileRoute("/api/public/admin")({
         const body = parsed.data;
 
         if (body.action === "login") {
-          const expected = process.env["ADMIN_PASSWORD"];
+          const scope: Scope = body.scope ?? "leads";
+          const expected =
+            scope === "adstrack"
+              ? process.env["ADSTRACK_ADMIN_PASSWORD"]
+              : process.env["ADMIN_PASSWORD"];
           const secret = process.env["ADMIN_SESSION_SECRET"];
           if (!expected || !secret) return json({ ok: false, error: "not_configured" }, 503);
           if (!equals(body.password, expected)) {
             return json({ ok: false, error: "invalid_password" }, 401);
           }
-          return json({ ok: true, token: issueToken() });
+          return json({ ok: true, token: issueToken(scope) });
         }
 
         const auth = request.headers.get("authorization");
         const token = auth?.toLowerCase().startsWith("bearer ") ? auth.slice(7).trim() : null;
-        if (!tokenValid(token)) return json({ ok: false, error: "unauthorized" }, 401);
+        const needed: Scope = body.action === "adstrack" ? "adstrack" : "leads";
+        if (!tokenValid(token, needed)) return json({ ok: false, error: "unauthorized" }, 401);
 
         try {
           const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useHead } from "@/hooks/useHead";
 import { apiUrl } from "@/lib/api";
 
-const TOKEN_KEY = "ac-admin-token";
+const TOKEN_KEY = "ac-adstrack-token";
 
 type AdstrackSend = {
   id: string;
@@ -97,7 +97,7 @@ function LoginScreen({ onSuccess }: { onSuccess: (token: string) => void }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await callAdmin<{ token: string }>({ action: "login", password });
+      const res = await callAdmin<{ token: string }>({ action: "login", password, scope: "adstrack" });
       onSuccess(res.token);
     } catch (err) {
       toast.error(loginErrorMessage((err as Error).message));
@@ -258,11 +258,6 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button variant="ghost" asChild>
-              <Link to="/admin">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Leads
-              </Link>
-            </Button>
             <Button variant="outline" onClick={() => void load()} disabled={loading}>
               <RefreshCw className="mr-2 h-4 w-4" /> Actualiser
             </Button>

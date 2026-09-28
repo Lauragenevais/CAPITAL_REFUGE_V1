@@ -234,11 +234,6 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             <Button variant="outline" onClick={exportCsv}>
               <Download className="mr-2 h-4 w-4" /> Export CSV
             </Button>
-            <Button variant="outline" asChild>
-              <Link to="/admin/adstrack">
-                <Send className="mr-2 h-4 w-4" /> Envois Adstrack
-              </Link>
-            </Button>
             <Button
               variant="ghost"
               onClick={async () => {
