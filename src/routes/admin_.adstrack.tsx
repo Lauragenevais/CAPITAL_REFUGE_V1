@@ -1,7 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Download, LockKeyhole, RefreshCw, Search } from "lucide-react";
+import { Download, LockKeyhole, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import {
-  adminIsUnlocked,
-  adminLogin,
+  adstrackIsUnlocked,
+  adstrackLogin,
   listAdstrackSends,
   type AdstrackSend,
 } from "@/lib/admin.functions";
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/admin_/adstrack")({
 
 function AdstrackPage() {
   const [unlocked, setUnlocked] = useState<boolean | null>(null);
-  const check = useServerFn(adminIsUnlocked);
+  const check = useServerFn(adstrackIsUnlocked);
 
   useEffect(() => {
     check()
@@ -63,7 +63,7 @@ function AdstrackPage() {
 }
 
 function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
-  const login = useServerFn(adminLogin);
+  const login = useServerFn(adstrackLogin);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -229,11 +229,6 @@ function Dashboard() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button variant="ghost" asChild>
-              <Link to="/admin">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Leads
-              </Link>
-            </Button>
             <Button variant="outline" onClick={() => void load()} disabled={loading}>
               <RefreshCw className="mr-2 h-4 w-4" /> Actualiser
             </Button>

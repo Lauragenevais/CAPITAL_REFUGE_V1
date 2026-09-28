@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Download, LockKeyhole, LogOut, RefreshCw, Search, Send } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Download, LockKeyhole, LogOut, RefreshCw, Search } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -283,11 +282,6 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
             </Button>
             <Button variant="outline" onClick={exportCsv}>
               <Download className="mr-2 h-4 w-4" /> Export CSV
-            </Button>
-            <Button variant="outline" asChild>
-              <Link to="/admin/adstrack">
-                <Send className="mr-2 h-4 w-4" /> Envois Adstrack
-              </Link>
             </Button>
             <Button variant="ghost" onClick={onLogout}>
               <LogOut className="mr-2 h-4 w-4" /> Quitter
