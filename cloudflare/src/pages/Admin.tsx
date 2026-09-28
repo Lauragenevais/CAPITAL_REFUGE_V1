@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Download, LockKeyhole, LogOut, RefreshCw, Search, Send } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Download, LockKeyhole, LogOut, RefreshCw, Search } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
