@@ -368,7 +368,7 @@ async function issueSmsCode(leadId: string, phone: string, sentCount: number): P
       sms_sent_count: sentCount + 1,
     })
     .eq("id", leadId);
-  await sendBrevoSms(phone, `Votre code de validation : ${code}. Il est valable 10 minutes.`);
+  await sendBrevoSms(phone, `Votre code est ${code}. Utilisez le pour valider votre demande d'infos sur notre site internet.`);
 }
 
 export type SmsActionResult = { ok: true } | { ok: false; code: string; message: string };
