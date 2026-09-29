@@ -61,6 +61,7 @@ type AdminLead = {
   click_id: string;
   pays: string;
   ip_address: string;
+  operation?: string;
   status: string;
   notes: string;
   created_at: string;
@@ -275,6 +276,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
       "Nom",
       "Email",
       "Téléphone",
+      "Opération",
       "Source",
       "Click ID",
       "Pays",
@@ -288,6 +290,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
       l.last_name,
       l.email,
       l.phone,
+      l.operation ?? "",
       l.source,
       l.click_id,
       l.pays,
@@ -390,13 +393,14 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
         </div>
 
         <div className="mt-6 overflow-x-auto rounded-2xl border border-border/70 bg-card">
-          <table className="w-full min-w-[1000px] text-sm">
+          <table className="w-full min-w-[1100px] text-sm">
             <thead className="border-b border-border/70 text-left text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Date</th>
                 <th className="px-4 py-3">Contact</th>
                 <th className="px-4 py-3">Téléphone</th>
                 <th className="px-4 py-3">SMS</th>
+                <th className="px-4 py-3">Opération</th>
                 <th className="px-4 py-3">Source</th>
                 <th className="px-4 py-3">Statut</th>
                 <th className="px-4 py-3">Notes</th>
@@ -405,14 +409,14 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
             <tbody>
               {loading && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-10 text-center text-muted-foreground">
+                  <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
                     Chargement…
                   </td>
                 </tr>
               )}
               {!loading && filtered.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-10 text-center text-muted-foreground">
+                  <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
                     Aucun lead
                   </td>
                 </tr>
@@ -437,6 +441,11 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                   <td className="whitespace-nowrap px-4 py-3">{lead.phone}</td>
                   <td className="px-4 py-3">
                     <SmsBadges lead={lead} />
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-semibold text-foreground">
+                      {lead.operation || "—"}
+                    </span>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{lead.source || "—"}</td>
                   <td className="px-4 py-3">
