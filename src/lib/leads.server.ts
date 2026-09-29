@@ -378,7 +378,7 @@ export async function resendLeadCode(leadId: string): Promise<SmsActionResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: lead } = await supabaseAdmin
     .from("leads")
-    .select("id, phone, phone_verified, sms_sent_count")
+    .select("id, phone, phone_verified, sms_sent_count, operation")
     .eq("id", leadId)
     .maybeSingle();
   if (!lead) return { ok: false, code: "not_found", message: "Demande introuvable." };
@@ -387,7 +387,8 @@ export async function resendLeadCode(leadId: string): Promise<SmsActionResult> {
     return { ok: false, code: "too_many_sends", message: "Nombre maximum d'envois atteint." };
   }
   try {
-    await issueSmsCode(lead.id, lead.phone, lead.sms_sent_count);
+    const newCode = await issueSmsCode(lead.id, lead.phone, lead.sms_sent_count);
+    await updateSheetSmsStatus(lead.id, lead.operation, { smsCode: newCode, smsStatus: "Envoyé" });
   } catch {
     return { ok: false, code: "sms_failed", message: "L'envoi du SMS a échoué. Merci de réessayer." };
   }
@@ -606,7 +607,7 @@ async function writeLeadToSheet(
   }
 }
 
-/** Met à jour les colonnes SMS (L) et/ou Code (M) de la ligne du lead (repérée par l'ID en colonne N). */
+/** Met à jour les colonnes SMS (L) et/ou Code (M) de la ligne du lead (repérée par l'ID en colonne O) ; N = code SMS envoyé. */
 export async function updateSheetSmsStatus(
   leadId: string,
   operation: string,
