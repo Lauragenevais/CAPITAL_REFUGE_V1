@@ -83,6 +83,9 @@ export type Database = {
           sms_attempts: number
           sms_code_expires_at: string | null
           sms_code_hash: string | null
+          sms_delivered_at: string | null
+          sms_delivery_status: string
+          sms_last_reason: string
           sms_sent_count: number
           source: string
           status: string
@@ -106,6 +109,9 @@ export type Database = {
           sms_attempts?: number
           sms_code_expires_at?: string | null
           sms_code_hash?: string | null
+          sms_delivered_at?: string | null
+          sms_delivery_status?: string
+          sms_last_reason?: string
           sms_sent_count?: number
           source?: string
           status?: string
@@ -129,6 +135,9 @@ export type Database = {
           sms_attempts?: number
           sms_code_expires_at?: string | null
           sms_code_hash?: string | null
+          sms_delivered_at?: string | null
+          sms_delivery_status?: string
+          sms_last_reason?: string
           sms_sent_count?: number
           source?: string
           status?: string

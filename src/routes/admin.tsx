@@ -46,6 +46,40 @@ const STATUS_CLASS: Record<string, string> = {
   perdu: "bg-destructive/15 text-destructive",
 };
 
+function SmsBadges({ lead }: { lead: AdminLead }) {
+  const smsSent = lead.sms_sent_count > 0;
+  if (!smsSent && lead.phone_verified) {
+    return <span className="text-xs text-muted-foreground">—</span>;
+  }
+  const deliveryClass =
+    lead.sms_delivery_status === "delivered"
+      ? "bg-primary/15 text-primary"
+      : lead.sms_delivery_status === "failed"
+        ? "bg-destructive/15 text-destructive"
+        : "bg-muted text-muted-foreground";
+  const deliveryLabel =
+    lead.sms_delivery_status === "delivered"
+      ? "Délivré"
+      : lead.sms_delivery_status === "failed"
+        ? "Échec"
+        : "Envoyé";
+  const verifiedClass = lead.phone_verified ? "bg-accent/15 text-accent" : "bg-muted text-muted-foreground";
+  const verifiedLabel = lead.phone_verified ? "Validé" : "Non validé";
+  return (
+    <div className="flex flex-col items-start gap-1">
+      <span
+        title={lead.sms_last_reason || undefined}
+        className={`rounded-full px-2 py-0.5 text-xs font-semibold ${deliveryClass}`}
+      >
+        {deliveryLabel}
+      </span>
+      <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${verifiedClass}`}>
+        {verifiedLabel}
+      </span>
+    </div>
+  );
+}
+
 function AdminPage() {
   const [unlocked, setUnlocked] = useState<boolean | null>(null);
   const check = useServerFn(adminIsUnlocked);
@@ -302,12 +336,13 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         </div>
 
         <div className="mt-6 overflow-x-auto rounded-2xl border border-border/70 bg-card">
-          <table className="w-full min-w-[900px] text-sm">
+          <table className="w-full min-w-[1000px] text-sm">
             <thead className="border-b border-border/70 text-left text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Date</th>
                 <th className="px-4 py-3">Contact</th>
                 <th className="px-4 py-3">Téléphone</th>
+                <th className="px-4 py-3">SMS</th>
                 <th className="px-4 py-3">Source</th>
                 <th className="px-4 py-3">Statut</th>
                 <th className="px-4 py-3">Notes</th>
@@ -315,10 +350,10 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             </thead>
             <tbody>
               {loading && (
-                <tr><td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">Chargement…</td></tr>
+                <tr><td colSpan={7} className="px-4 py-10 text-center text-muted-foreground">Chargement…</td></tr>
               )}
               {!loading && filtered.length === 0 && (
-                <tr><td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">Aucun lead</td></tr>
+                <tr><td colSpan={7} className="px-4 py-10 text-center text-muted-foreground">Aucun lead</td></tr>
               )}
               {filtered.map((lead) => (
                 <tr key={lead.id} className="border-b border-border/40 last:border-0 align-top">
@@ -332,6 +367,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                     <p className="text-xs text-muted-foreground">{lead.email}</p>
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">{lead.phone}</td>
+                  <td className="px-4 py-3"><SmsBadges lead={lead} /></td>
                   <td className="px-4 py-3 text-muted-foreground">{lead.source || "—"}</td>
                   <td className="px-4 py-3">
                     <Select value={lead.status} onValueChange={(v) => void setStatus(lead, v)}>

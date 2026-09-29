@@ -134,7 +134,7 @@ export const Route = createFileRoute("/api/public/admin")({
             const { data, error } = await supabaseAdmin
               .from("leads")
               .select(
-                "id, first_name, last_name, email, phone, source, click_id, pays, ip_address, status, notes, created_at",
+                "id, first_name, last_name, email, phone, source, click_id, pays, ip_address, status, notes, created_at, phone_verified, sms_sent_count, sms_delivery_status, sms_last_reason",
               )
               .order("created_at", { ascending: false })
               .limit(2000);
