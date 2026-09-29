@@ -390,7 +390,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
         </div>
 
         <div className="mt-6 overflow-x-auto rounded-2xl border border-border/70 bg-card">
-          <table className="w-full min-w-[900px] text-sm">
+          <table className="w-full min-w-[1000px] text-sm">
             <thead className="border-b border-border/70 text-left text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Date</th>
@@ -405,14 +405,14 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
             <tbody>
               {loading && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
+                  <td colSpan={7} className="px-4 py-10 text-center text-muted-foreground">
                     Chargement…
                   </td>
                 </tr>
               )}
               {!loading && filtered.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
+                  <td colSpan={7} className="px-4 py-10 text-center text-muted-foreground">
                     Aucun lead
                   </td>
                 </tr>
@@ -435,6 +435,9 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                     <p className="text-xs text-muted-foreground">{lead.email}</p>
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">{lead.phone}</td>
+                  <td className="px-4 py-3">
+                    <SmsBadges lead={lead} />
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground">{lead.source || "—"}</td>
                   <td className="px-4 py-3">
                     <select
