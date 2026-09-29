@@ -342,7 +342,7 @@ async function sendBrevoSms(phone: string, content: string): Promise<void> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      sender: process.env["BREVO_SMS_SENDER"] ?? "MonCapital",
+      sender: "MonCapital",
       recipient,
       content,
       type: "transactional",
