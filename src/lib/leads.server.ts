@@ -313,11 +313,144 @@ export function normalizeSheetId(value: string | undefined): string {
 
 
 
+/** ---------- Vérification SMS (formulaires uniquement) ---------- */
+
+const SMS_CODE_TTL_MS = 10 * 60 * 1000;
+const SMS_MAX_ATTEMPTS = 5;
+const SMS_MAX_SENDS = 3;
+
+async function hashCode(leadId: string, code: string): Promise<string> {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`${leadId}:${code}`));
+  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function generateCode(): string {
+  const n = crypto.getRandomValues(new Uint32Array(1))[0]! % 1_000_000;
+  return String(n).padStart(6, "0");
+}
+
+async function sendBrevoSms(phone: string, content: string): Promise<void> {
+  const lovableApiKey = process.env["LOVABLE_API_KEY"];
+  const brevoKey = process.env["BREVO_API_KEY"];
+  if (!lovableApiKey || !brevoKey) throw new Error("Envoi SMS non configuré");
+  const recipient = `33${phone.replace(/^0/, "")}`;
+  const resp = await fetch("https://connector-gateway.lovable.dev/brevo/transactionalSMS/sms", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${lovableApiKey}`,
+      "X-Connection-Api-Key": brevoKey,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: process.env["BREVO_SMS_SENDER"] ?? "Capital",
+      recipient,
+      content,
+      type: "transactional",
+    }),
+  });
+  if (!resp.ok) {
+    const body = await resp.text();
+    console.error(`Brevo SMS error [${resp.status}]: ${body}`);
+    throw new Error(`Brevo SMS [${resp.status}]`);
+  }
+}
+
+/** Génère, stocke (haché) et envoie un nouveau code pour un lead. */
+async function issueSmsCode(leadId: string, phone: string, sentCount: number): Promise<void> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const code = generateCode();
+  await supabaseAdmin
+    .from("leads")
+    .update({
+      sms_code_hash: await hashCode(leadId, code),
+      sms_code_expires_at: new Date(Date.now() + SMS_CODE_TTL_MS).toISOString(),
+      sms_attempts: 0,
+      sms_sent_count: sentCount + 1,
+    })
+    .eq("id", leadId);
+  await sendBrevoSms(phone, `Votre code de validation : ${code}. Il est valable 10 minutes.`);
+}
+
+export type SmsActionResult = { ok: true } | { ok: false; code: string; message: string };
+
+export async function resendLeadCode(leadId: string): Promise<SmsActionResult> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data: lead } = await supabaseAdmin
+    .from("leads")
+    .select("id, phone, phone_verified, sms_sent_count")
+    .eq("id", leadId)
+    .maybeSingle();
+  if (!lead) return { ok: false, code: "not_found", message: "Demande introuvable." };
+  if (lead.phone_verified) return { ok: false, code: "already_verified", message: "Numéro déjà validé." };
+  if (lead.sms_sent_count >= SMS_MAX_SENDS) {
+    return { ok: false, code: "too_many_sends", message: "Nombre maximum d'envois atteint." };
+  }
+  try {
+    await issueSmsCode(lead.id, lead.phone, lead.sms_sent_count);
+  } catch {
+    return { ok: false, code: "sms_failed", message: "L'envoi du SMS a échoué. Merci de réessayer." };
+  }
+  return { ok: true };
+}
+
+export async function verifyLeadCode(
+  leadId: string,
+  code: string,
+  ipAddress: string,
+): Promise<SmsActionResult> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data: lead } = await supabaseAdmin.from("leads").select("*").eq("id", leadId).maybeSingle();
+  if (!lead) return { ok: false, code: "not_found", message: "Demande introuvable." };
+  if (lead.phone_verified) return { ok: true };
+  if (lead.sms_attempts >= SMS_MAX_ATTEMPTS) {
+    return { ok: false, code: "too_many_attempts", message: "Trop d'essais. Demandez un nouveau code." };
+  }
+  if (!lead.sms_code_hash || !lead.sms_code_expires_at || new Date(lead.sms_code_expires_at) < new Date()) {
+    return { ok: false, code: "expired", message: "Code expiré. Demandez un nouveau code." };
+  }
+  if ((await hashCode(lead.id, code)) !== lead.sms_code_hash) {
+    await supabaseAdmin.from("leads").update({ sms_attempts: lead.sms_attempts + 1 }).eq("id", lead.id);
+    return { ok: false, code: "invalid_code", message: "Code incorrect." };
+  }
+  // Marquage atomique : seul le premier appel valide déclenche la suite
+  const { data: updated } = await supabaseAdmin
+    .from("leads")
+    .update({ phone_verified: true, verified_at: new Date().toISOString(), sms_code_hash: null })
+    .eq("id", lead.id)
+    .eq("phone_verified", false)
+    .select("id");
+  if (!updated || updated.length === 0) return { ok: true };
+
+  await finalizeLead(
+    {
+      first_name: lead.first_name,
+      last_name: lead.last_name,
+      email: lead.email,
+      phone: lead.phone,
+      consent: true,
+      source: lead.source || undefined,
+      click_id: lead.click_id || undefined,
+      operation: lead.operation as LeadInput["operation"],
+    } as LeadInput,
+    lead.ip_address || ipAddress,
+    "form",
+    lead.operation,
+  );
+  return { ok: true };
+}
+
 /** ---------- Traitement partagé d'un lead ---------- */
 
 export type ProcessLeadResult =
-  | { ok: true }
+  | { ok: true; pendingVerification?: false }
+  | { ok: true; pendingVerification: true; leadId: string; smsSent: boolean }
   | { ok: false; code: "duplicate"; message: string };
+
+const DUPLICATE: ProcessLeadResult = {
+  ok: false,
+  code: "duplicate",
+  message: "Une demande avec cet email ou ce numéro existe déjà.",
+};
 
 export async function processLead(
   data: LeadInput,
@@ -326,46 +459,69 @@ export async function processLead(
 ): Promise<ProcessLeadResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const operation = data.operation ?? OPERATION;
-
+  const needsSms = channel === "form";
 
   const { data: existing } = await supabaseAdmin
     .from("leads")
-    .select("id")
+    .select("id, email, phone, phone_verified, sms_sent_count")
     .or(`email.eq.${data.email},phone.eq.${data.phone}`)
     .limit(1);
 
   if (existing && existing.length > 0) {
-    return {
-      ok: false,
-      code: "duplicate",
-      message: "Une demande avec cet email ou ce numéro existe déjà.",
-    };
+    const prev = existing[0]!;
+    // Même personne revenue sans avoir validé : on lui renvoie un code
+    if (needsSms && !prev.phone_verified && prev.email === data.email && prev.phone === data.phone) {
+      const r = await resendLeadCode(prev.id);
+      return { ok: true, pendingVerification: true, leadId: prev.id, smsSent: r.ok };
+    }
+    return DUPLICATE;
   }
 
-  const { error: insertError } = await supabaseAdmin.from("leads").insert({
-    first_name: data.first_name,
-    last_name: data.last_name,
-    email: data.email,
-    phone: data.phone,
-    consent: data.consent,
-    source: data.source ?? "",
-    click_id: data.click_id ?? "",
-    ip_address: ipAddress,
-    pays: "FR",
-    operation,
-  });
+  const { data: inserted, error: insertError } = await supabaseAdmin
+    .from("leads")
+    .insert({
+      first_name: data.first_name,
+      last_name: data.last_name,
+      email: data.email,
+      phone: data.phone,
+      consent: data.consent,
+      source: data.source ?? "",
+      click_id: data.click_id ?? "",
+      ip_address: ipAddress,
+      pays: "FR",
+      operation,
+      phone_verified: !needsSms,
+    })
+    .select("id")
+    .single();
 
-  if (insertError) {
-    if (insertError.code === "23505") {
-      return {
-        ok: false,
-        code: "duplicate",
-        message: "Une demande avec cet email ou ce numéro existe déjà.",
-      };
-    }
+  if (insertError || !inserted) {
+    if (insertError?.code === "23505") return DUPLICATE;
     console.error("Lead insert error:", insertError);
     throw new Error("Enregistrement impossible");
   }
+
+  if (needsSms) {
+    let smsSent = true;
+    try {
+      await issueSmsCode(inserted.id, data.phone, 0);
+    } catch (err) {
+      smsSent = false;
+      console.error("SMS code error:", err);
+    }
+    return { ok: true, pendingVerification: true, leadId: inserted.id, smsSent };
+  }
+
+  return finalizeLead(data, ipAddress, channel, operation);
+}
+
+/** Actions après validation : Google Sheet, pixels, notification. */
+async function finalizeLead(
+  data: LeadInput,
+  ipAddress: string,
+  channel: "form" | "api",
+  operation: string,
+): Promise<ProcessLeadResult> {
 
   // Google Sheet (non bloquant)
   let sheetStatus = "⏭️ Non configuré";
