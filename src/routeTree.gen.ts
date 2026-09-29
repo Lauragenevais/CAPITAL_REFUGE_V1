@@ -30,6 +30,7 @@ import { Route as PolitiqueConfidentialitePaypalRouteImport } from './routes/pol
 import { Route as AdminAdstrackRouteImport } from './routes/admin_.adstrack'
 import { Route as ApiPublicAdminRouteImport } from './routes/api/public/admin'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
+import { Route as ApiPublicLeadVerifyRouteImport } from './routes/api/public/lead-verify'
 import { Route as ApiPublicLeadsRouteImport } from './routes/api/public/leads'
 
 const IndexRoute = IndexRouteImport.update({
@@ -142,6 +143,11 @@ const ApiPublicLeadFormRoute = ApiPublicLeadFormRouteImport.update({
   path: '/api/public/lead-form',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicLeadVerifyRoute = ApiPublicLeadVerifyRouteImport.update({
+  id: '/api/public/lead-verify',
+  path: '/api/public/lead-verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicLeadsRoute = ApiPublicLeadsRouteImport.update({
   id: '/api/public/leads',
   path: '/api/public/leads',
@@ -170,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/admin/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/api/public/lead-verify': typeof ApiPublicLeadVerifyRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
 }
 export interface FileRoutesByTo {
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/admin/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/api/public/lead-verify': typeof ApiPublicLeadVerifyRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
 }
 export interface FileRoutesById {
@@ -219,6 +227,7 @@ export interface FileRoutesById {
   '/admin_/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/api/public/lead-verify': typeof ApiPublicLeadVerifyRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
 }
 export interface FileRouteTypes {
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
     | '/admin/adstrack'
     | '/api/public/admin'
     | '/api/public/lead-form'
+    | '/api/public/lead-verify'
     | '/api/public/leads'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -269,6 +279,7 @@ export interface FileRouteTypes {
     | '/admin/adstrack'
     | '/api/public/admin'
     | '/api/public/lead-form'
+    | '/api/public/lead-verify'
     | '/api/public/leads'
   id:
     | '__root__'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/admin_/adstrack'
     | '/api/public/admin'
     | '/api/public/lead-form'
+    | '/api/public/lead-verify'
     | '/api/public/leads'
   fileRoutesById: FileRoutesById
 }
@@ -318,6 +330,7 @@ export interface RootRouteChildren {
   AdminAdstrackRoute: typeof AdminAdstrackRoute
   ApiPublicAdminRoute: typeof ApiPublicAdminRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
+  ApiPublicLeadVerifyRoute: typeof ApiPublicLeadVerifyRoute
   ApiPublicLeadsRoute: typeof ApiPublicLeadsRoute
 }
 
@@ -470,6 +483,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicLeadFormRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/lead-verify': {
+      id: '/api/public/lead-verify'
+      path: '/api/public/lead-verify'
+      fullPath: '/api/public/lead-verify'
+      preLoaderRoute: typeof ApiPublicLeadVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/leads': {
       id: '/api/public/leads'
       path: '/api/public/leads'
@@ -502,6 +522,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminAdstrackRoute: AdminAdstrackRoute,
   ApiPublicAdminRoute: ApiPublicAdminRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
+  ApiPublicLeadVerifyRoute: ApiPublicLeadVerifyRoute,
   ApiPublicLeadsRoute: ApiPublicLeadsRoute,
 }
 export const routeTree = rootRouteImport
