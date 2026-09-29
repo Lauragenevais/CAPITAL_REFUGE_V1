@@ -61,7 +61,7 @@ export const Route = createFileRoute("/api/public/brevo-sms-webhook")({
           // le plus récent portant ce numéro (comparaison sur numéro normalisé).
           const { data: candidates, error: fetchError } = await supabaseAdmin
             .from("leads")
-            .select("id, phone")
+            .select("id, phone, operation")
             .gt("sms_sent_count", 0)
             .order("created_at", { ascending: false })
             .limit(500);
@@ -71,6 +71,7 @@ export const Route = createFileRoute("/api/public/brevo-sms-webhook")({
             (c) => normalizePhone(c.phone ?? "") === normalized,
           );
           if (!lead) return new Response("ok");
+          const { updateSheetSmsStatus } = await import("@/lib/leads.server");
 
           if (event === "delivered") {
             const { error } = await supabaseAdmin
@@ -82,6 +83,7 @@ export const Route = createFileRoute("/api/public/brevo-sms-webhook")({
               })
               .eq("id", lead.id);
             if (error) console.error("Brevo webhook delivered update error:", error.message);
+            await updateSheetSmsStatus(lead.id, lead.operation, { smsStatus: "Délivré" });
           } else if (FAILED_EVENTS.has(event)) {
             const { error } = await supabaseAdmin
               .from("leads")
@@ -91,6 +93,9 @@ export const Route = createFileRoute("/api/public/brevo-sms-webhook")({
               })
               .eq("id", lead.id);
             if (error) console.error("Brevo webhook failed update error:", error.message);
+            await updateSheetSmsStatus(lead.id, lead.operation, {
+              smsStatus: event === "hardBounce" ? "Hardbounce" : `Échec (${event})`,
+            });
           }
         } catch (err) {
           console.error("Brevo SMS webhook error:", err);
