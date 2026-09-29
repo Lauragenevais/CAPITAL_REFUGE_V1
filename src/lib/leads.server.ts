@@ -421,6 +421,8 @@ export async function verifyLeadCode(
     .select("id");
   if (!updated || updated.length === 0) return { ok: true };
 
+  await updateSheetSmsStatus(lead.id, lead.operation, { codeStatus: "Validé" });
+
   await finalizeLead(
     {
       first_name: lead.first_name,
@@ -435,6 +437,7 @@ export async function verifyLeadCode(
     lead.ip_address || ipAddress,
     "form",
     lead.operation,
+    "✅ Déjà dans le Google Sheet (code SMS passé à « Validé »)",
   );
   return { ok: true };
 }
@@ -509,62 +512,147 @@ export async function processLead(
       smsSent = false;
       console.error("SMS code error:", err);
     }
+    // Tous les leads formulaire vont dans le Google Sheet dès la soumission
+    await writeLeadToSheet(data, ipAddress, channel, operation, {
+      leadId: inserted.id,
+      smsStatus: smsSent ? "Envoyé" : "Échec envoi",
+      codeStatus: "Non validé",
+    });
     return { ok: true, pendingVerification: true, leadId: inserted.id, smsSent };
   }
 
   return finalizeLead(data, ipAddress, channel, operation);
 }
 
-/** Actions après validation : Google Sheet, pixels, notification. */
+/** Onglet cible selon le canal / l'opération / le mode de routage. */
+function sheetTarget(channel: "form" | "api", operation: string) {
+  const legacySheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
+  const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
+  const isLivretRobotApi =
+    channel === "api" && (operation === "LIVRET" || operation === "ROBOT");
+  const isCryptoEmailing = LEAD_ROUTING_MODE === "CRYPTO_EMAILING";
+  return {
+    sheetId: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_ID : legacySheetId,
+    tab: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_TAB : isLivretRobotApi ? "Livret - Robot" : sheetTab,
+  };
+}
+
+async function ensureSmsHeaders(token: string, sheetId: string, tab: string): Promise<void> {
+  const range = tab ? `'${tab}'!L1:N1` : "L1:N1";
+  const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (r.ok) {
+    const d = (await r.json()) as { values?: string[][] };
+    if (d.values?.[0]?.[2]) return;
+  }
+  const w = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?valueInputOption=RAW`,
+    {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ values: [["Statut SMS", "Code SMS", "ID lead"]] }),
+    },
+  );
+  if (!w.ok) throw new Error(`Google Sheets header error [${w.status}]: ${await w.text()}`);
+}
+
+/** Ajoute le lead en haut du Google Sheet. Renvoie le statut texte. */
+async function writeLeadToSheet(
+  data: LeadInput,
+  ipAddress: string,
+  channel: "form" | "api",
+  operation: string,
+  sms: { leadId: string; smsStatus: string; codeStatus: string },
+): Promise<string> {
+  const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
+  const { sheetId, tab } = sheetTarget(channel, operation);
+  if (!serviceAccountKey || !sheetId) return "⏭️ Non configuré";
+  try {
+    const token = await getGoogleAccessToken(serviceAccountKey);
+    await ensureOperationHeader(token, sheetId, tab);
+    await ensureSmsHeaders(token, sheetId, tab);
+    await insertAtTopOfGoogleSheet(
+      token,
+      sheetId,
+      [
+        [
+          data.first_name,
+          data.last_name.toUpperCase(),
+          data.email,
+          data.phone,
+          "FR",
+          String(data.consent).toUpperCase(),
+          ipAddress,
+          data.source ?? "",
+          data.source === "6g7do0kw" ? "SMS" : (data.click_id ?? ""),
+          parisTimestamp(),
+          operation,
+          sms.smsStatus,
+          sms.codeStatus,
+          sms.leadId,
+        ],
+      ],
+      tab,
+    );
+    return `✅ Ajouté au Google Sheet${tab ? ` (onglet "${tab}")` : ""}`;
+  } catch (err) {
+    console.error("Google Sheet error (non bloquant):", err);
+    return `❌ Erreur Google Sheet: ${err instanceof Error ? err.message : "inconnue"}`;
+  }
+}
+
+/** Met à jour les colonnes SMS (L) et/ou Code (M) de la ligne du lead (repérée par l'ID en colonne N). */
+export async function updateSheetSmsStatus(
+  leadId: string,
+  operation: string,
+  update: { smsStatus?: string; codeStatus?: string },
+): Promise<void> {
+  const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
+  const { sheetId, tab } = sheetTarget("form", operation);
+  if (!serviceAccountKey || !sheetId) return;
+  try {
+    const token = await getGoogleAccessToken(serviceAccountKey);
+    const prefix = tab ? `'${tab}'!` : "";
+    const r = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${prefix}N1:N5000`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    if (!r.ok) throw new Error(`read [${r.status}]: ${await r.text()}`);
+    const d = (await r.json()) as { values?: string[][] };
+    const idx = (d.values ?? []).findIndex((row) => row[0] === leadId);
+    if (idx < 0) return;
+    const row = idx + 1;
+    const data: { range: string; values: string[][] }[] = [];
+    if (update.smsStatus !== undefined) data.push({ range: `${prefix}L${row}`, values: [[update.smsStatus]] });
+    if (update.codeStatus !== undefined) data.push({ range: `${prefix}M${row}`, values: [[update.codeStatus]] });
+    const w = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values:batchUpdate`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ valueInputOption: "RAW", data }),
+    });
+    if (!w.ok) throw new Error(`write [${w.status}]: ${await w.text()}`);
+  } catch (err) {
+    console.error("Google Sheet SMS update error (non bloquant):", err);
+  }
+}
+
+/** Actions après validation : Google Sheet (si pas déjà fait), pixels, notification. */
 async function finalizeLead(
   data: LeadInput,
   ipAddress: string,
   channel: "form" | "api",
   operation: string,
+  sheetStatusOverride?: string,
 ): Promise<ProcessLeadResult> {
 
-  // Google Sheet (non bloquant)
-  let sheetStatus = "⏭️ Non configuré";
-  const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
-  const legacySheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
-  const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
-  const isLivretRobotApi =
-    channel === "api" && (operation === "LIVRET" || operation === "ROBOT");
-  const legacySheetTab = isLivretRobotApi ? "Livret - Robot" : sheetTab;
-  const isCryptoEmailing = LEAD_ROUTING_MODE === "CRYPTO_EMAILING";
-  const sheetId = isCryptoEmailing ? CRYPTO_EMAILING_SHEET_ID : legacySheetId;
-  const targetSheetTab = isCryptoEmailing ? CRYPTO_EMAILING_SHEET_TAB : legacySheetTab;
-
-  if (serviceAccountKey && sheetId) {
-    try {
-      const token = await getGoogleAccessToken(serviceAccountKey);
-      await ensureOperationHeader(token, sheetId, targetSheetTab);
-      await insertAtTopOfGoogleSheet(
-        token,
-        sheetId,
-        [
-          [
-            data.first_name,
-            data.last_name.toUpperCase(),
-            data.email,
-            data.phone,
-            "FR",
-            String(data.consent).toUpperCase(),
-            ipAddress,
-            data.source ?? "",
-            data.source === "6g7do0kw" ? "SMS" : (data.click_id ?? ""),
-            parisTimestamp(),
-            operation,
-          ],
-        ],
-        targetSheetTab,
-      );
-      sheetStatus = `✅ Ajouté au Google Sheet${targetSheetTab ? ` (onglet "${targetSheetTab}")` : ""}`;
-    } catch (err) {
-      sheetStatus = `❌ Erreur Google Sheet: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Google Sheet error (non bloquant):", err);
-    }
-  }
+  const sheetStatus =
+    sheetStatusOverride ??
+    (await writeLeadToSheet(data, ipAddress, channel, operation, {
+      leadId: "",
+      smsStatus: "Non concerné",
+      codeStatus: "Non concerné",
+    }));
 
   // Pixels de conversion Com&Click — un par canal
   let pixelStatus = "⏭️ Non déclenché";
@@ -793,7 +881,7 @@ async function finalizeLead(
 
   // Webservice adstrack (non bloquant) — uniquement en mode Crypto - Emailing
   let adstrackStatus = "⏭️ Non déclenché (configuration historique)";
-  if (isCryptoEmailing) {
+  if (LEAD_ROUTING_MODE === "CRYPTO_EMAILING") {
     adstrackStatus = await sendToAdstrack(data, ipAddress, channel, operation);
   }
 
