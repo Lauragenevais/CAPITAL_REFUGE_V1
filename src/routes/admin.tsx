@@ -46,6 +46,40 @@ const STATUS_CLASS: Record<string, string> = {
   perdu: "bg-destructive/15 text-destructive",
 };
 
+function SmsBadges({ lead }: { lead: AdminLead }) {
+  const smsSent = lead.sms_sent_count > 0;
+  if (!smsSent && lead.phone_verified) {
+    return <span className="text-xs text-muted-foreground">—</span>;
+  }
+  const deliveryClass =
+    lead.sms_delivery_status === "delivered"
+      ? "bg-primary/15 text-primary"
+      : lead.sms_delivery_status === "failed"
+        ? "bg-destructive/15 text-destructive"
+        : "bg-muted text-muted-foreground";
+  const deliveryLabel =
+    lead.sms_delivery_status === "delivered"
+      ? "Délivré"
+      : lead.sms_delivery_status === "failed"
+        ? "Échec"
+        : "Envoyé";
+  const verifiedClass = lead.phone_verified ? "bg-accent/15 text-accent" : "bg-muted text-muted-foreground";
+  const verifiedLabel = lead.phone_verified ? "Validé" : "Non validé";
+  return (
+    <div className="flex flex-col items-start gap-1">
+      <span
+        title={lead.sms_last_reason || undefined}
+        className={`rounded-full px-2 py-0.5 text-xs font-semibold ${deliveryClass}`}
+      >
+        {deliveryLabel}
+      </span>
+      <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${verifiedClass}`}>
+        {verifiedLabel}
+      </span>
+    </div>
+  );
+}
+
 function AdminPage() {
   const [unlocked, setUnlocked] = useState<boolean | null>(null);
   const check = useServerFn(adminIsUnlocked);
