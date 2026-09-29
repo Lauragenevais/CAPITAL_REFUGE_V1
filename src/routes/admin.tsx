@@ -342,6 +342,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                 <th className="px-4 py-3">Date</th>
                 <th className="px-4 py-3">Contact</th>
                 <th className="px-4 py-3">Téléphone</th>
+                <th className="px-4 py-3">SMS</th>
                 <th className="px-4 py-3">Source</th>
                 <th className="px-4 py-3">Statut</th>
                 <th className="px-4 py-3">Notes</th>
@@ -349,7 +350,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             </thead>
             <tbody>
               {loading && (
-                <tr><td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">Chargement…</td></tr>
+                <tr><td colSpan={7} className="px-4 py-10 text-center text-muted-foreground">Chargement…</td></tr>
               )}
               {!loading && filtered.length === 0 && (
                 <tr><td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">Aucun lead</td></tr>
