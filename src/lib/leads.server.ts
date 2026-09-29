@@ -356,7 +356,7 @@ async function sendBrevoSms(phone: string, content: string): Promise<void> {
 }
 
 /** Génère, stocke (haché) et envoie un nouveau code pour un lead. */
-async function issueSmsCode(leadId: string, phone: string, sentCount: number): Promise<void> {
+async function issueSmsCode(leadId: string, phone: string, sentCount: number): Promise<string> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const code = generateCode();
   await supabaseAdmin
@@ -369,6 +369,7 @@ async function issueSmsCode(leadId: string, phone: string, sentCount: number): P
     })
     .eq("id", leadId);
   await sendBrevoSms(phone, `Votre code est ${code}. Utilisez le pour valider votre demande d'infos sur notre site internet.`);
+  return code;
 }
 
 export type SmsActionResult = { ok: true } | { ok: false; code: string; message: string };
@@ -377,7 +378,7 @@ export async function resendLeadCode(leadId: string): Promise<SmsActionResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data: lead } = await supabaseAdmin
     .from("leads")
-    .select("id, phone, phone_verified, sms_sent_count")
+    .select("id, phone, phone_verified, sms_sent_count, operation")
     .eq("id", leadId)
     .maybeSingle();
   if (!lead) return { ok: false, code: "not_found", message: "Demande introuvable." };
@@ -386,7 +387,8 @@ export async function resendLeadCode(leadId: string): Promise<SmsActionResult> {
     return { ok: false, code: "too_many_sends", message: "Nombre maximum d'envois atteint." };
   }
   try {
-    await issueSmsCode(lead.id, lead.phone, lead.sms_sent_count);
+    const newCode = await issueSmsCode(lead.id, lead.phone, lead.sms_sent_count);
+    await updateSheetSmsStatus(lead.id, lead.operation, { smsCode: newCode, smsStatus: "Envoyé" });
   } catch {
     return { ok: false, code: "sms_failed", message: "L'envoi du SMS a échoué. Merci de réessayer." };
   }
@@ -506,8 +508,9 @@ export async function processLead(
 
   if (needsSms) {
     let smsSent = true;
+    let smsCode = "";
     try {
-      await issueSmsCode(inserted.id, data.phone, 0);
+      smsCode = await issueSmsCode(inserted.id, data.phone, 0);
     } catch (err) {
       smsSent = false;
       console.error("SMS code error:", err);
@@ -517,6 +520,7 @@ export async function processLead(
       leadId: inserted.id,
       smsStatus: smsSent ? "Envoyé" : "Échec envoi",
       codeStatus: "Non validé",
+      smsCode,
     });
     return { ok: true, pendingVerification: true, leadId: inserted.id, smsSent };
   }
@@ -538,20 +542,20 @@ function sheetTarget(channel: "form" | "api", operation: string) {
 }
 
 async function ensureSmsHeaders(token: string, sheetId: string, tab: string): Promise<void> {
-  const range = tab ? `'${tab}'!L1:N1` : "L1:N1";
+  const range = tab ? `'${tab}'!L1:O1` : "L1:O1";
   const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (r.ok) {
     const d = (await r.json()) as { values?: string[][] };
-    if (d.values?.[0]?.[2]) return;
+    if (d.values?.[0]?.[3]) return;
   }
   const w = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?valueInputOption=RAW`,
     {
       method: "PUT",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ values: [["Statut SMS", "Code SMS", "ID lead"]] }),
+      body: JSON.stringify({ values: [["SMS", "Code SMS", "N° code SMS recu", "Lead id"]] }),
     },
   );
   if (!w.ok) throw new Error(`Google Sheets header error [${w.status}]: ${await w.text()}`);
@@ -563,7 +567,7 @@ async function writeLeadToSheet(
   ipAddress: string,
   channel: "form" | "api",
   operation: string,
-  sms: { leadId: string; smsStatus: string; codeStatus: string },
+  sms: { leadId: string; smsStatus: string; codeStatus: string; smsCode?: string },
 ): Promise<string> {
   const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
   const { sheetId, tab } = sheetTarget(channel, operation);
@@ -590,6 +594,7 @@ async function writeLeadToSheet(
           operation,
           sms.smsStatus,
           sms.codeStatus,
+          sms.smsCode ?? "",
           sms.leadId,
         ],
       ],
@@ -602,11 +607,11 @@ async function writeLeadToSheet(
   }
 }
 
-/** Met à jour les colonnes SMS (L) et/ou Code (M) de la ligne du lead (repérée par l'ID en colonne N). */
+/** Met à jour les colonnes SMS (L) et/ou Code (M) de la ligne du lead (repérée par l'ID en colonne O) ; N = code SMS envoyé. */
 export async function updateSheetSmsStatus(
   leadId: string,
   operation: string,
-  update: { smsStatus?: string; codeStatus?: string },
+  update: { smsStatus?: string; codeStatus?: string; smsCode?: string },
 ): Promise<void> {
   const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
   const { sheetId, tab } = sheetTarget("form", operation);
@@ -615,7 +620,7 @@ export async function updateSheetSmsStatus(
     const token = await getGoogleAccessToken(serviceAccountKey);
     const prefix = tab ? `'${tab}'!` : "";
     const r = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${prefix}N1:N5000`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${prefix}O1:O5000`,
       { headers: { Authorization: `Bearer ${token}` } },
     );
     if (!r.ok) throw new Error(`read [${r.status}]: ${await r.text()}`);
@@ -626,6 +631,7 @@ export async function updateSheetSmsStatus(
     const data: { range: string; values: string[][] }[] = [];
     if (update.smsStatus !== undefined) data.push({ range: `${prefix}L${row}`, values: [[update.smsStatus]] });
     if (update.codeStatus !== undefined) data.push({ range: `${prefix}M${row}`, values: [[update.codeStatus]] });
+    if (update.smsCode !== undefined) data.push({ range: `${prefix}N${row}`, values: [[update.smsCode]] });
     const w = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values:batchUpdate`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
