@@ -17,6 +17,40 @@ const STATUS_CLASS: Record<string, string> = {
   perdu: "bg-destructive/15 text-destructive",
 };
 
+function SmsBadges({ lead }: { lead: AdminLead }) {
+  const smsSent = (lead.sms_sent_count ?? 0) > 0;
+  if (!smsSent && lead.phone_verified !== false) {
+    return <span className="text-xs text-muted-foreground">—</span>;
+  }
+  const deliveryClass =
+    lead.sms_delivery_status === "delivered"
+      ? "bg-primary/15 text-primary"
+      : lead.sms_delivery_status === "failed"
+        ? "bg-destructive/15 text-destructive"
+        : "bg-muted text-muted-foreground";
+  const deliveryLabel =
+    lead.sms_delivery_status === "delivered"
+      ? "Délivré"
+      : lead.sms_delivery_status === "failed"
+        ? "Échec"
+        : "Envoyé";
+  const verifiedClass = lead.phone_verified !== false ? "bg-accent/15 text-accent" : "bg-muted text-muted-foreground";
+  const verifiedLabel = lead.phone_verified !== false ? "Validé" : "Non validé";
+  return (
+    <div className="flex flex-col items-start gap-1">
+      <span
+        title={lead.sms_last_reason || undefined}
+        className={`rounded-full px-2 py-0.5 text-xs font-semibold ${deliveryClass}`}
+      >
+        {deliveryLabel}
+      </span>
+      <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${verifiedClass}`}>
+        {verifiedLabel}
+      </span>
+    </div>
+  );
+}
+
 type AdminLead = {
   id: string;
   first_name: string;
@@ -30,6 +64,10 @@ type AdminLead = {
   status: string;
   notes: string;
   created_at: string;
+  phone_verified?: boolean;
+  sms_sent_count?: number;
+  sms_delivery_status?: string;
+  sms_last_reason?: string;
 };
 
 async function callAdmin<T>(body: Record<string, unknown>, token?: string | null): Promise<T> {
@@ -358,6 +396,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                 <th className="px-4 py-3">Date</th>
                 <th className="px-4 py-3">Contact</th>
                 <th className="px-4 py-3">Téléphone</th>
+                <th className="px-4 py-3">SMS</th>
                 <th className="px-4 py-3">Source</th>
                 <th className="px-4 py-3">Statut</th>
                 <th className="px-4 py-3">Notes</th>
