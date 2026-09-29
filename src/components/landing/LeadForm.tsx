@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { CheckCircle2, Lock, ShieldCheck, BadgeCheck, Sparkles, ArrowRight } from "lucide-react";
+import { CheckCircle2, Lock, ShieldCheck, BadgeCheck, Sparkles, ArrowRight, Smartphone } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,10 @@ const DEFAULT_CONSENT_LABEL =
 
 export function LeadForm({ operation, consentLabel }: LeadFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [leadId, setLeadId] = useState<string | null>(null);
+  const [phoneShown, setPhoneShown] = useState("");
+  const [code, setCode] = useState("");
+  const [verifying, setVerifying] = useState(false);
   const isGoogle = operation === "GOOGLE";
 
   const {
@@ -78,10 +82,24 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
       const result = (await response.json().catch(() => ({}))) as {
         ok?: boolean;
         message?: string;
+        pending_verification?: boolean;
+        lead_id?: string;
+        sms_sent?: boolean;
       };
 
       if (!response.ok || !result.ok) {
         toast.error(result.message ?? "Une erreur est survenue. Merci de réessayer.");
+        return;
+      }
+
+      if (result.pending_verification && result.lead_id) {
+        setLeadId(result.lead_id);
+        setPhoneShown(values.phone);
+        if (result.sms_sent === false) {
+          toast.error("L'envoi du SMS a échoué. Cliquez sur « Renvoyer le code ».");
+        } else {
+          toast.success("Un code vient de vous être envoyé par SMS.");
+        }
         return;
       }
 
@@ -93,6 +111,51 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
     }
   };
 
+  const callVerify = async (body: Record<string, string>) => {
+    const response = await fetch(apiUrl("/api/public/lead-verify"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return (await response.json().catch(() => ({}))) as { ok?: boolean; message?: string };
+  };
+
+  const onVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!leadId) return;
+    if (!/^\d{6}$/.test(code)) {
+      toast.error("Le code contient 6 chiffres.");
+      return;
+    }
+    setVerifying(true);
+    try {
+      const result = await callVerify({ action: "verify", lead_id: leadId, code });
+      if (!result.ok) {
+        toast.error(result.message ?? "Code incorrect.");
+        return;
+      }
+      setIsSubmitted(true);
+      toast.success("Votre numéro est validé !");
+    } catch {
+      toast.error("Une erreur est survenue. Merci de réessayer.");
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const onResend = async () => {
+    if (!leadId) return;
+    setVerifying(true);
+    try {
+      const result = await callVerify({ action: "resend", lead_id: leadId });
+      if (result.ok) toast.success("Un nouveau code vous a été envoyé.");
+      else toast.error(result.message ?? "Impossible de renvoyer le code.");
+    } catch {
+      toast.error("Une erreur est survenue. Merci de réessayer.");
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   if (isSubmitted) {
     return (
@@ -108,6 +171,49 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
           Un conseiller spécialisé vous rappelle sous 24 heures ouvrées pour valider votre profil
           investisseur.
         </p>
+      </div>
+    );
+  }
+
+  if (leadId) {
+    return (
+      <div
+        id="formulaire"
+        className={`animate-rise overflow-hidden rounded-3xl bg-panel text-panel-foreground shadow-panel ${isGoogle ? "border-2 border-border" : ""}`}
+      >
+        <div className="bg-gold px-6 py-5 text-center text-primary-foreground">
+          <p className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] uppercase">
+            <Smartphone className="h-3.5 w-3.5" /> Dernière étape
+          </p>
+          <h2 className="mt-2 text-2xl font-bold">Validez votre numéro</h2>
+          <p className="mt-1 text-sm">
+            Saisissez le code à 6 chiffres envoyé par SMS au {phoneShown}
+          </p>
+        </div>
+        <form onSubmit={onVerify} className="space-y-4 p-6 md:p-8">
+          <label htmlFor="sms-code" className="mb-1.5 block text-sm font-bold">Code reçu par SMS</label>
+          <Input
+            id="sms-code"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={6}
+            placeholder="123456"
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            className="h-14 border-2 border-black/30 bg-background text-center text-2xl font-bold tracking-[0.5em] text-panel-foreground"
+          />
+          <Button type="submit" variant="hero" size="xl" className="w-full" disabled={verifying}>
+            {verifying ? "Vérification..." : <>Valider mon code <ArrowRight className="h-5 w-5" /></>}
+          </Button>
+          <button
+            type="button"
+            onClick={onResend}
+            disabled={verifying}
+            className="block w-full text-center text-sm font-semibold underline underline-offset-4 disabled:opacity-50"
+          >
+            Je n'ai pas reçu le code — Renvoyer le code
+          </button>
+        </form>
       </div>
     );
   }

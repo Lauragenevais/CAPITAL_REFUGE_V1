@@ -97,6 +97,12 @@ export const Route = createFileRoute("/api/public/lead-form")({
           if (!result.ok) {
             return json({ ok: false, error: result.code, message: result.message }, 409);
           }
+          if (result.pendingVerification) {
+            return json(
+              { ok: true, pending_verification: true, lead_id: result.leadId, sms_sent: result.smsSent },
+              201,
+            );
+          }
           return json({ ok: true }, 201);
         } catch (err) {
           console.error("Lead form error:", err);

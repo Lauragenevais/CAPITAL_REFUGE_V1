@@ -79,9 +79,15 @@ export type Database = {
           operation: string
           pays: string
           phone: string
+          phone_verified: boolean
+          sms_attempts: number
+          sms_code_expires_at: string | null
+          sms_code_hash: string | null
+          sms_sent_count: number
           source: string
           status: string
           updated_at: string
+          verified_at: string | null
         }
         Insert: {
           click_id?: string
@@ -96,9 +102,15 @@ export type Database = {
           operation?: string
           pays?: string
           phone: string
+          phone_verified?: boolean
+          sms_attempts?: number
+          sms_code_expires_at?: string | null
+          sms_code_hash?: string | null
+          sms_sent_count?: number
           source?: string
           status?: string
           updated_at?: string
+          verified_at?: string | null
         }
         Update: {
           click_id?: string
@@ -113,9 +125,15 @@ export type Database = {
           operation?: string
           pays?: string
           phone?: string
+          phone_verified?: boolean
+          sms_attempts?: number
+          sms_code_expires_at?: string | null
+          sms_code_hash?: string | null
+          sms_sent_count?: number
           source?: string
           status?: string
           updated_at?: string
+          verified_at?: string | null
         }
         Relationships: []
       }
