@@ -881,7 +881,7 @@ async function finalizeLead(
 
   // Webservice adstrack (non bloquant) — uniquement en mode Crypto - Emailing
   let adstrackStatus = "⏭️ Non déclenché (configuration historique)";
-  if (isCryptoEmailing) {
+  if (LEAD_ROUTING_MODE === "CRYPTO_EMAILING") {
     adstrackStatus = await sendToAdstrack(data, ipAddress, channel, operation);
   }
 
