@@ -95,6 +95,10 @@ export type AdminLead = {
   status: string;
   notes: string;
   created_at: string;
+  phone_verified: boolean;
+  sms_sent_count: number;
+  sms_delivery_status: string;
+  sms_last_reason: string;
 };
 
 export const listLeads = createServerFn({ method: "GET" }).handler(async () => {
@@ -103,7 +107,7 @@ export const listLeads = createServerFn({ method: "GET" }).handler(async () => {
   const { data, error } = await supabaseAdmin
     .from("leads")
     .select(
-      "id, first_name, last_name, email, phone, source, click_id, pays, ip_address, status, notes, created_at",
+      "id, first_name, last_name, email, phone, source, click_id, pays, ip_address, status, notes, created_at, phone_verified, sms_sent_count, sms_delivery_status, sms_last_reason",
     )
     .order("created_at", { ascending: false })
     .limit(2000);
