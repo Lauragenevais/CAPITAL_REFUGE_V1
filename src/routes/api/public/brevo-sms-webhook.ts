@@ -57,6 +57,21 @@ export const Route = createFileRoute("/api/public/brevo-sms-webhook")({
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
         try {
+          // Le code SMS n'est envoyé qu'aux leads du formulaire : on cherche parmi eux
+          // le plus récent portant ce numéro (comparaison sur numéro normalisé).
+          const { data: candidates, error: fetchError } = await supabaseAdmin
+            .from("leads")
+            .select("id, phone")
+            .gt("sms_sent_count", 0)
+            .order("created_at", { ascending: false })
+            .limit(500);
+          if (fetchError) throw new Error(fetchError.message);
+
+          const lead = (candidates ?? []).find(
+            (c) => normalizePhone(c.phone ?? "") === normalized,
+          );
+          if (!lead) return new Response("ok");
+
           if (event === "delivered") {
             const { error } = await supabaseAdmin
               .from("leads")
@@ -65,9 +80,7 @@ export const Route = createFileRoute("/api/public/brevo-sms-webhook")({
                 sms_delivered_at: new Date().toISOString(),
                 sms_last_reason: "",
               })
-              .eq("sms_normalized_phone", normalized)
-              .order("created_at", { ascending: false })
-              .limit(1);
+              .eq("id", lead.id);
             if (error) console.error("Brevo webhook delivered update error:", error.message);
           } else if (FAILED_EVENTS.has(event)) {
             const { error } = await supabaseAdmin
@@ -76,9 +89,7 @@ export const Route = createFileRoute("/api/public/brevo-sms-webhook")({
                 sms_delivery_status: "failed",
                 sms_last_reason: payload.reason ?? event,
               })
-              .eq("sms_normalized_phone", normalized)
-              .order("created_at", { ascending: false })
-              .limit(1);
+              .eq("id", lead.id);
             if (error) console.error("Brevo webhook failed update error:", error.message);
           }
         } catch (err) {

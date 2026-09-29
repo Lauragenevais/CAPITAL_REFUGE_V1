@@ -29,6 +29,7 @@ import { Route as PolitiqueConfidentialiteNvidiaRouteImport } from './routes/pol
 import { Route as PolitiqueConfidentialitePaypalRouteImport } from './routes/politique-confidentialite-paypal'
 import { Route as AdminAdstrackRouteImport } from './routes/admin_.adstrack'
 import { Route as ApiPublicAdminRouteImport } from './routes/api/public/admin'
+import { Route as ApiPublicBrevoSmsWebhookRouteImport } from './routes/api/public/brevo-sms-webhook'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicLeadVerifyRouteImport } from './routes/api/public/lead-verify'
 import { Route as ApiPublicLeadsRouteImport } from './routes/api/public/leads'
@@ -138,6 +139,12 @@ const ApiPublicAdminRoute = ApiPublicAdminRouteImport.update({
   path: '/api/public/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicBrevoSmsWebhookRoute =
+  ApiPublicBrevoSmsWebhookRouteImport.update({
+    id: '/api/public/brevo-sms-webhook',
+    path: '/api/public/brevo-sms-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicLeadFormRoute = ApiPublicLeadFormRouteImport.update({
   id: '/api/public/lead-form',
   path: '/api/public/lead-form',
@@ -175,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
   '/admin/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
+  '/api/public/brevo-sms-webhook': typeof ApiPublicBrevoSmsWebhookRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/lead-verify': typeof ApiPublicLeadVerifyRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -200,6 +208,7 @@ export interface FileRoutesByTo {
   '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
   '/admin/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
+  '/api/public/brevo-sms-webhook': typeof ApiPublicBrevoSmsWebhookRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/lead-verify': typeof ApiPublicLeadVerifyRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -226,6 +235,7 @@ export interface FileRoutesById {
   '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
   '/admin_/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
+  '/api/public/brevo-sms-webhook': typeof ApiPublicBrevoSmsWebhookRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/lead-verify': typeof ApiPublicLeadVerifyRoute
   '/api/public/leads': typeof ApiPublicLeadsRoute
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/politique-confidentialite-paypal'
     | '/admin/adstrack'
     | '/api/public/admin'
+    | '/api/public/brevo-sms-webhook'
     | '/api/public/lead-form'
     | '/api/public/lead-verify'
     | '/api/public/leads'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/politique-confidentialite-paypal'
     | '/admin/adstrack'
     | '/api/public/admin'
+    | '/api/public/brevo-sms-webhook'
     | '/api/public/lead-form'
     | '/api/public/lead-verify'
     | '/api/public/leads'
@@ -303,6 +315,7 @@ export interface FileRouteTypes {
     | '/politique-confidentialite-paypal'
     | '/admin_/adstrack'
     | '/api/public/admin'
+    | '/api/public/brevo-sms-webhook'
     | '/api/public/lead-form'
     | '/api/public/lead-verify'
     | '/api/public/leads'
@@ -329,6 +342,7 @@ export interface RootRouteChildren {
   PolitiqueConfidentialitePaypalRoute: typeof PolitiqueConfidentialitePaypalRoute
   AdminAdstrackRoute: typeof AdminAdstrackRoute
   ApiPublicAdminRoute: typeof ApiPublicAdminRoute
+  ApiPublicBrevoSmsWebhookRoute: typeof ApiPublicBrevoSmsWebhookRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   ApiPublicLeadVerifyRoute: typeof ApiPublicLeadVerifyRoute
   ApiPublicLeadsRoute: typeof ApiPublicLeadsRoute
@@ -476,6 +490,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/brevo-sms-webhook': {
+      id: '/api/public/brevo-sms-webhook'
+      path: '/api/public/brevo-sms-webhook'
+      fullPath: '/api/public/brevo-sms-webhook'
+      preLoaderRoute: typeof ApiPublicBrevoSmsWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/lead-form': {
       id: '/api/public/lead-form'
       path: '/api/public/lead-form'
@@ -521,6 +542,7 @@ const rootRouteChildren: RootRouteChildren = {
   PolitiqueConfidentialitePaypalRoute: PolitiqueConfidentialitePaypalRoute,
   AdminAdstrackRoute: AdminAdstrackRoute,
   ApiPublicAdminRoute: ApiPublicAdminRoute,
+  ApiPublicBrevoSmsWebhookRoute: ApiPublicBrevoSmsWebhookRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   ApiPublicLeadVerifyRoute: ApiPublicLeadVerifyRoute,
   ApiPublicLeadsRoute: ApiPublicLeadsRoute,
