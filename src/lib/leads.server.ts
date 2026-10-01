@@ -123,6 +123,8 @@ async function sendToAdstrack(
   }
 }
 
+export const INVEST_AMOUNTS = ["100 à 500 €", "500 à 2 000 €", "2 000 à 5 000 €", "5 000 € et plus"] as const;
+
 export const leadSchema = z.object({
   first_name: z.string().trim().min(2).max(60),
   last_name: z.string().trim().min(2).max(60),
@@ -135,6 +137,7 @@ export const leadSchema = z.object({
   source: z.string().max(60).optional(),
   click_id: z.string().max(120).optional(),
   operation: z.enum(["AMAZON", "CHATGPT", "NVIDIA", "PAYPAL", "GOOGLE", "LIVRET", "ROBOT"]),
+  invest_amount: z.enum(INVEST_AMOUNTS).optional(),
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
@@ -435,6 +438,7 @@ export async function verifyLeadCode(
       source: lead.source || undefined,
       click_id: lead.click_id || undefined,
       operation: lead.operation as LeadInput["operation"],
+      invest_amount: (lead.invest_amount || undefined) as LeadInput["invest_amount"],
     } as LeadInput,
     lead.ip_address || ipAddress,
     "form",
@@ -495,6 +499,7 @@ export async function processLead(
       ip_address: ipAddress,
       pays: "FR",
       operation,
+      invest_amount: data.invest_amount ?? "",
       phone_verified: !needsSms,
     })
     .select("id")
@@ -542,20 +547,20 @@ function sheetTarget(channel: "form" | "api", operation: string) {
 }
 
 async function ensureSmsHeaders(token: string, sheetId: string, tab: string): Promise<void> {
-  const range = tab ? `'${tab}'!L1:O1` : "L1:O1";
+  const range = tab ? `'${tab}'!L1:P1` : "L1:P1";
   const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (r.ok) {
     const d = (await r.json()) as { values?: string[][] };
-    if (d.values?.[0]?.[3]) return;
+    if (d.values?.[0]?.[4]) return;
   }
   const w = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?valueInputOption=RAW`,
     {
       method: "PUT",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ values: [["SMS", "Code SMS", "N° code SMS recu", "Lead id"]] }),
+      body: JSON.stringify({ values: [["SMS", "Code SMS", "N° code SMS recu", "Lead id", "Montant investissement"]] }),
     },
   );
   if (!w.ok) throw new Error(`Google Sheets header error [${w.status}]: ${await w.text()}`);
@@ -596,6 +601,7 @@ async function writeLeadToSheet(
           sms.codeStatus,
           sms.smsCode ?? "",
           sms.leadId,
+          data.invest_amount ?? "",
         ],
       ],
       tab,
@@ -929,7 +935,7 @@ async function finalizeLead(
             `Nouveau lead enregistré:\n\n` +
             `📌 Provenance: ${origin} (${operation})\n\n` +
             `Nom: ${data.last_name}\nPrénom: ${data.first_name}\nEmail: ${data.email}\n` +
-            `Téléphone: ${data.phone}\nSource: ${data.source || "direct"}\n` +
+            `Téléphone: ${data.phone}\nMontant envisagé: ${data.invest_amount || "non renseigné"}\nSource: ${data.source || "direct"}\n` +
             `Click ID: ${data.click_id || "aucun"}\nIP: ${ipAddress}\n\n` +
             `--- RÉSUMÉ DES ACTIONS ---\n` +
             `✅ Déclenchés: ${triggered.length > 0 ? triggered.join(", ") : "aucun"}\n` +
