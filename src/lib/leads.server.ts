@@ -560,7 +560,7 @@ async function ensureSmsHeaders(token: string, sheetId: string, tab: string): Pr
     {
       method: "PUT",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ values: [["SMS", "Code SMS", "N° code SMS recu", "Lead id", "Montant investissement"]] }),
+      body: JSON.stringify({ values: [["SMS", "Code SMS", "N° code SMS recu", "Lead id", "Montant Investi"]] }),
     },
   );
   if (!w.ok) throw new Error(`Google Sheets header error [${w.status}]: ${await w.text()}`);
