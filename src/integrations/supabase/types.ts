@@ -73,6 +73,7 @@ export type Database = {
           email: string
           first_name: string
           id: string
+          invest_amount: string
           ip_address: string
           last_name: string
           notes: string
@@ -99,6 +100,7 @@ export type Database = {
           email: string
           first_name: string
           id?: string
+          invest_amount?: string
           ip_address?: string
           last_name: string
           notes?: string
@@ -125,6 +127,7 @@ export type Database = {
           email?: string
           first_name?: string
           id?: string
+          invest_amount?: string
           ip_address?: string
           last_name?: string
           notes?: string
