@@ -1,0 +1,1 @@
+ALTER TABLE public.leads ADD COLUMN IF NOT EXISTS invest_amount text NOT NULL DEFAULT '';
