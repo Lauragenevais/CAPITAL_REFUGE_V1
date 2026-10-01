@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { apiUrl } from "@/lib/api";
 
+const INVEST_AMOUNTS = ["100 à 500 €", "500 à 2 000 €", "2 000 à 5 000 €", "5 000 € et plus"] as const;
+
 const formSchema = z.object({
   lastName: z.string().trim().min(2, "Le nom doit contenir au moins 2 caractères"),
   firstName: z.string().trim().min(2, "Le prénom doit contenir au moins 2 caractères"),
@@ -18,6 +20,7 @@ const formSchema = z.object({
     .string()
     .trim()
     .regex(/^0[467]\d{8}$/, "10 chiffres, commençant par 04, 06 ou 07"),
+  investAmount: z.enum(INVEST_AMOUNTS, { message: "Merci de sélectionner un montant" }),
   consent: z.boolean().refine((v) => v === true, { message: "Vous devez accepter les conditions" }),
 });
 
@@ -46,12 +49,14 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
   const [phoneShown, setPhoneShown] = useState("");
   const [code, setCode] = useState("");
   const [verifying, setVerifying] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
   const isGoogle = operation === "GOOGLE";
 
   const {
     register,
     handleSubmit,
     setValue,
+    trigger,
     watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
@@ -76,6 +81,7 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
           source,
           click_id: clickId,
           operation: operation ?? "AMAZON",
+          invest_amount: values.investAmount,
         }),
       });
 
@@ -109,6 +115,11 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
       console.error("Erreur envoi lead:", error);
       toast.error("Une erreur est survenue. Merci de réessayer.");
     }
+  };
+
+  const goToStep2 = async () => {
+    const ok = await trigger(["lastName", "firstName", "phone", "email"]);
+    if (ok) setStep(2);
   };
 
   const callVerify = async (body: Record<string, string>) => {
@@ -244,6 +255,8 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-6 md:p-8">
+        <p className="text-center text-xs font-bold tracking-[0.18em] uppercase opacity-70">Étape {step} sur 2</p>
+        <div className={step === 1 ? "space-y-4" : "hidden"}>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
             <label htmlFor="lastName" className={isGoogle ? "mb-1.5 block text-sm font-bold" : "sr-only"}>Nom</label>
@@ -307,6 +320,38 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
           {errors.email && <p id="email-error" role="alert" className="mt-1 text-sm font-semibold text-destructive">{errors.email.message}</p>}
         </div>
 
+        <Button type="button" variant="hero" size="xl" className="w-full" onClick={goToStep2}>
+          Continuer <ArrowRight className="h-5 w-5" />
+        </Button>
+        </div>
+
+        {step === 2 && (
+        <>
+        <div>
+          <label htmlFor="investAmount" className="block text-base font-bold">
+            Quel montant envisagez-vous d'investir en cryptomonnaie ?
+          </label>
+          <p className="mt-1 mb-3 text-sm opacity-80">
+            Afin de mieux vous orienter vers une solution adaptée à votre projet, merci de sélectionner le montant que vous prévoyez d'investir :
+          </p>
+          <select
+            id="investAmount"
+            defaultValue=""
+            aria-invalid={Boolean(errors.investAmount)}
+            aria-describedby={errors.investAmount ? "investAmount-error" : undefined}
+            {...register("investAmount")}
+            className={`flex w-full rounded-md border px-3 text-base shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isGoogle ? "h-13 border-2 border-input bg-background px-4 text-base text-panel-foreground placeholder:text-muted-foreground" : "h-12 border-black/30 bg-black/[0.07] text-panel-foreground placeholder:text-black/70"}`}
+          >
+            <option value="" disabled>Sélectionnez un montant *</option>
+            {INVEST_AMOUNTS.map((a) => (
+              <option key={a} value={a}>{a}</option>
+            ))}
+          </select>
+          {errors.investAmount && (
+            <p id="investAmount-error" role="alert" className="mt-1 text-sm font-semibold text-destructive">{errors.investAmount.message}</p>
+          )}
+        </div>
+
         <div className="flex items-start gap-3 pt-1">
           <Checkbox
             id="consent"
@@ -331,6 +376,15 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
             </>
           )}
         </Button>
+        <button
+          type="button"
+          onClick={() => setStep(1)}
+          className="block w-full text-center text-sm font-semibold underline underline-offset-4"
+        >
+          Retour à l'étape précédente
+        </button>
+        </>
+        )}
 
         <p className={`flex items-center justify-center gap-1.5 ${isGoogle ? "text-xs font-medium text-muted-foreground" : "text-[11px] opacity-55"}`}>
           <Lock className="h-3 w-3" /> Vos données sont protégées — réponse sous 24h
