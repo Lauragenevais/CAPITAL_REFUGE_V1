@@ -547,23 +547,40 @@ function sheetTarget(channel: "form" | "api", operation: string) {
 }
 
 async function ensureSmsHeaders(token: string, sheetId: string, tab: string): Promise<void> {
-  const range = tab ? `'${tab}'!L1:P1` : "L1:P1";
+  const range = tab ? `'${tab}'!L1:O1` : "L1:O1";
   const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (r.ok) {
     const d = (await r.json()) as { values?: string[][] };
-    if (d.values?.[0]?.[4]) return;
+    if (d.values?.[0]?.[3]) return;
   }
   const w = await fetch(
     `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?valueInputOption=RAW`,
     {
       method: "PUT",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ values: [["SMS", "Code SMS", "N° code SMS recu", "Lead id", "Montant investissement"]] }),
+      body: JSON.stringify({ values: [["SMS", "Code SMS", "N° code SMS recu", "Lead id"]] }),
     },
   );
   if (!w.ok) throw new Error(`Google Sheets header error [${w.status}]: ${await w.text()}`);
+}
+
+/** Colonne R « Montant Investi » (P et Q sont utilisées manuellement : Statut, Facture). */
+async function ensureInvestHeader(token: string, sheetId: string, tab: string): Promise<void> {
+  const range = encodeURIComponent(tab ? `'${tab}'!R1` : "R1");
+  const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (r.ok) {
+    const d = (await r.json()) as { values?: string[][] };
+    if (d.values?.[0]?.[0]) return;
+  }
+  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?valueInputOption=RAW`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ values: [["Montant Investi"]] }),
+  });
 }
 
 /** Ajoute le lead en haut du Google Sheet. Renvoie le statut texte. */
@@ -581,6 +598,7 @@ async function writeLeadToSheet(
     const token = await getGoogleAccessToken(serviceAccountKey);
     await ensureOperationHeader(token, sheetId, tab);
     await ensureSmsHeaders(token, sheetId, tab);
+    await ensureInvestHeader(token, sheetId, tab);
     await insertAtTopOfGoogleSheet(
       token,
       sheetId,
@@ -601,7 +619,9 @@ async function writeLeadToSheet(
           sms.codeStatus,
           sms.smsCode ?? "",
           sms.leadId,
-          data.invest_amount ?? "",
+          "", // P : Statut (colonne gérée manuellement)
+          "", // Q : Facture (colonne gérée manuellement)
+          data.invest_amount ?? "", // R : Montant Investi
         ],
       ],
       tab,
