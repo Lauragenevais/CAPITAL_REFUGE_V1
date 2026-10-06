@@ -743,6 +743,24 @@ async function finalizeLead(
       pixelStatus = `❌ ${label} erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click PayPal error (non bloquant):", err);
     }
+  } else if (channel === "form" && operation === "GOOGLE") {
+    const pixelUrl =
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
+      `&CampaignID=8tdluw02&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}` +
+      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
+    try {
+      const pixelResp = await fetch(pixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      pixelStatus = pixelResp.ok
+        ? `✅ Pixel Google déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
+        : `❌ Pixel Google erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
+    } catch (err) {
+      pixelStatus = `❌ Pixel Google erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click Google error (non bloquant):", err);
+    }
   } else if (channel === "form" && operation === "LIVRET") {
     const pixelUrl =
       `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
@@ -814,6 +832,24 @@ async function finalizeLead(
     } catch (err) {
       pixelStatus = `❌ Pixel API Livret erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click API Livret error (non bloquant):", err);
+    }
+  } else if (channel === "api" && operation === "GOOGLE") {
+    const pixelUrl =
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
+      `&CampaignID=8tdluw02&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}` +
+      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
+    try {
+      const pixelResp = await fetch(pixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      pixelStatus = pixelResp.ok
+        ? `✅ Pixel API Google déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
+        : `❌ Pixel API Google erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
+    } catch (err) {
+      pixelStatus = `❌ Pixel API Google erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click API Google error (non bloquant):", err);
     }
   } else if (channel === "api" && operation === "ROBOT") {
     const pixelUrl =
