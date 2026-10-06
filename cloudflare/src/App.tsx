@@ -25,6 +25,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/amazon" element={<Home />} />
       <Route path="/chatgpt" element={<Chatgpt />} />
       <Route path="/nvidia" element={<Nvidia />} />
       <Route path="/paypal" element={<Paypal />} />
