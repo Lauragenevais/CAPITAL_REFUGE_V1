@@ -7,6 +7,8 @@ const TEMPLATES = [
   { id: "amazon", label: "Amazon Coin", path: "/email/promo-amazon.html" },
   { id: "chatgpt", label: "ChatGPT Capital", path: "/email/promo-chatgpt.html" },
   { id: "nvidia", label: "Nvidia Capital", path: "/email/promo-nvidia.html" },
+  { id: "paypal", label: "PayPal Capital", path: "/email/promo-paypal.html" },
+  { id: "google", label: "Google Capital", path: "/email/promo-google.html" },
 ] as const;
 
 type TemplateId = (typeof TEMPLATES)[number]["id"];
@@ -19,7 +21,7 @@ export const Route = createFileRoute("/email-template")({
       {
         name: "description",
         content:
-          "Aperçu et copie des templates email promotionnels (Amazon Coin, ChatGPT Capital, Nvidia Capital) : visuels, accroche et boutons d'inscription.",
+          "Aperçu et copie des templates email promotionnels (Amazon Coin, ChatGPT Capital, Nvidia Capital, PayPal Capital, Google Capital) : visuels, accroche et boutons d'inscription.",
       },
       { name: "robots", content: "noindex, nofollow" },
       { property: "og:title", content: "Templates email — Pré-inscriptions" },
