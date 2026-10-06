@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AmazonRouteImport } from './routes/amazon'
 import { Route as ApiDocsRouteImport } from './routes/api-docs'
 import { Route as ChatgptRouteImport } from './routes/chatgpt'
 import { Route as EmailTemplateRouteImport } from './routes/email-template'
@@ -42,6 +43,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AmazonRoute = AmazonRouteImport.update({
+  id: '/amazon',
+  path: '/amazon',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiDocsRoute = ApiDocsRouteImport.update({
@@ -164,6 +170,7 @@ const ApiPublicLeadsRoute = ApiPublicLeadsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/amazon': typeof AmazonRoute
   '/api-docs': typeof ApiDocsRoute
   '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/amazon': typeof AmazonRoute
   '/api-docs': typeof ApiDocsRoute
   '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
@@ -217,6 +225,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/amazon': typeof AmazonRoute
   '/api-docs': typeof ApiDocsRoute
   '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/amazon'
     | '/api-docs'
     | '/chatgpt'
     | '/email-template'
@@ -271,6 +281,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/amazon'
     | '/api-docs'
     | '/chatgpt'
     | '/email-template'
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/amazon'
     | '/api-docs'
     | '/chatgpt'
     | '/email-template'
@@ -324,6 +336,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  AmazonRoute: typeof AmazonRoute
   ApiDocsRoute: typeof ApiDocsRoute
   ChatgptRoute: typeof ChatgptRoute
   EmailTemplateRoute: typeof EmailTemplateRoute
@@ -362,6 +375,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/amazon': {
+      id: '/amazon'
+      path: '/amazon'
+      fullPath: '/amazon'
+      preLoaderRoute: typeof AmazonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api-docs': {
@@ -524,6 +544,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  AmazonRoute: AmazonRoute,
   ApiDocsRoute: ApiDocsRoute,
   ChatgptRoute: ChatgptRoute,
   EmailTemplateRoute: EmailTemplateRoute,
