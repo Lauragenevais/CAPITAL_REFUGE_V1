@@ -724,6 +724,25 @@ async function finalizeLead(
       pixelStatus = `❌ Pixel Nvidia erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click Nvidia error (non bloquant):", err);
     }
+  } else if (operation === "GOOGLE") {
+    const label = channel === "api" ? "Pixel API Google" : "Pixel Google";
+    const pixelUrl =
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
+      `&CampaignID=u5by4qir&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}` +
+      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
+    try {
+      const pixelResp = await fetch(pixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      pixelStatus = pixelResp.ok
+        ? `✅ ${label} déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
+        : `❌ ${label} erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
+    } catch (err) {
+      pixelStatus = `❌ ${label} erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click Google error (non bloquant):", err);
+    }
   } else if (channel === "form" && operation === "LIVRET") {
     const pixelUrl =
       `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
