@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { AmazonLanding } from "@/components/landing/AmazonLanding";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/amazon")({
   head: () => ({
     meta: [
       { title: "Amazon Coin : vérifiez votre éligibilité avant le lancement" },
