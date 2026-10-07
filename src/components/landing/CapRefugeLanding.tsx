@@ -359,3 +359,22 @@ export function CapRefugeLanding() {
     </div>
   );
 }
+
+function SectionHeading({ eyebrow, title, text, center }: { eyebrow: string; title: string; text?: string; center?: boolean }) {
+  return (
+    <div className={center ? "text-center" : "max-w-2xl"}>
+      <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">{eyebrow}</p>
+      <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">{title}</h2>
+      {text && <p className="mt-5 text-muted-foreground">{text}</p>}
+    </div>
+  );
+}
+
+function SplitSection({ image, alt, reverse, children }: { image: string; alt: string; reverse?: boolean; children: React.ReactNode }) {
+  return (
+    <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-2">
+      <img src={image} alt={alt} width={1280} height={960} loading="lazy" className={`aspect-[4/3] w-full rounded-3xl object-cover ${reverse ? "lg:order-2" : ""}`} />
+      <div>{children}</div>
+    </div>
+  );
+}
