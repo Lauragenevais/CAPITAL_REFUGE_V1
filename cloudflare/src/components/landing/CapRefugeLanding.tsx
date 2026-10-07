@@ -331,7 +331,7 @@ export function CapRefugeLanding() {
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-6 py-16 md:flex-row md:items-center">
           <div>
             <h2 className="font-display text-3xl font-semibold">Faites le premier pas vers l&apos;or</h2>
-            <p className="mt-2 text-muted-foreground">Gratuit, sans engagement — un expert vous rappelle.</p>
+            <p className="mt-2 text-muted-foreground">Gratuit, sans engagement - un expert vous rappelle.</p>
           </div>
           <Button variant="hero" size="xl" asChild>
             <a href="#formulaire">Être rappelé par un expert <ArrowRight className="h-5 w-5" /></a>
