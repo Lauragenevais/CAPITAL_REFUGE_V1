@@ -9,6 +9,7 @@ const TEMPLATES = [
   { id: "nvidia", label: "Nvidia Capital", path: "/email/promo-nvidia.html" },
   { id: "paypal", label: "PayPal Capital", path: "/email/promo-paypal.html" },
   { id: "google", label: "Google Capital", path: "/email/promo-google.html" },
+  { id: "or", label: "Cap Refuge (OR)", path: "/email/promo-or.html" },
 ] as const;
 
 type TemplateId = (typeof TEMPLATES)[number]["id"];
