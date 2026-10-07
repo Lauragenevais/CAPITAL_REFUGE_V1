@@ -1,6 +1,6 @@
 // HLR-Lookups.com : vérification en temps réel qu'un numéro existe sur un réseau.
 // Valide = CONNECTED ou ABSENT. Une panne / un manque de crédit ne bloque pas le lead.
-export type HlrResult = { valid: boolean; status: string; network?: string };
+export type HlrResult = { valid: boolean; status: string; network?: string | undefined };
 
 export const HLR_SKIP_SOURCES = ["7ptu0gdy"];
 
