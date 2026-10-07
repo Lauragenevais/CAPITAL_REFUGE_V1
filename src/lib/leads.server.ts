@@ -138,6 +138,8 @@ export const leadSchema = z.object({
   click_id: z.string().max(120).optional(),
   operation: z.enum(["AMAZON", "CHATGPT", "NVIDIA", "PAYPAL", "GOOGLE", "LIVRET", "ROBOT"]),
   invest_amount: z.enum(INVEST_AMOUNTS).optional(),
+  /** Onglet spécifique du Google Sheet (ex. « Or » pour la page d'accueil Cap Refuge). */
+  sheet_tab: z.enum(["Or"]).optional(),
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
