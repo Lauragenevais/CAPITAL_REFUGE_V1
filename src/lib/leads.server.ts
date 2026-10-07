@@ -535,6 +535,11 @@ export async function processLead(
   const hlr = skipHlr ? { valid: true, status: "NON_VERIFIE" } : await hlrLookup(data.phone);
   console.log("HLR result:", hlr.status, skipHlr ? "(source exemptée)" : "");
   if (!hlr.valid) {
+    await supabaseAdmin.from("hlr_refusals").insert({
+      first_name: data.first_name, last_name: data.last_name, email: data.email, phone: data.phone,
+      source: data.source ?? "", click_id: data.click_id ?? "", ip_address: ipAddress,
+      operation, channel, hlr_status: hlr.status, hlr_network: hlr.network ?? "",
+    });
     await notifyHlrRefusal(data, ipAddress, channel, operation, hlr.status, hlr.network);
     return HLR_REFUSED;
   }
@@ -556,6 +561,8 @@ export async function processLead(
       operation,
       invest_amount: data.invest_amount ?? "",
       phone_verified: !needsSms,
+      hlr_status: hlr.status,
+      hlr_network: hlr.network ?? "",
     })
     .select("id")
     .single();

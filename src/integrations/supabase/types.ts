@@ -65,6 +65,54 @@ export type Database = {
         }
         Relationships: []
       }
+      hlr_refusals: {
+        Row: {
+          channel: string
+          click_id: string
+          created_at: string
+          email: string
+          first_name: string
+          hlr_network: string
+          hlr_status: string
+          id: string
+          ip_address: string
+          last_name: string
+          operation: string
+          phone: string
+          source: string
+        }
+        Insert: {
+          channel?: string
+          click_id?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          hlr_network?: string
+          hlr_status?: string
+          id?: string
+          ip_address?: string
+          last_name?: string
+          operation?: string
+          phone?: string
+          source?: string
+        }
+        Update: {
+          channel?: string
+          click_id?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          hlr_network?: string
+          hlr_status?: string
+          id?: string
+          ip_address?: string
+          last_name?: string
+          operation?: string
+          phone?: string
+          source?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           click_id: string
@@ -72,6 +120,8 @@ export type Database = {
           created_at: string
           email: string
           first_name: string
+          hlr_network: string
+          hlr_status: string
           id: string
           invest_amount: string
           ip_address: string
@@ -99,6 +149,8 @@ export type Database = {
           created_at?: string
           email: string
           first_name: string
+          hlr_network?: string
+          hlr_status?: string
           id?: string
           invest_amount?: string
           ip_address?: string
@@ -126,6 +178,8 @@ export type Database = {
           created_at?: string
           email?: string
           first_name?: string
+          hlr_network?: string
+          hlr_status?: string
           id?: string
           invest_amount?: string
           ip_address?: string

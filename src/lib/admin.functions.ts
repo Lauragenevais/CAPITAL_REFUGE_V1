@@ -100,6 +100,9 @@ export type AdminLead = {
   sms_sent_count: number;
   sms_delivery_status: string;
   sms_last_reason: string;
+  hlr_status: string;
+  hlr_network: string;
+  refused?: boolean;
 };
 
 export const listLeads = createServerFn({ method: "GET" }).handler(async () => {
@@ -108,12 +111,26 @@ export const listLeads = createServerFn({ method: "GET" }).handler(async () => {
   const { data, error } = await supabaseAdmin
     .from("leads")
     .select(
-      "id, first_name, last_name, email, phone, source, click_id, pays, ip_address, operation, status, notes, created_at, phone_verified, sms_sent_count, sms_delivery_status, sms_last_reason",
+      "id, first_name, last_name, email, phone, source, click_id, pays, ip_address, operation, status, notes, created_at, phone_verified, sms_sent_count, sms_delivery_status, sms_last_reason, hlr_status, hlr_network",
     )
     .order("created_at", { ascending: false })
     .limit(2000);
   if (error) throw new Error(error.message);
-  return (data ?? []) as AdminLead[];
+  const { data: refusals } = await supabaseAdmin
+    .from("hlr_refusals")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(2000);
+  const refusedRows: AdminLead[] = (refusals ?? []).map((r) => ({
+    id: r.id, first_name: r.first_name, last_name: r.last_name, email: r.email, phone: r.phone,
+    source: r.source, click_id: r.click_id, pays: "FR", ip_address: r.ip_address, operation: r.operation,
+    status: "refusé HLR", notes: "", created_at: r.created_at, phone_verified: false, sms_sent_count: 0,
+    sms_delivery_status: "", sms_last_reason: "", hlr_status: r.hlr_status, hlr_network: r.hlr_network,
+    refused: true,
+  }));
+  return [...((data ?? []) as AdminLead[]), ...refusedRows].sort((a, b) =>
+    b.created_at.localeCompare(a.created_at),
+  );
 });
 
 export const updateLead = createServerFn({ method: "POST" })
