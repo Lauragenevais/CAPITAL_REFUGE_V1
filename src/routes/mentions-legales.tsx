@@ -26,7 +26,7 @@ const SECTIONS = [
   {
     title: "Éditeur du site",
     content: [
-      "Le site Mon Véhicule Électrique est édité par la société ROBUSTRANQUILITY, dont le siège social est situé au Rua Joaquim António de Aguiar 43, 1070-150 Lisboa - Portugal.",
+      "Le site Cap Refuge est édité par la société ROBUSTRANQUILITY, dont le siège social est situé au Rua Joaquim António de Aguiar 43, 1070-150 Lisboa - Portugal.",
     ],
   },
   {
