@@ -222,24 +222,6 @@ export function CapRefugeLanding() {
         </div>
       </section>
 
-      {/* Lingots ou pièces */}
-      <section id="projet" className="bg-surface py-24">
-        <SplitSection image={goldCoins} alt="Pièces d'or d'investissement">
-          <SectionHeading eyebrow="Lingots ou pièces" title="Le bon format pour votre projet" />
-          <ul className="mt-8 space-y-4">
-            {[
-              ["Les lingots pour les montants importants", "Une prime réduite et un or pur 999,9 ‰ certifié."],
-              ["Les pièces pour plus de souplesse", "Napoléon, Krugerrand, Maple Leaf : faciles à revendre par petites quantités."],
-              ["Revendre au meilleur cours", "Une estimation au cours du jour, toujours détaillée par écrit."],
-            ].map(([t, d]) => (
-              <li key={t} className="rounded-2xl border border-border bg-card p-5">
-                <p className="font-semibold">{t}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{d}</p>
-              </li>
-            ))}
-          </ul>
-        </SplitSection>
-      </section>
 
       {/* Brochure */}
       <section id="brochure" className="py-24">
