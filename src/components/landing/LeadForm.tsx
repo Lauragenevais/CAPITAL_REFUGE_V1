@@ -38,12 +38,16 @@ function getTrackingParams() {
 type LeadFormProps = {
   operation?: "AMAZON" | "CHATGPT" | "NVIDIA" | "PAYPAL" | "GOOGLE" | "LIVRET" | "ROBOT";
   consentLabel?: string;
+  badge?: string;
+  title?: string;
+  subtitle?: string;
+  amountQuestion?: string;
 };
 
 const DEFAULT_CONSENT_LABEL =
   "J'accepte les conditions générales d'utilisation et d'être recontacté par nos partenaires afin de recevoir des informations sur l'Amazon Coin.";
 
-export function LeadForm({ operation, consentLabel }: LeadFormProps) {
+export function LeadForm({ operation, consentLabel, badge, title, subtitle, amountQuestion }: LeadFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [leadId, setLeadId] = useState<string | null>(null);
   const [phoneShown, setPhoneShown] = useState("");
@@ -236,10 +240,10 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
     >
       <div className="bg-gold px-6 py-5 text-center text-primary-foreground">
         <p className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] uppercase">
-          <Sparkles className="h-3.5 w-3.5" /> Pré-inscription ouverte
+          <Sparkles className="h-3.5 w-3.5" /> {badge ?? "Pré-inscription ouverte"}
         </p>
-        <h2 className="mt-2 text-2xl font-bold">Testez votre éligibilité</h2>
-        <p className={`mt-1 text-sm ${isGoogle ? "font-medium" : "opacity-80"}`}>Réponse immédiate, en moins de 60 secondes</p>
+        <h2 className="mt-2 text-2xl font-bold">{title ?? "Testez votre éligibilité"}</h2>
+        <p className={`mt-1 text-sm ${isGoogle ? "font-medium" : "opacity-80"}`}>{subtitle ?? "Réponse immédiate, en moins de 60 secondes"}</p>
       </div>
 
       <div className={`flex items-center justify-center gap-5 border-b border-black/10 py-3 font-semibold tracking-wide uppercase ${isGoogle ? "text-xs text-panel-foreground" : "text-[11px] opacity-60"}`}>
@@ -329,7 +333,7 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
         <>
         <div>
           <label htmlFor="investAmount" className="block text-base font-bold">
-            Quel montant envisagez-vous d'investir en cryptomonnaie ?
+            {amountQuestion ?? "Quel montant envisagez-vous d'investir en cryptomonnaie ?"}
           </label>
           <p className="mt-1 mb-3 text-sm opacity-80">
             Afin de mieux vous orienter vers une solution adaptée à votre projet, merci de sélectionner le montant que vous prévoyez d'investir :

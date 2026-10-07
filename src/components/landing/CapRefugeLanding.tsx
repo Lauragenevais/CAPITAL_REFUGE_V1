@@ -149,7 +149,13 @@ export function CapRefugeLanding() {
             ))}
           </ul>
           <div className="mt-10 max-w-md">
-            <LeadForm consentLabel={CONSENT} />
+            <LeadForm
+              consentLabel={CONSENT}
+              badge="Accompagnement gratuit"
+              title="Être rappelé par un expert"
+              subtitle="Gratuit et sans engagement, en moins d'une minute"
+              amountQuestion="Quel montant envisagez-vous d'investir dans l'or ?"
+            />
           </div>
         </div>
         <div className="relative min-h-[420px] lg:min-h-0">
