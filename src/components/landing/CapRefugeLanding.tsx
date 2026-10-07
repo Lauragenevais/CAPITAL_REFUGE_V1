@@ -6,12 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/landing/LeadForm";
 import goldHero from "@/assets/gold-hero.jpg";
-import goldCoins from "@/assets/gold-coins.jpg";
 import goldVault from "@/assets/gold-vault.jpg";
 import goldBrochure from "@/assets/gold-brochure.jpg";
 
 const NAV = [
-  { label: "Lingots ou pièces", href: "#projet" },
   { label: "Avantages", href: "#avantages" },
   { label: "Déroulement", href: "#etapes" },
   { label: "Brochure", href: "#brochure" },
