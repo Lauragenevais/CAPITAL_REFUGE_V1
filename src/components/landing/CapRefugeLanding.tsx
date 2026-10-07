@@ -7,12 +7,13 @@ import { LeadForm } from "@/components/landing/LeadForm";
 import goldHero from "@/assets/gold-hero.jpg";
 import goldCoins from "@/assets/gold-coins.jpg";
 import goldVault from "@/assets/gold-vault.jpg";
+import goldBrochure from "@/assets/gold-brochure.jpg";
 
 const NAV = [
   { label: "Lingots ou pièces", href: "#projet" },
   { label: "Avantages", href: "#avantages" },
   { label: "Déroulement", href: "#etapes" },
-  { label: "Avis", href: "#avis" },
+  { label: "Brochure", href: "#brochure" },
   { label: "FAQ", href: "#faq" },
 ];
 
@@ -140,7 +141,7 @@ export function CapRefugeLanding() {
           className="absolute inset-0 h-full w-full object-cover opacity-35"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/85 to-secondary/40" aria-hidden />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:py-24">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-[1fr_1fr] lg:py-24">
           <div>
             <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Or physique · Cours LBMA</p>
             <h1 className="font-display mt-6 text-4xl leading-[1.08] font-semibold md:text-6xl">
@@ -169,7 +170,10 @@ export function CapRefugeLanding() {
               ))}
             </dl>
           </div>
-          <div className="w-full max-w-md justify-self-center lg:justify-self-end">
+          <div className="w-full max-w-xl justify-self-center lg:justify-self-end">
+            <p className="mb-4 text-center text-sm text-muted-foreground">
+              Bienvenue ! Laissez-nous vos coordonnées, un expert vous rappelle pour répondre à toutes vos questions.
+            </p>
             <LeadForm
               consentLabel={CONSENT}
               badge="Accompagnement gratuit"
@@ -223,6 +227,34 @@ export function CapRefugeLanding() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* Brochure */}
+      <section id="brochure" className="mx-auto max-w-7xl px-6 pb-24">
+        <div className="grid items-center gap-10 overflow-hidden rounded-3xl bg-surface lg:grid-cols-2">
+          <img src={goldBrochure} alt="Brochure Cap Refuge sur l'investissement dans l'or" width={1280} height={960} loading="lazy" className="h-full min-h-[320px] w-full object-cover" />
+          <div className="px-6 pb-12 lg:px-4 lg:py-12 lg:pr-14">
+            <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Brochure gratuite</p>
+            <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">Demandez votre brochure</h2>
+            <p className="mt-5 text-muted-foreground">
+              Tout ce qu&apos;il faut savoir pour investir dans l&apos;or physique, réuni dans un guide clair :
+            </p>
+            <ul className="mt-6 space-y-3">
+              {["Pourquoi l'or dans un patrimoine", "Lingots ou pièces : le bon choix", "Comprendre le cours de l'or (LBMA)", "La fiscalité et la revente expliquées"].map((t) => (
+                <li key={t} className="flex items-center gap-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-primary">
+                    <Check className="h-3.5 w-3.5" />
+                  </span>
+                  {t}
+                </li>
+              ))}
+            </ul>
+            <Button variant="hero" size="xl" className="mt-8" asChild>
+              <a href="#formulaire">Recevoir ma brochure <ArrowRight className="h-5 w-5" /></a>
+            </Button>
+            <p className="mt-3 text-xs text-muted-foreground">Gratuit et sans engagement.</p>
+          </div>
         </div>
       </section>
 
