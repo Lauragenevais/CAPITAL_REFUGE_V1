@@ -305,3 +305,38 @@
 @utility animate-rise {
   animation: rise-in 0.7s ease-out both;
 }
+.theme-caprefuge {
+  --radius: 0.875rem;
+  --background: oklch(0.955 0.008 90);
+  --foreground: oklch(0.2 0.035 255);
+  --surface: oklch(0.92 0.012 88);
+  --surface-foreground: oklch(0.2 0.035 255);
+  --panel: oklch(0.99 0.004 90);
+  --panel-foreground: oklch(0.2 0.035 255);
+  --card: oklch(0.985 0.005 90);
+  --card-foreground: oklch(0.2 0.035 255);
+  --primary: oklch(0.74 0.1 80);
+  --primary-foreground: oklch(0.2 0.035 255);
+  --primary-glow: oklch(0.82 0.09 85);
+  --secondary: oklch(0.2 0.035 255);
+  --secondary-foreground: oklch(0.95 0.008 90);
+  --muted: oklch(0.92 0.01 88);
+  --muted-foreground: oklch(0.45 0.03 255);
+  --accent: oklch(0.32 0.04 255);
+  --accent-foreground: oklch(0.95 0.008 90);
+  --border: oklch(0.84 0.015 85);
+  --input: oklch(0.84 0.015 85);
+  --ring: oklch(0.74 0.1 80);
+  --gradient-gold: linear-gradient(135deg, oklch(0.7 0.1 75), oklch(0.8 0.09 85));
+  --gradient-ink: linear-gradient(180deg, oklch(0.2 0.035 255), oklch(0.26 0.04 255));
+  --shadow-gold: 0 14px 34px -16px color-mix(in oklab, var(--primary) 60%, transparent);
+  --shadow-panel: 0 30px 60px -30px oklch(0.2 0.035 255 / 0.35);
+}
+.theme-caprefuge .on-navy {
+  --foreground: oklch(0.95 0.008 90);
+  --muted-foreground: oklch(0.78 0.02 250);
+  --border: oklch(0.34 0.035 255);
+  --card: oklch(0.26 0.04 255);
+  color: var(--foreground);
+  background: var(--gradient-ink);
+}

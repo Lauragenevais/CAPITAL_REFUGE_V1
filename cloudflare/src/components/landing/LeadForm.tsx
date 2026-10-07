@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { CheckCircle2, Lock, ShieldCheck, BadgeCheck, Sparkles, ArrowRight, Smartphone } from "lucide-react";
+import { CheckCircle2, Lock, ShieldCheck, BadgeCheck, Sparkles, ArrowRight, Smartphone, Phone } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -38,12 +38,18 @@ function getTrackingParams() {
 type LeadFormProps = {
   operation?: "AMAZON" | "CHATGPT" | "NVIDIA" | "PAYPAL" | "GOOGLE" | "LIVRET" | "ROBOT";
   consentLabel?: string;
+  badge?: string;
+  title?: string;
+  subtitle?: string;
+  amountQuestion?: string;
+  /** Bandeau de réassurance, barre d'étapes, préfixe +33 et micro-texte (Cap Refuge). */
+  enhanced?: boolean;
 };
 
 const DEFAULT_CONSENT_LABEL =
   "J'accepte les conditions générales d'utilisation et d'être recontacté par nos partenaires afin de recevoir des informations sur l'Amazon Coin.";
 
-export function LeadForm({ operation, consentLabel }: LeadFormProps) {
+export function LeadForm({ operation, consentLabel, badge, title, subtitle, amountQuestion, enhanced }: LeadFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [leadId, setLeadId] = useState<string | null>(null);
   const [phoneShown, setPhoneShown] = useState("");
@@ -236,12 +242,19 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
     >
       <div className="bg-gold px-6 py-5 text-center text-primary-foreground">
         <p className="inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] uppercase">
-          <Sparkles className="h-3.5 w-3.5" /> Pré-inscription ouverte
+          <Sparkles className="h-3.5 w-3.5" /> {badge ?? "Pré-inscription ouverte"}
         </p>
-        <h2 className="mt-2 text-2xl font-bold">Testez votre éligibilité</h2>
-        <p className={`mt-1 text-sm ${isGoogle ? "font-medium" : "opacity-80"}`}>Réponse immédiate, en moins de 60 secondes</p>
+        <h2 className="mt-2 text-2xl font-bold">{title ?? "Testez votre éligibilité"}</h2>
+        <p className={`mt-1 text-sm ${isGoogle ? "font-medium" : "opacity-80"}`}>{subtitle ?? "Réponse immédiate, en moins de 60 secondes"}</p>
       </div>
 
+      {enhanced ? (
+        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 border-b border-black/10 py-3 text-xs font-bold">
+          <span className="inline-flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" /> Rappel sous 24h</span>
+          <span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5" /> Sans engagement</span>
+          <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" /> 100% gratuit</span>
+        </div>
+      ) : (
       <div className={`flex items-center justify-center gap-5 border-b border-black/10 py-3 font-semibold tracking-wide uppercase ${isGoogle ? "text-xs text-panel-foreground" : "text-[11px] opacity-60"}`}>
         <span className="inline-flex items-center gap-1.5">
           <Lock className="h-3.5 w-3.5" /> Sécurisé
@@ -253,9 +266,26 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
           <ShieldCheck className="h-3.5 w-3.5" /> Gratuit
         </span>
       </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-6 md:p-8">
-        <p className="text-center text-xs font-bold tracking-[0.18em] uppercase opacity-70">Étape {step} sur 2</p>
+        {enhanced ? (
+          <div>
+            <div className="mb-2 flex justify-between text-xs font-bold uppercase tracking-wide">
+              <span className={step === 1 ? "" : "opacity-50"}>1. Vos coordonnées</span>
+              <span className={step === 2 ? "" : "opacity-50"}>2. Votre projet</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5" aria-label={`Étape ${step} sur 2`}>
+              <span className="h-1.5 rounded-full bg-gold" />
+              <span className={`h-1.5 rounded-full ${step === 2 ? "bg-gold" : "bg-black/15"}`} />
+            </div>
+            <p className="mt-2 text-center text-xs opacity-70">
+              Étape {step}/2 {step === 1 ? "— plus qu'une question rapide ensuite" : "— dernière question"}
+            </p>
+          </div>
+        ) : (
+          <p className="text-center text-xs font-bold tracking-[0.18em] uppercase opacity-70">Étape {step} sur 2</p>
+        )}
         <div className={step === 1 ? "space-y-4" : "hidden"}>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
@@ -292,16 +322,24 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
 
         <div>
           <label htmlFor="phone" className={isGoogle ? "mb-1.5 block text-sm font-bold" : "sr-only"}>Téléphone</label>
-          <Input
-            id="phone"
-            type="tel"
-            placeholder="Votre téléphone *"
-            autoComplete="tel"
-            aria-invalid={Boolean(errors.phone)}
-            aria-describedby={errors.phone ? "phone-error" : undefined}
-            {...register("phone")}
-            className={isGoogle ? "h-13 border-2 border-input bg-background px-4 text-base text-panel-foreground placeholder:text-muted-foreground" : "h-12 border-black/30 bg-black/[0.07] text-panel-foreground placeholder:text-black/70"}
-          />
+          <div className="relative">
+            {enhanced && (
+              <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center gap-1.5 border-r border-black/20 pr-2.5 text-sm font-semibold">
+                <span aria-hidden>🇫🇷</span> +33
+              </span>
+            )}
+            <Input
+              id="phone"
+              type="tel"
+              inputMode={enhanced ? "numeric" : undefined}
+              placeholder={enhanced ? "06 12 34 56 78 *" : "Votre téléphone *"}
+              autoComplete="tel"
+              aria-invalid={Boolean(errors.phone)}
+              aria-describedby={errors.phone ? "phone-error" : undefined}
+              {...register("phone", enhanced ? { setValueAs: (v: string) => (v ?? "").replace(/[\s.-]/g, "") } : undefined)}
+              className={`${isGoogle ? "h-13 border-2 border-input bg-background px-4 text-base text-panel-foreground placeholder:text-muted-foreground" : "h-12 border-black/30 bg-black/[0.07] text-panel-foreground placeholder:text-black/70"} ${enhanced ? "pl-[5.5rem]" : ""}`}
+            />
+          </div>
           {errors.phone && <p id="phone-error" role="alert" className="mt-1 text-sm font-semibold text-destructive">{errors.phone.message}</p>}
         </div>
 
@@ -329,7 +367,7 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
         <>
         <div>
           <label htmlFor="investAmount" className="block text-base font-bold">
-            Quel montant envisagez-vous d'investir en cryptomonnaie ?
+            {amountQuestion ?? "Quel montant envisagez-vous d'investir en cryptomonnaie ?"}
           </label>
           <p className="mt-1 mb-3 text-sm opacity-80">
             Afin de mieux vous orienter vers une solution adaptée à votre projet, merci de sélectionner le montant que vous prévoyez d'investir :
@@ -376,6 +414,11 @@ export function LeadForm({ operation, consentLabel }: LeadFormProps) {
             </>
           )}
         </Button>
+        {enhanced && (
+          <p className="text-center text-xs font-medium opacity-75">
+            Un conseiller vous rappelle personnellement, aucun robot.
+          </p>
+        )}
         <button
           type="button"
           onClick={() => setStep(1)}
