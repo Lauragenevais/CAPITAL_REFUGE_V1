@@ -8,6 +8,20 @@ import { useHead } from "@/hooks/useHead";
 import { apiUrl } from "@/lib/api";
 
 const TOKEN_KEY = "ac-admin-token";
+
+const HLR_LABEL: Record<string, string> = {
+  CONNECTED: "✅ Valide",
+  ABSENT: "✅ Valide (éteint)",
+  NON_VERIFIE: "➖ Non vérifié",
+  SERVICE_ERROR: "⚠️ Service indisponible",
+  INVALID_MSISDN: "❌ Invalide",
+  UNDETERMINED: "❌ Indéterminé",
+};
+function hlrLabel(s?: string) {
+  if (!s) return "—";
+  return HLR_LABEL[s] ?? (s.startsWith("❌") ? s : `❌ ${s}`);
+}
+
 const STATUSES = ["nouveau", "contacté", "converti", "perdu"] as const;
 
 const STATUS_CLASS: Record<string, string> = {
@@ -15,6 +29,7 @@ const STATUS_CLASS: Record<string, string> = {
   "contacté": "bg-primary/15 text-primary",
   converti: "bg-accent/15 text-accent",
   perdu: "bg-destructive/15 text-destructive",
+  "refusé HLR": "bg-destructive/15 text-destructive",
 };
 
 function SmsBadges({ lead }: { lead: AdminLead }) {
@@ -69,6 +84,9 @@ type AdminLead = {
   sms_sent_count?: number;
   sms_delivery_status?: string;
   sms_last_reason?: string;
+  hlr_status?: string;
+  hlr_network?: string;
+  refused?: boolean;
 };
 
 async function callAdmin<T>(body: Record<string, unknown>, token?: string | null): Promise<T> {
@@ -245,6 +263,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
       today: leads.filter((l) => now - new Date(l.created_at).getTime() < 86400000).length,
       week: leads.filter((l) => now - new Date(l.created_at).getTime() < 604800000).length,
       converted: leads.filter((l) => l.status === "converti").length,
+      refused: leads.filter((l) => l.refused).length,
     };
   }, [leads]);
 
@@ -282,6 +301,8 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
       "Pays",
       "IP",
       "Statut",
+      "HLR",
+      "Opérateur",
       "Notes",
     ];
     const rows = filtered.map((l) => [
@@ -296,6 +317,8 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
       l.pays,
       l.ip_address,
       l.status,
+      hlrLabel(l.hlr_status),
+      l.hlr_network ?? "",
       l.notes,
     ]);
     const csv = [headers, ...rows]
@@ -332,12 +355,13 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
           {[
             { label: "Total leads", value: stats.total },
             { label: "Aujourd'hui", value: stats.today },
             { label: "7 derniers jours", value: stats.week },
             { label: "Convertis", value: stats.converted },
+            { label: "Refusés HLR", value: stats.refused },
           ].map((s) => (
             <div key={s.label} className="rounded-2xl border border-border/70 bg-card p-5">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">{s.label}</p>
@@ -362,6 +386,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
             className={selectClass("w-44")}
           >
             <option value="tous">Tous les statuts</option>
+            <option value="refusé HLR">refusé HLR</option>
             {STATUSES.map((s) => (
               <option key={s} value={s}>
                 {s}
@@ -399,6 +424,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                 <th className="px-4 py-3">Date</th>
                 <th className="px-4 py-3">Contact</th>
                 <th className="px-4 py-3">Téléphone</th>
+                <th className="px-4 py-3">HLR</th>
                 <th className="px-4 py-3">SMS</th>
                 <th className="px-4 py-3">Opération</th>
                 <th className="px-4 py-3">Source</th>
@@ -409,14 +435,14 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
             <tbody>
               {loading && (
                 <tr>
-                  <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
+                  <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
                     Chargement…
                   </td>
                 </tr>
               )}
               {!loading && filtered.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
+                  <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
                     Aucun lead
                   </td>
                 </tr>
@@ -439,6 +465,10 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                     <p className="text-xs text-muted-foreground">{lead.email}</p>
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">{lead.phone}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-xs">
+                    <p className={lead.refused ? "font-semibold text-destructive" : ""}>{hlrLabel(lead.hlr_status)}</p>
+                    {lead.hlr_network && <p className="text-muted-foreground">{lead.hlr_network}</p>}
+                  </td>
                   <td className="px-4 py-3">
                     <SmsBadges lead={lead} />
                   </td>
@@ -451,12 +481,13 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                   <td className="px-4 py-3">
                     <select
                       value={lead.status}
+                      disabled={lead.refused}
                       onChange={(e) => void setStatus(lead, e.target.value)}
                       className={`h-8 w-36 rounded-md border-0 px-2 text-xs font-semibold outline-none ${
                         STATUS_CLASS[lead.status] ?? "bg-muted"
                       }`}
                     >
-                      {STATUSES.map((s) => (
+                      {(lead.refused ? ["refusé HLR"] : STATUSES).map((s) => (
                         <option key={s} value={s}>
                           {s}
                         </option>
@@ -466,6 +497,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                   <td className="px-4 py-3">
                     <Input
                       defaultValue={lead.notes}
+                      disabled={lead.refused}
                       placeholder="Ajouter une note…"
                       className="h-8 w-56 text-xs"
                       onBlur={(e) => void saveNotes(lead, e.target.value)}
