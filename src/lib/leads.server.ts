@@ -455,13 +455,54 @@ export async function verifyLeadCode(
 export type ProcessLeadResult =
   | { ok: true; pendingVerification?: false }
   | { ok: true; pendingVerification: true; leadId: string; smsSent: boolean }
-  | { ok: false; code: "duplicate"; message: string };
+  | { ok: false; code: "duplicate" | "hlr_invalid"; message: string };
 
 const DUPLICATE: ProcessLeadResult = {
   ok: false,
   code: "duplicate",
   message: "Une demande avec cet email ou ce numéro existe déjà.",
 };
+
+const HLR_REFUSED: ProcessLeadResult = {
+  ok: false,
+  code: "hlr_invalid",
+  message: "Ce numéro de téléphone est erroné. Merci de saisir un autre numéro.",
+};
+
+async function notifyHlrRefusal(
+  data: LeadInput,
+  ipAddress: string,
+  channel: "form" | "api",
+  operation: string,
+  status: string,
+  network?: string,
+): Promise<void> {
+  const resendKey = process.env["RESEND_API_KEY"];
+  const lovableApiKey = process.env["LOVABLE_API_KEY"];
+  const notifyTo = process.env["LEAD_NOTIFICATION_EMAIL"];
+  if (!resendKey || !lovableApiKey || !notifyTo) return;
+  try {
+    await fetch("https://connector-gateway.lovable.dev/resend/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${lovableApiKey}`,
+        "X-Connection-Api-Key": resendKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Amazon <onboarding@resend.dev>",
+        to: [notifyTo],
+        subject: `[LEAD ${channel === "api" ? "API" : "FORMULAIRE"} ${operation}] ❌ HLR refusé - ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
+        text:
+          `Lead refusé (non enregistré) :\n\n📱 HLR : ❌ Refusé (${status}${network ? " - " + network : ""})\n\n` +
+          `Nom: ${data.last_name}\nPrénom: ${data.first_name}\nEmail: ${data.email}\nTéléphone: ${data.phone}\n` +
+          `Source: ${data.source || "direct"}\nIP: ${ipAddress}`,
+      }),
+    });
+  } catch (e) {
+    console.error("HLR refusal email error:", e);
+  }
+}
 
 export async function processLead(
   data: LeadInput,
@@ -487,6 +528,18 @@ export async function processLead(
     }
     return DUPLICATE;
   }
+
+  // Vérification HLR (sauf sources exemptées)
+  const { hlrLookup, HLR_SKIP_SOURCES } = await import("./hlr.server");
+  const skipHlr = HLR_SKIP_SOURCES.includes(data.source ?? "");
+  const hlr = skipHlr ? { valid: true, status: "NON_VERIFIE" } : await hlrLookup(data.phone);
+  console.log("HLR result:", hlr.status, skipHlr ? "(source exemptée)" : "");
+  if (!hlr.valid) {
+    await notifyHlrRefusal(data, ipAddress, channel, operation, hlr.status, hlr.network);
+    return HLR_REFUSED;
+  }
+
+
 
   const { data: inserted, error: insertError } = await supabaseAdmin
     .from("leads")
