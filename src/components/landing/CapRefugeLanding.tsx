@@ -112,7 +112,7 @@ export function CapRefugeLanding() {
       <header className="on-navy sticky top-0 z-40 border-b border-border">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <a href="#top" className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center border border-primary text-primary">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary text-primary">
               <ShieldCheck className="h-5 w-5" />
             </span>
             <span className="font-display text-lg font-semibold tracking-[0.12em] uppercase">Cap Refuge</span>
@@ -130,25 +130,46 @@ export function CapRefugeLanding() {
         </div>
       </header>
 
-      {/* Écran partagé : texte + formulaire | photo */}
-      <section id="top" className="grid lg:grid-cols-2">
-        <div className="on-navy flex flex-col justify-center px-6 py-16 lg:px-16 lg:py-20">
-          <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Or physique · Cours LBMA</p>
-          <h1 className="font-display mt-6 text-4xl leading-[1.08] font-semibold md:text-5xl">
-            Investir et acheter de <span className="text-primary">l&apos;or</span>, en toute sérénité
-          </h1>
-          <p className="mt-6 max-w-lg text-lg text-muted-foreground">
-            Lingots, pièces, cours et fiscalité : nos experts vous accompagnent gratuitement pour protéger
-            durablement votre patrimoine.
-          </p>
-          <ul className="mt-8 space-y-3 text-sm">
-            {["Lingots ou pièces : le bon choix", "Comprendre le cours de l'or (LBMA)", "Fiscalité et revente au meilleur cours"].map((t) => (
-              <li key={t} className="flex items-center gap-3">
-                <Check className="h-4 w-4 text-primary" /> {t}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-10 max-w-md">
+      {/* Hero : photo pleine largeur, texte à gauche, formulaire à droite */}
+      <section id="top" className="on-navy relative overflow-hidden">
+        <img
+          src={goldHero}
+          alt="Lingots et pièces d'or sur un marbre sombre"
+          width={1280}
+          height={1280}
+          className="absolute inset-0 h-full w-full object-cover opacity-35"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/85 to-secondary/40" aria-hidden />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:py-24">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Or physique · Cours LBMA</p>
+            <h1 className="font-display mt-6 text-4xl leading-[1.08] font-semibold md:text-6xl">
+              Investir et acheter de <span className="text-primary">l&apos;or</span>, en toute sérénité
+            </h1>
+            <p className="mt-6 max-w-xl text-lg text-muted-foreground">
+              Lingots, pièces, cours et fiscalité : nos experts vous accompagnent gratuitement pour protéger
+              durablement votre patrimoine.
+            </p>
+            <ul className="mt-8 space-y-3">
+              {["Lingots ou pièces : le bon choix", "Comprendre le cours de l'or (LBMA)", "Fiscalité et revente au meilleur cours"].map((t) => (
+                <li key={t} className="flex items-center gap-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-primary">
+                    <Check className="h-3.5 w-3.5" />
+                  </span>
+                  {t}
+                </li>
+              ))}
+            </ul>
+            <dl className="mt-10 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-4">
+              {STATS.map((stat) => (
+                <div key={stat.label} className="rounded-2xl border border-border bg-card/70 p-4 backdrop-blur">
+                  <dt className="font-display text-lg font-semibold text-primary">{stat.value}</dt>
+                  <dd className="mt-1 text-[11px] text-muted-foreground uppercase">{stat.label}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+          <div className="w-full max-w-md justify-self-center lg:justify-self-end">
             <LeadForm
               consentLabel={CONSENT}
               badge="Accompagnement gratuit"
@@ -157,23 +178,6 @@ export function CapRefugeLanding() {
               amountQuestion="Quel montant envisagez-vous d'investir dans l'or ?"
             />
           </div>
-        </div>
-        <div className="relative min-h-[420px] lg:min-h-0">
-          <img
-            src={goldHero}
-            alt="Lingots et pièces d'or sur un marbre sombre"
-            width={1280}
-            height={1280}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          <dl className="absolute inset-x-6 bottom-6 grid grid-cols-2 gap-px bg-border sm:grid-cols-4 lg:inset-x-10 lg:bottom-10">
-            {STATS.map((stat) => (
-              <div key={stat.label} className="bg-card/95 p-4">
-                <dt className="font-display text-lg font-semibold">{stat.value}</dt>
-                <dd className="mt-1 text-[11px] text-muted-foreground uppercase">{stat.label}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </section>
 
@@ -202,9 +206,9 @@ export function CapRefugeLanding() {
       </section>
 
       {/* Lingots ou pièces */}
-      <section id="projet" className="grid lg:grid-cols-2">
-        <img src={goldCoins} alt="Pièces d'or d'investissement" width={1280} height={960} loading="lazy" className="h-full min-h-[360px] w-full object-cover" />
-        <div className="bg-surface px-6 py-16 lg:px-16">
+      <section id="projet" className="mx-auto grid max-w-7xl gap-6 px-6 lg:grid-cols-2">
+        <img src={goldCoins} alt="Pièces d'or d'investissement" width={1280} height={960} loading="lazy" className="h-full min-h-[360px] w-full rounded-3xl object-cover" />
+        <div className="rounded-3xl bg-surface px-6 py-16 lg:px-14">
           <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Lingots ou pièces</p>
           <h2 className="font-display mt-4 text-3xl font-semibold">Le bon format pour votre projet</h2>
           <ul className="mt-8 space-y-6">
@@ -213,7 +217,7 @@ export function CapRefugeLanding() {
               ["Les pièces pour plus de souplesse", "Napoléon, Krugerrand, Maple Leaf : faciles à revendre par petites quantités."],
               ["Revendre au meilleur cours", "Une estimation au cours du jour, toujours détaillée par écrit."],
             ].map(([t, d]) => (
-              <li key={t} className="border-l-2 border-primary pl-5">
+              <li key={t} className="rounded-2xl border border-border bg-card p-5">
                 <p className="font-semibold">{t}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{d}</p>
               </li>
@@ -227,9 +231,9 @@ export function CapRefugeLanding() {
         <div className="mx-auto max-w-7xl px-6">
           <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Déroulement</p>
           <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">Trois étapes, simplement</h2>
-          <ol className="mt-12 grid gap-px bg-border md:grid-cols-3">
+          <ol className="mt-12 grid gap-5 md:grid-cols-3">
             {STEPS.map((s, i) => (
-              <li key={s.title} className="bg-card p-8">
+              <li key={s.title} className="rounded-2xl border border-border bg-card p-8">
                 <span className="text-sm font-semibold tracking-[0.2em] text-primary">ÉTAPE {i + 1}</span>
                 <h3 className="mt-4 text-xl font-semibold">{s.title}</h3>
                 <p className="mt-3 text-sm text-muted-foreground">{s.text}</p>
@@ -240,7 +244,7 @@ export function CapRefugeLanding() {
       </section>
 
       {/* Sécurité */}
-      <section className="grid lg:grid-cols-2">
+      <section className="mx-auto grid max-w-7xl gap-6 px-6 py-24 lg:grid-cols-2">
         <div className="order-2 px-6 py-16 lg:order-1 lg:px-16">
           <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Sécurité</p>
           <h2 className="font-display mt-4 text-3xl font-semibold">Acheter en toute confiance</h2>
@@ -248,7 +252,7 @@ export function CapRefugeLanding() {
             Or certifié LBMA, prix transparents et conseils d&apos;experts : vous savez exactement ce que vous achetez,
             à quel prix, et comment le conserver ou le revendre.
           </p>
-          <div className="mt-8 grid grid-cols-3 border border-border">
+          <div className="mt-8 grid grid-cols-3 overflow-hidden rounded-2xl border border-border">
             {[["999,9 ‰", "or pur"], ["LBMA", "cours officiel"], ["100 %", "sans engagement"]].map(([v, l]) => (
               <div key={l} className="border-r border-border p-4 last:border-r-0">
                 <p className="font-display text-xl font-semibold text-primary">{v}</p>
@@ -257,7 +261,7 @@ export function CapRefugeLanding() {
             ))}
           </div>
         </div>
-        <img src={goldVault} alt="Coffre-fort rempli de lingots d'or" width={1280} height={960} loading="lazy" className="order-1 h-full min-h-[360px] w-full object-cover lg:order-2" />
+        <img src={goldVault} alt="Coffre-fort rempli de lingots d'or" width={1280} height={960} loading="lazy" className="order-1 h-full min-h-[360px] w-full rounded-3xl object-cover lg:order-2" />
       </section>
 
       {/* Avis */}
@@ -266,7 +270,7 @@ export function CapRefugeLanding() {
           <h2 className="font-display text-3xl font-semibold md:text-4xl">Ils ont investi dans l&apos;or</h2>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {TESTIMONIALS.map((t) => (
-              <figure key={t.name} className="border-t-2 border-primary pt-6">
+              <figure key={t.name} className="rounded-2xl border border-border bg-card p-6">
                 <blockquote className="text-muted-foreground">« {t.text} »</blockquote>
                 <figcaption className="mt-5 text-sm font-semibold">
                   {t.name} <span className="font-normal text-muted-foreground">— {t.meta}</span>
