@@ -1,3 +1,4 @@
+import type * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Check, Coins, Globe2, Lock, Phone, ShieldCheck, TrendingUp } from "lucide-react";
 
