@@ -36,7 +36,7 @@ function getTrackingParams() {
 }
 
 type LeadFormProps = {
-  operation?: "AMAZON" | "CHATGPT" | "NVIDIA" | "PAYPAL" | "GOOGLE" | "LIVRET" | "ROBOT";
+  operation?: "AMAZON" | "OR" | "CHATGPT" | "NVIDIA" | "PAYPAL" | "GOOGLE" | "LIVRET" | "ROBOT";
   consentLabel?: string;
   badge?: string;
   title?: string;

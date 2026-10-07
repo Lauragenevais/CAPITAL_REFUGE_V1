@@ -136,7 +136,7 @@ export const leadSchema = z.object({
   consent: z.literal(true),
   source: z.string().max(60).optional(),
   click_id: z.string().max(120).optional(),
-  operation: z.enum(["AMAZON", "CHATGPT", "NVIDIA", "PAYPAL", "GOOGLE", "LIVRET", "ROBOT"]),
+  operation: z.enum(["AMAZON", "OR", "CHATGPT", "NVIDIA", "PAYPAL", "GOOGLE", "LIVRET", "ROBOT"]),
   invest_amount: z.enum(INVEST_AMOUNTS).optional(),
   /** Onglet spécifique du Google Sheet (ex. « Or » pour la page d'accueil Cap Refuge). */
   sheet_tab: z.enum(["Or"]).optional(),
@@ -810,7 +810,7 @@ async function finalizeLead(
       pixelStatus = `❌ Pixel Robot erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click Robot error (non bloquant):", err);
     }
-  } else if (channel === "form" && operation === "AMAZON") {
+  } else if (channel === "form" && (operation === "AMAZON" || operation === "OR")) {
     const pixelUrl =
       `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=jqyvg8ky&status=P` +
