@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 export const Route = createFileRoute("/api-docs")({
   head: () => ({
     meta: [
-      { title: "API Leads — Documentation | Amazon Capital" },
+      { title: "API Leads — Documentation | Cap Refuge" },
       {
         name: "description",
         content:
@@ -140,7 +140,7 @@ function ApiDocsPage() {
         <h1 className="mt-3 text-4xl font-semibold">API d'enregistrement de leads</h1>
         <p className="mt-4 text-muted-foreground">
           Cette API permet à un partenaire externe d'envoyer des leads directement dans la base
-          Amazon Capital. Chaque lead accepté est enregistré en base, ajouté en haut de l'onglet
+          Cap Refuge. Chaque lead accepté est enregistré en base, ajouté en haut de l'onglet
           Google Sheet et déclenche une notification email — exactement comme le formulaire du site.
         </p>
 

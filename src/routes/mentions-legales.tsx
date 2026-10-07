@@ -4,16 +4,16 @@ import { ArrowLeft, TrendingUp } from "lucide-react";
 export const Route = createFileRoute("/mentions-legales")({
   head: () => ({
     meta: [
-      { title: "Mentions légales — Amazon Capital" },
+      { title: "Mentions légales — Cap Refuge" },
       {
         name: "description",
         content:
-          "Mentions légales du site Amazon Capital : éditeur, hébergement, propriété intellectuelle et limites de responsabilité.",
+          "Mentions légales du site Cap Refuge : éditeur, hébergement, propriété intellectuelle et limites de responsabilité.",
       },
-      { property: "og:title", content: "Mentions légales — Amazon Capital" },
+      { property: "og:title", content: "Mentions légales — Cap Refuge" },
       {
         property: "og:description",
-        content: "Informations légales relatives à l'éditeur et à l'hébergement du site Amazon Capital.",
+        content: "Informations légales relatives à l'éditeur et à l'hébergement du site Cap Refuge.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -68,7 +68,7 @@ function MentionsLegales() {
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold shadow-gold">
               <TrendingUp className="h-5 w-5 text-primary-foreground" />
             </span>
-            <span className="font-display text-lg font-bold">Amazon Capital</span>
+            <span className="font-display text-lg font-bold">Cap Refuge</span>
           </Link>
           <Link
             to="/"
@@ -105,7 +105,7 @@ function MentionsLegales() {
 
       <footer className="border-t border-border/60 bg-surface/60 py-8">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-4 text-sm text-muted-foreground">
-          <span className="font-display text-base font-bold text-foreground">Amazon Capital</span>
+          <span className="font-display text-base font-bold text-foreground">Cap Refuge</span>
           <nav className="flex gap-6">
             <Link to="/mentions-legales" className="text-primary">
               Mentions légales
