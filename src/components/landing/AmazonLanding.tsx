@@ -200,7 +200,7 @@ export function AmazonLanding() {
           </div>
 
           <div className="lg:pt-6">
-            <LeadForm />
+            <LeadForm consentLabel="J'accepte les conditions générales d'utilisation et d'être recontacté afin de recevoir des informations sur l'investissement dans l'or." />
           </div>
         </div>
       </section>
