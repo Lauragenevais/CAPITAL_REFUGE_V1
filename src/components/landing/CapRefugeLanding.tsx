@@ -312,21 +312,6 @@ export function CapRefugeLanding() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-24">
-        <div className="mx-auto max-w-3xl px-6">
-          <SectionHeading eyebrow="FAQ" title="Questions fréquentes" center />
-          <Accordion type="single" collapsible className="mt-10">
-            {FAQ.map((item) => (
-              <AccordionItem key={item.q} value={item.q} className="border-border">
-                <AccordionTrigger className="text-left text-base font-semibold">{item.q}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">{item.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </section>
-
-      {/* FAQ */}
       <section id="faq" className="mx-auto grid max-w-7xl gap-12 px-6 py-24 lg:grid-cols-[0.8fr_1.2fr]">
         <h2 className="font-display text-3xl font-semibold md:text-4xl">Questions fréquentes</h2>
         <Accordion type="single" collapsible>
