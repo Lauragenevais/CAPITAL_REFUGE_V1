@@ -536,12 +536,13 @@ export async function processLead(
 }
 
 /** Onglet cible selon le canal / l'opération / le mode de routage. */
-function sheetTarget(channel: "form" | "api", operation: string) {
+function sheetTarget(channel: "form" | "api", operation: string, tabOverride?: string) {
   const legacySheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
   const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
   const isLivretRobotApi =
     channel === "api" && (operation === "LIVRET" || operation === "ROBOT");
   const isCryptoEmailing = LEAD_ROUTING_MODE === "CRYPTO_EMAILING";
+  if (tabOverride && !isCryptoEmailing) return { sheetId: legacySheetId, tab: tabOverride };
   return {
     sheetId: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_ID : legacySheetId,
     tab: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_TAB : isLivretRobotApi ? "Livret - Robot" : sheetTab,
