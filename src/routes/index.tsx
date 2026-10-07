@@ -5,17 +5,17 @@ import { AmazonLanding } from "@/components/landing/AmazonLanding";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Amazon Coin : vérifiez votre éligibilité avant le lancement" },
+      { title: "Cap Refuge : investir et acheter de l'or physique" },
       {
         name: "description",
         content:
-          "L'Amazon Coin arrive. Vérifiez votre éligibilité en 60 secondes et positionnez-vous avant le grand public avec l'accompagnement d'un conseiller crypto.",
+          "Lingots, pièces, cours LBMA et fiscalité : un expert Cap Refuge vous accompagne gratuitement pour investir dans l'or.",
       },
-      { property: "og:title", content: "Amazon Coin : prenez position avant le lancement" },
+      { property: "og:title", content: "Cap Refuge : investir dans l'or sereinement" },
       {
         property: "og:description",
         content:
-          "Analyse gratuite en 60 secondes : découvrez si votre profil est éligible au programme de pré-inscription Amazon Coin.",
+          "Faites-vous rappeler gratuitement par un expert des métaux précieux pour investir dans l'or.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -21,12 +21,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { LeadForm } from "@/components/landing/LeadForm";
-import heroPortrait from "@/assets/hero-portrait.jpg";
-import blockGrowth from "@/assets/block-growth.jpg";
-import blockGlobal from "@/assets/block-global.jpg";
+import heroPortrait from "@/assets/gold-hero.jpg";
+import blockGrowth from "@/assets/gold-coins.jpg";
+import blockGlobal from "@/assets/gold-vault.jpg";
 
 const NAV = [
-  { label: "Le projet", href: "#projet" },
+  { label: "Lingots ou pièces", href: "#projet" },
   { label: "Avantages", href: "#avantages" },
   { label: "Déroulement", href: "#etapes" },
   { label: "Avis", href: "#avis" },
@@ -34,47 +34,47 @@ const NAV = [
 ];
 
 const STATS = [
-  { value: "+312 %", label: "Progression modélisée" },
-  { value: "300 M+", label: "Clients Amazon actifs" },
-  { value: "24/7", label: "Marché toujours ouvert" },
-  { value: "60 s", label: "Pour se pré-inscrire" },
+  { value: "5 000 ans", label: "Valeur refuge reconnue" },
+  { value: "LBMA", label: "Cours de référence" },
+  { value: "24 carats", label: "Or pur 999,9 ‰" },
+  { value: "60 s", label: "Pour faire sa demande" },
 ];
 
 const BENEFITS = [
   {
+    icon: ShieldCheck,
+    title: "Une valeur refuge",
+    text: "L'or protège votre patrimoine face à l'inflation et aux crises : il ne dépend d'aucune banque ni d'aucun État.",
+  },
+  {
+    icon: Coins,
+    title: "Lingots ou pièces",
+    text: "Lingots, lingotins, Napoléon, Krugerrand… nous vous aidons à choisir le format adapté à votre projet.",
+  },
+  {
     icon: TrendingUp,
-    title: "Un potentiel rarement vu",
-    text: "L'Amazon Coin s'appuierait sur un écosystème déjà rentable et sur des centaines de millions d'acheteurs réguliers.",
+    title: "Au cours officiel",
+    text: "Des prix indexés sur le cours de référence LBMA, transparents, pour acheter et revendre au juste prix.",
   },
   {
     icon: Globe2,
-    title: "Une adoption immédiate",
-    text: "Des millions de marchands connectés au réseau Amazon pourraient accepter la monnaie dès son ouverture.",
-  },
-  {
-    icon: BrainCircuit,
-    title: "Pilotage assisté par IA",
-    text: "Des algorithmes analysent la volatilité en continu pour ajuster votre exposition selon votre profil.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Infrastructure de niveau bancaire",
-    text: "Une architecture cloud éprouvée, celle qui héberge déjà les données les plus sensibles au monde.",
+    title: "Une fiscalité claire",
+    text: "Taxe forfaitaire ou régime des plus-values : un expert vous explique l'option la plus avantageuse.",
   },
 ];
 
 const STEPS = [
   {
     title: "Complétez le formulaire",
-    text: "Quatre informations suffisent. Nous vérifions immédiatement si votre profil entre dans le programme.",
+    text: "Quelques informations suffisent pour décrire votre projet d'investissement dans l'or.",
   },
   {
-    title: "Échangez avec un spécialiste",
-    text: "Un conseiller crypto vous rappelle sous 24h pour construire une stratégie adaptée à vos objectifs.",
+    title: "Échangez avec un expert",
+    text: "Un spécialiste des métaux précieux vous rappelle pour vous orienter : lingots, pièces, montant, fiscalité.",
   },
   {
-    title: "Prenez position",
-    text: "Vous placez le montant que vous décidez et suivez l'évolution de votre portefeuille en temps réel.",
+    title: "Investissez sereinement",
+    text: "Vous achetez au cours du jour, en toute sécurité, et conservez votre or comme vous le souhaitez.",
   },
 ];
 
@@ -82,36 +82,40 @@ const TESTIMONIALS = [
   {
     name: "Damien",
     meta: "45 ans — Nantes",
-    text: "J'hésitais depuis longtemps à toucher à la crypto. Le rappel du conseiller m'a permis de comprendre où je mettais les pieds avant de démarrer.",
+    text: "Je voulais sécuriser une partie de mon épargne. L'expert m'a expliqué la différence entre lingots et pièces, sans pression.",
   },
   {
     name: "Sophie",
     meta: "37 ans — Toulouse",
-    text: "Inscription réellement rapide et suivi sérieux. J'ai commencé avec un petit montant, je suis montée progressivement.",
+    text: "Démarche rapide et explications claires sur la fiscalité. J'ai commencé par quelques pièces, puis un lingotin.",
   },
   {
     name: "Marc",
     meta: "58 ans — Rennes",
-    text: "Ce que j'ai apprécié : pas de promesse magique, juste des explications claires sur le risque et le potentiel.",
+    text: "Ce que j'ai apprécié : des prix basés sur le cours officiel et un vrai accompagnement pour la revente.",
   },
 ];
 
 const FAQ = [
   {
-    q: "L'Amazon Coin est-il déjà disponible ?",
-    a: "Le programme de pré-inscription permet d'être informé en priorité et d'être accompagné dès l'ouverture. Aucun engagement n'est demandé au moment de la demande.",
+    q: "Pourquoi investir dans l'or ?",
+    a: "L'or est une valeur refuge reconnue depuis des millénaires. Il permet de diversifier son patrimoine et de le protéger face à l'inflation et aux crises financières.",
   },
   {
-    q: "Quel montant faut-il prévoir ?",
-    a: "Il n'y a pas de montant imposé. Votre conseiller définit avec vous une enveloppe cohérente avec votre situation, en gardant à l'esprit que tout investissement comporte un risque de perte en capital.",
+    q: "Lingots ou pièces : que choisir ?",
+    a: "Les lingots conviennent aux montants importants avec une prime faible ; les pièces sont plus faciles à revendre par petites quantités. Votre expert vous aide à trouver le bon équilibre.",
   },
   {
-    q: "Combien de temps prend la vérification ?",
-    a: "Le formulaire se remplit en moins d'une minute et la prise de contact intervient sous 24 heures ouvrées.",
+    q: "Comment est fixé le prix de l'or ?",
+    a: "Le prix suit le cours de référence LBMA (London Bullion Market Association), publié chaque jour. Le cours peut varier à la hausse comme à la baisse.",
+  },
+  {
+    q: "Quelle est la fiscalité de l'or ?",
+    a: "À la revente, vous choisissez entre la taxe forfaitaire sur le prix de cession et le régime des plus-values, avec abattement selon la durée de détention.",
   },
   {
     q: "Mes données sont-elles protégées ?",
-    a: "Vos informations sont transmises de manière chiffrée et utilisées uniquement pour la vérification d'éligibilité et la mise en relation avec un conseiller partenaire.",
+    a: "Vos informations restent confidentielles et servent uniquement à vous recontacter au sujet de votre projet.",
   },
 ];
 
@@ -121,7 +125,7 @@ export function AmazonLanding() {
       {/* Bandeau haut */}
       <div className="bg-surface/80 px-4 py-2 text-center text-xs font-medium tracking-wide text-muted-foreground">
         <Coins className="mr-1.5 inline h-3.5 w-3.5 text-primary" />
-        Cap Refuge — la monnaie qui pourrait redessiner le commerce mondial
+        Cap Refuge — investir et acheter de l’or physique en toute sérénité
       </div>
 
       {/* Navigation */}
@@ -141,7 +145,7 @@ export function AmazonLanding() {
             ))}
           </nav>
           <Button variant="hero" size="lg" asChild>
-            <a href="#formulaire">Vérifier mon éligibilité</a>
+            <a href="#formulaire">Être rappelé par un expert</a>
           </Button>
         </div>
       </header>
@@ -151,7 +155,7 @@ export function AmazonLanding() {
         <div className="grid-backdrop absolute inset-0 opacity-40" aria-hidden />
         <img
           src={heroPortrait}
-          alt="Conseillère financière dans un bureau donnant sur la ville la nuit"
+          alt="Lingots et pièces d’or sur un marbre sombre"
           width={1280}
           height={1280}
           className="pointer-events-none absolute top-0 right-0 hidden h-full w-[46%] object-cover opacity-50 [mask-image:linear-gradient(to_right,transparent,black_45%)] lg:block"
@@ -159,25 +163,24 @@ export function AmazonLanding() {
         <div className="relative mx-auto grid max-w-6xl gap-12 px-4 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-24">
           <div className="animate-rise">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-4 py-1.5 text-[11px] font-bold tracking-[0.18em] text-primary uppercase">
-              <Zap className="h-3.5 w-3.5" /> Ouverture des inscriptions
+              <Zap className="h-3.5 w-3.5" /> Accompagnement gratuit
             </span>
             <h1 className="mt-6 text-4xl leading-[1.05] font-extrabold md:text-6xl">
-              Amazon prépare sa propre <span className="text-gold">cryptomonnaie</span>
+              Investir et acheter de <span className="text-gold">l’or</span> intelligemment
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-              Adossée au premier réseau e-commerce du monde, l&apos;Amazon Coin pourrait s&apos;imposer
-              comme un moyen de paiement universel. Prenez votre place avant que le grand public ne
-              découvre le projet.
+              Lingots, pièces, cours et fiscalité : nos experts vous accompagnent pour acheter de l&apos;or
+              physique au cours officiel et protéger durablement votre patrimoine.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Button variant="hero" size="xl" asChild>
                 <a href="#formulaire">
-                  Tester mon éligibilité <ArrowRight className="h-5 w-5" />
+                  Être rappelé par un expert <ArrowRight className="h-5 w-5" />
                 </a>
               </Button>
               <Button variant="outlineGold" size="xl" asChild>
-                <a href="#projet">Comprendre le projet</a>
+                <a href="#projet">Pourquoi l&apos;or ?</a>
               </Button>
             </div>
 
@@ -197,7 +200,7 @@ export function AmazonLanding() {
           </div>
 
           <div className="lg:pt-6">
-            <LeadForm />
+            <LeadForm consentLabel="J'accepte les conditions générales d'utilisation et d'être recontacté afin de recevoir des informations sur l'investissement dans l'or." />
           </div>
         </div>
       </section>
@@ -207,11 +210,11 @@ export function AmazonLanding() {
         <div className="mx-auto max-w-6xl px-4">
           <p className="text-xs font-bold tracking-[0.2em] text-primary uppercase">Avantages</p>
           <h2 className="mt-3 max-w-2xl text-3xl font-bold md:text-4xl">
-            Pourquoi l&apos;Amazon Coin attire autant d&apos;attention
+            Pourquoi l&apos;or a sa place dans votre patrimoine
           </h2>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            La force logistique et technologique d&apos;un géant appliquée à un actif numérique :
-            une combinaison inédite sur le marché crypto.
+            Un actif tangible, universel et durable, pour diversifier votre épargne en dehors des
+            marchés financiers.
           </p>
 
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
@@ -256,24 +259,24 @@ export function AmazonLanding() {
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 lg:grid-cols-2">
           <div>
             <p className="text-xs font-bold tracking-[0.2em] text-primary uppercase">
-              Événement majeur
+              Lingots ou pièces
             </p>
             <h2 className="mt-3 text-3xl font-bold md:text-4xl">
-              Une monnaie pensée pour des centaines de millions d&apos;acheteurs
+              Choisir le bon format pour votre projet
             </h2>
             <ul className="mt-8 space-y-5">
               {[
                 [
-                  "Un socle économique déjà en place",
-                  "Contrairement à la plupart des cryptos, l'actif s'appuierait sur un chiffre d'affaires réel.",
+                  "Les lingots pour les montants importants",
+                  "Une prime réduite et un or pur 999,9 ‰ certifié.",
                 ],
                 [
-                  "300 millions d'utilisateurs potentiels",
-                  "Chaque client du réseau devient un détenteur possible dès l'ouverture.",
+                  "Les pièces pour plus de souplesse",
+                  "Napoléon, Krugerrand, Maple Leaf : faciles à revendre par petites quantités.",
                 ],
                 [
-                  "Un usage quotidien, pas seulement spéculatif",
-                  "Paiement, remboursement, fidélité : les cas d'usage existent avant même le lancement.",
+                  "Revendre au meilleur cours",
+                  "Une estimation au cours du jour, toujours détaillée par écrit.",
                 ],
               ].map(([title, text]) => (
                 <li key={title} className="flex gap-4">
@@ -290,7 +293,7 @@ export function AmazonLanding() {
           </div>
           <img
             src={blockGrowth}
-            alt="Représentation d'une pièce numérique dorée au-dessus d'un graphique haussier"
+            alt="Pièces d’or d’investissement sur un velours sombre"
             width={1280}
             height={960}
             loading="lazy"
@@ -304,7 +307,7 @@ export function AmazonLanding() {
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 lg:grid-cols-2">
           <img
             src={blockGlobal}
-            alt="Globe numérique doré relié par un réseau de connexions et de pièces crypto"
+            alt="Coffre-fort rempli de lingots d’or"
             width={1280}
             height={960}
             loading="lazy"
@@ -312,21 +315,20 @@ export function AmazonLanding() {
           />
           <div className="order-1 lg:order-2">
             <p className="text-xs font-bold tracking-[0.2em] text-primary uppercase">
-              Adoption mondiale
+              Sécurité
             </p>
             <h2 className="mt-3 text-3xl font-bold md:text-4xl">
-              Viser le standard du paiement numérique
+              Acheter en toute sécurité
             </h2>
             <p className="mt-5 text-muted-foreground">
-              Là où les cryptomonnaies historiques ont dû construire leur communauté, l&apos;Amazon
-              Coin partirait avec une base d&apos;utilisateurs déjà constituée et un réseau marchand
-              opérationnel sur cinq continents.
+              Or certifié LBMA, prix transparents et conseils d&apos;experts : vous savez exactement ce
+              que vous achetez, à quel prix, et comment le conserver ou le revendre.
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {[
-                ["200 M+", "membres Prime"],
-                ["5", "continents couverts"],
-                ["AAA", "niveau de sécurité"],
+                ["999,9 ‰", "or pur certifié"],
+                ["LBMA", "cours officiel"],
+                ["100 %", "gratuit, sans engagement"],
               ].map(([value, label]) => (
                 <div key={label} className="rounded-2xl border border-border/70 bg-card p-4">
                   <p className="font-display text-2xl font-bold text-primary">{value}</p>
@@ -342,7 +344,7 @@ export function AmazonLanding() {
       <section id="avis" className="border-y border-border/60 bg-surface/40 py-20">
         <div className="mx-auto max-w-6xl px-4">
           <p className="text-xs font-bold tracking-[0.2em] text-primary uppercase">Témoignages</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Ils se sont déjà positionnés</h2>
+          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Ils ont investi dans l’or</h2>
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {TESTIMONIALS.map((item) => (
@@ -397,14 +399,14 @@ export function AmazonLanding() {
       <section className="pb-24">
         <div className="mx-auto max-w-4xl px-4">
           <div className="rounded-3xl border border-primary/30 bg-surface/70 p-10 text-center">
-            <h2 className="text-3xl font-bold">Places limitées pour cette phase</h2>
+            <h2 className="text-3xl font-bold">Faites le premier pas vers l’or</h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-              La vérification est gratuite et sans engagement. Il vous faut moins d&apos;une minute
-              pour savoir si votre profil est retenu.
+              L&apos;accompagnement est gratuit et sans engagement. Moins d&apos;une minute pour être
+              rappelé par un expert des métaux précieux.
             </p>
             <Button variant="hero" size="xl" className="mt-8" asChild>
               <a href="#formulaire">
-                Vérifier mon éligibilité <ArrowRight className="h-5 w-5" />
+                Être rappelé par un expert <ArrowRight className="h-5 w-5" />
               </a>
             </Button>
             <p className="mt-5 flex items-center justify-center gap-2 text-xs text-muted-foreground">
@@ -436,8 +438,8 @@ export function AmazonLanding() {
           <p className="max-w-3xl text-xs leading-relaxed">
             Les informations diffusées sur ce site sont fournies à titre indicatif et ne
             constituent pas un conseil en investissement. Les performances évoquées reposent sur des
-            projections et ne préjugent pas des résultats futurs. Tout investissement en
-            cryptomonnaies comporte un risque de perte partielle ou totale du capital engagé.
+            projections et ne préjugent pas des résultats futurs. Le cours de l&apos;or peut
+            varier à la hausse comme à la baisse ; tout investissement comporte un risque de perte partielle ou totale du capital engagé.
           </p>
           <p className="text-xs">
             Données collectées : nom, prénom, email, téléphone, adresse IP — conservées 3 ans
@@ -458,7 +460,7 @@ export function AmazonLanding() {
       {/* Barre CTA mobile */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border/70 bg-background/95 px-4 py-3 backdrop-blur lg:hidden">
         <Button variant="hero" size="lg" className="w-full" asChild>
-          <a href="#formulaire">Vérifier mon éligibilité</a>
+          <a href="#formulaire">Être rappelé par un expert</a>
         </Button>
       </div>
     </div>
