@@ -481,7 +481,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                   <td className="px-4 py-3">
                     <select
                       value={lead.status}
-                      disabled={lead.refused}
+                      disabled={Boolean(lead.refused)}
                       onChange={(e) => void setStatus(lead, e.target.value)}
                       className={`h-8 w-36 rounded-md border-0 px-2 text-xs font-semibold outline-none ${
                         STATUS_CLASS[lead.status] ?? "bg-muted"
@@ -497,7 +497,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                   <td className="px-4 py-3">
                     <Input
                       defaultValue={lead.notes}
-                      disabled={lead.refused}
+                      disabled={Boolean(lead.refused)}
                       placeholder="Ajouter une note…"
                       className="h-8 w-56 text-xs"
                       onBlur={(e) => void saveNotes(lead, e.target.value)}

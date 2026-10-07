@@ -400,7 +400,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                   <td className="px-4 py-3 text-muted-foreground">{lead.source || "—"}</td>
                   <td className="px-4 py-3">
                     <Select value={lead.status}
-                      disabled={lead.refused} onValueChange={(v) => void setStatus(lead, v)}>
+                      disabled={Boolean(lead.refused)} onValueChange={(v) => void setStatus(lead, v)}>
                       <SelectTrigger
                         className={`h-8 w-36 border-0 text-xs font-semibold ${STATUS_CLASS[lead.status] ?? "bg-muted"}`}
                       >
@@ -416,7 +416,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                   <td className="px-4 py-3">
                     <Input
                       defaultValue={lead.notes}
-                      disabled={lead.refused}
+                      disabled={Boolean(lead.refused)}
                       placeholder="Ajouter une note…"
                       className="h-8 w-56 text-xs"
                       onBlur={(e) => void saveNotes(lead, e.target.value)}
