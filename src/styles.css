@@ -155,7 +155,7 @@
 
 /* Palette dédiée à Cap Refuge : ivoire, bleu nuit et laiton */
 .theme-caprefuge {
-  --radius: 0.25rem;
+  --radius: 0.875rem;
   --background: oklch(0.955 0.008 90);
   --foreground: oklch(0.2 0.035 255);
   --surface: oklch(0.92 0.012 88);
