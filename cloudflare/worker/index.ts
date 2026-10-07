@@ -3,7 +3,7 @@
  * L'adresse du backend n'apparaît jamais côté navigateur.
  */
 
-const BACKEND_ORIGIN = "https://amazoncapital.lovable.app";
+const BACKEND_ORIGIN = "https://form-sync-guru.lovable.app";
 
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
