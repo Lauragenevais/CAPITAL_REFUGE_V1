@@ -172,7 +172,7 @@ export function CapRefugeLanding() {
           </div>
           <div className="w-full max-w-xl justify-self-center lg:justify-self-end">
             <p className="mb-4 text-center text-sm text-muted-foreground">
-              👋 Bienvenue ! Laissez-nous vos coordonnées, un expert vous rappelle pour répondre à toutes vos questions.
+              Bienvenue ! Laissez-nous vos coordonnées, un expert vous rappelle pour répondre à toutes vos questions.
             </p>
             <LeadForm
               consentLabel={CONSENT}
