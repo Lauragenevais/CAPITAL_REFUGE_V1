@@ -64,6 +64,7 @@ export function LeadForm({ operation, consentLabel, badge, title, subtitle, amou
     register,
     handleSubmit,
     setValue,
+    setError,
     trigger,
     watch,
     formState: { errors, isSubmitting },
@@ -100,7 +101,14 @@ export function LeadForm({ operation, consentLabel, badge, title, subtitle, amou
         pending_verification?: boolean;
         lead_id?: string;
         sms_sent?: boolean;
+        error?: string;
       };
+
+      if (result.error === "hlr_invalid") {
+        setStep(1);
+        setError("phone", { type: "hlr", message: result.message ?? "Ce numéro de téléphone est erroné. Merci de saisir un autre numéro." });
+        return;
+      }
 
       if (!response.ok || !result.ok) {
         toast.error(result.message ?? "Une erreur est survenue. Merci de réessayer.");
