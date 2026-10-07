@@ -178,6 +178,7 @@ export function CapRefugeLanding() {
             <LeadForm
               enhanced
               sheetTab="Or"
+              operation="OR"
               consentLabel={CONSENT}
               badge="Accompagnement gratuit"
               title="Être rappelé par un expert"
