@@ -176,15 +176,33 @@ export function CapRefugeLanding() {
               Bienvenue ! Laissez-nous vos coordonnées, un expert vous rappelle pour répondre à toutes vos questions.
             </p>
             <LeadForm
+              enhanced
               consentLabel={CONSENT}
               badge="Accompagnement gratuit"
               title="Être rappelé par un expert"
               subtitle="Gratuit et sans engagement, en moins d'une minute"
               amountQuestion="Quel montant envisagez-vous d'investir dans l'or ?"
             />
+            <div className="mt-4 flex items-start gap-3 rounded-2xl border border-border bg-card/70 p-4 backdrop-blur">
+              <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+              <p className="text-sm">
+                Le cours de l'or a progressé de <strong className="text-primary">+4,6 % sur 12 mois</strong> et de{" "}
+                <strong className="text-primary">+126 % sur 3 ans</strong>.
+                <span className="mt-1 block text-[11px] text-muted-foreground">
+                  Cours de l'once en USD, au 7 octobre 2026 (source : Boursorama). Les performances passées ne préjugent pas des performances futures.
+                </span>
+              </p>
+            </div>
           </div>
         </div>
       </section>
+
+      <a
+        href="#formulaire"
+        className="fixed inset-x-4 bottom-4 z-50 flex h-14 items-center justify-center gap-2 rounded-2xl bg-gold font-bold text-primary-foreground shadow-gold lg:hidden"
+      >
+        <Phone className="h-5 w-5" /> Être rappelé gratuitement
+      </a>
 
       {/* Avantages */}
       <section id="avantages" className="py-24">
