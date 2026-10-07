@@ -4,16 +4,16 @@ import { ArrowLeft, TrendingUp } from "lucide-react";
 export const Route = createFileRoute("/politique-confidentialite")({
   head: () => ({
     meta: [
-      { title: "Politique de confidentialité — Amazon Capital" },
+      { title: "Politique de confidentialité — Cap Refuge" },
       {
         name: "description",
         content:
-          "Politique de confidentialité du site Amazon Capital : données collectées, finalités, durée de conservation et exercice de vos droits RGPD.",
+          "Politique de confidentialité du site Cap Refuge : données collectées, finalités, durée de conservation et exercice de vos droits RGPD.",
       },
-      { property: "og:title", content: "Politique de confidentialité — Amazon Capital" },
+      { property: "og:title", content: "Politique de confidentialité — Cap Refuge" },
       {
         property: "og:description",
-        content: "Comment Amazon Capital collecte, utilise et protège vos données personnelles conformément au RGPD.",
+        content: "Comment Cap Refuge collecte, utilise et protège vos données personnelles conformément au RGPD.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -85,7 +85,7 @@ function PolitiqueConfidentialite() {
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold shadow-gold">
               <TrendingUp className="h-5 w-5 text-primary-foreground" />
             </span>
-            <span className="font-display text-lg font-bold">Amazon Capital</span>
+            <span className="font-display text-lg font-bold">Cap Refuge</span>
           </Link>
           <Link
             to="/"
@@ -124,7 +124,7 @@ function PolitiqueConfidentialite() {
 
       <footer className="border-t border-border/60 bg-surface/60 py-8">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-4 text-sm text-muted-foreground">
-          <span className="font-display text-base font-bold text-foreground">Amazon Capital</span>
+          <span className="font-display text-base font-bold text-foreground">Cap Refuge</span>
           <nav className="flex gap-6">
             <Link to="/mentions-legales" className="transition-colors hover:text-primary">
               Mentions légales

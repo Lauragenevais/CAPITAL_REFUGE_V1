@@ -121,7 +121,7 @@ export function AmazonLanding() {
       {/* Bandeau haut */}
       <div className="bg-surface/80 px-4 py-2 text-center text-xs font-medium tracking-wide text-muted-foreground">
         <Coins className="mr-1.5 inline h-3.5 w-3.5 text-primary" />
-        Amazon Capital — la monnaie qui pourrait redessiner le commerce mondial
+        Cap Refuge — la monnaie qui pourrait redessiner le commerce mondial
       </div>
 
       {/* Navigation */}
@@ -131,7 +131,7 @@ export function AmazonLanding() {
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold shadow-gold">
               <TrendingUp className="h-5 w-5 text-primary-foreground" />
             </span>
-            <span className="font-display text-lg font-bold">Amazon Capital</span>
+            <span className="font-display text-lg font-bold">Cap Refuge</span>
           </a>
           <nav className="hidden items-center gap-7 text-sm text-muted-foreground lg:flex">
             {NAV.map((item) => (
@@ -419,7 +419,7 @@ export function AmazonLanding() {
         <div className="mx-auto max-w-6xl space-y-6 px-4 text-sm text-muted-foreground">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <span className="font-display text-base font-bold text-foreground">
-              Amazon Capital
+              Cap Refuge
             </span>
             <nav className="flex gap-6">
               <Link to="/mentions-legales" className="transition-colors hover:text-primary">

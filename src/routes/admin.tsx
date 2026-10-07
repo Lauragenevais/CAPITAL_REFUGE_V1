@@ -25,10 +25,10 @@ export const Route = createFileRoute("/admin")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Suivi des leads — Amazon Capital" },
+      { title: "Suivi des leads — Cap Refuge" },
       { name: "description", content: "Espace privé de suivi des demandes reçues via le site." },
       { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "Suivi des leads — Amazon Capital" },
+      { property: "og:title", content: "Suivi des leads — Cap Refuge" },
       { property: "og:description", content: "Espace privé de suivi des demandes." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -259,7 +259,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-5">
           <div>
             <h1 className="font-display text-xl font-bold">Suivi des leads</h1>
-            <p className="text-sm text-muted-foreground">Espace administrateur — Amazon Capital</p>
+            <p className="text-sm text-muted-foreground">Espace administrateur — Cap Refuge</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => void load()} disabled={loading}>

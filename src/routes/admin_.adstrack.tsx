@@ -23,13 +23,13 @@ export const Route = createFileRoute("/admin_/adstrack")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Suivi des envois Adstrack — Amazon Capital" },
+      { title: "Suivi des envois Adstrack — Cap Refuge" },
       {
         name: "description",
         content: "Espace privé de suivi des leads transmis au webservice Adstrack CRP19.",
       },
       { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "Suivi des envois Adstrack — Amazon Capital" },
+      { property: "og:title", content: "Suivi des envois Adstrack — Cap Refuge" },
       {
         property: "og:description",
         content: "Espace privé de suivi des leads transmis au webservice Adstrack CRP19.",
