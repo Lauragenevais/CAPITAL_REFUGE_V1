@@ -44,12 +44,14 @@ type LeadFormProps = {
   amountQuestion?: string;
   /** Bandeau de réassurance, barre d'étapes, préfixe +33 et micro-texte (Cap Refuge). */
   enhanced?: boolean;
+  /** Onglet du Google Sheet (ex. « Or » pour la page d'accueil). */
+  sheetTab?: "Or";
 };
 
 const DEFAULT_CONSENT_LABEL =
   "J'accepte les conditions générales d'utilisation et d'être recontacté par nos partenaires afin de recevoir des informations sur l'Amazon Coin.";
 
-export function LeadForm({ operation, consentLabel, badge, title, subtitle, amountQuestion, enhanced }: LeadFormProps) {
+export function LeadForm({ operation, consentLabel, badge, title, subtitle, amountQuestion, enhanced, sheetTab }: LeadFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [leadId, setLeadId] = useState<string | null>(null);
   const [phoneShown, setPhoneShown] = useState("");
@@ -88,6 +90,7 @@ export function LeadForm({ operation, consentLabel, badge, title, subtitle, amou
           click_id: clickId,
           operation: operation ?? "AMAZON",
           invest_amount: values.investAmount,
+          ...(sheetTab ? { sheet_tab: sheetTab } : {}),
         }),
       });
 

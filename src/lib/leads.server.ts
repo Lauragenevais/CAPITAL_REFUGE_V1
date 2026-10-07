@@ -138,6 +138,8 @@ export const leadSchema = z.object({
   click_id: z.string().max(120).optional(),
   operation: z.enum(["AMAZON", "CHATGPT", "NVIDIA", "PAYPAL", "GOOGLE", "LIVRET", "ROBOT"]),
   invest_amount: z.enum(INVEST_AMOUNTS).optional(),
+  /** Onglet spécifique du Google Sheet (ex. « Or » pour la page d'accueil Cap Refuge). */
+  sheet_tab: z.enum(["Or"]).optional(),
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
@@ -534,12 +536,13 @@ export async function processLead(
 }
 
 /** Onglet cible selon le canal / l'opération / le mode de routage. */
-function sheetTarget(channel: "form" | "api", operation: string) {
+function sheetTarget(channel: "form" | "api", operation: string, tabOverride?: string) {
   const legacySheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
   const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
   const isLivretRobotApi =
     channel === "api" && (operation === "LIVRET" || operation === "ROBOT");
   const isCryptoEmailing = LEAD_ROUTING_MODE === "CRYPTO_EMAILING";
+  if (tabOverride && !isCryptoEmailing) return { sheetId: legacySheetId, tab: tabOverride };
   return {
     sheetId: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_ID : legacySheetId,
     tab: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_TAB : isLivretRobotApi ? "Livret - Robot" : sheetTab,
@@ -592,7 +595,7 @@ async function writeLeadToSheet(
   sms: { leadId: string; smsStatus: string; codeStatus: string; smsCode?: string },
 ): Promise<string> {
   const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
-  const { sheetId, tab } = sheetTarget(channel, operation);
+  const { sheetId, tab } = sheetTarget(channel, operation, data.sheet_tab);
   if (!serviceAccountKey || !sheetId) return "⏭️ Non configuré";
   try {
     const token = await getGoogleAccessToken(serviceAccountKey);
@@ -640,20 +643,30 @@ export async function updateSheetSmsStatus(
   update: { smsStatus?: string; codeStatus?: string; smsCode?: string },
 ): Promise<void> {
   const serviceAccountKey = process.env["GOOGLE_SERVICE_ACCOUNT_KEY"];
-  const { sheetId, tab } = sheetTarget("form", operation);
+  const { sheetId, tab: defaultTab } = sheetTarget("form", operation);
   if (!serviceAccountKey || !sheetId) return;
   try {
     const token = await getGoogleAccessToken(serviceAccountKey);
-    const prefix = tab ? `'${tab}'!` : "";
-    const r = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${prefix}O1:O5000`,
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
-    if (!r.ok) throw new Error(`read [${r.status}]: ${await r.text()}`);
-    const d = (await r.json()) as { values?: string[][] };
-    const idx = (d.values ?? []).findIndex((row) => row[0] === leadId);
-    if (idx < 0) return;
-    const row = idx + 1;
+    // Le lead peut être dans l'onglet par défaut ou dans l'onglet « Or » (page d'accueil)
+    const candidates = Array.from(new Set([defaultTab, sheetTarget("form", operation, "Or").tab]));
+    let prefix = "";
+    let row = -1;
+    for (const t of candidates) {
+      const p = t ? `'${t}'!` : "";
+      const r = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(`${p}O1:O5000`)}`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      if (!r.ok) continue;
+      const d = (await r.json()) as { values?: string[][] };
+      const idx = (d.values ?? []).findIndex((v) => v[0] === leadId);
+      if (idx >= 0) {
+        prefix = p;
+        row = idx + 1;
+        break;
+      }
+    }
+    if (row < 0) return;
     const data: { range: string; values: string[][] }[] = [];
     if (update.smsStatus !== undefined) data.push({ range: `${prefix}L${row}`, values: [[update.smsStatus]] });
     if (update.codeStatus !== undefined) data.push({ range: `${prefix}M${row}`, values: [[update.codeStatus]] });
