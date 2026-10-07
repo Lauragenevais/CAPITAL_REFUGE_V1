@@ -1,3 +1,4 @@
+import type * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Check, Coins, Globe2, Lock, Phone, ShieldCheck, TrendingUp } from "lucide-react";
 
@@ -185,37 +186,29 @@ export function CapRefugeLanding() {
         </div>
       </section>
 
-      {/* Avantages : titre fixe à gauche, liste à droite */}
-      <section id="avantages" className="mx-auto grid max-w-7xl gap-12 px-6 py-24 lg:grid-cols-[0.8fr_1.2fr]">
-        <div className="lg:sticky lg:top-28 lg:self-start">
-          <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Pourquoi l&apos;or</p>
-          <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">Un pilier pour votre patrimoine</h2>
-          <p className="mt-5 text-muted-foreground">
-            Un actif tangible, universel et durable pour diversifier votre épargne en dehors des marchés financiers.
-          </p>
-        </div>
-        <div className="divide-y divide-border border-y border-border">
-          {BENEFITS.map((b, i) => (
-            <article key={b.title} className="grid grid-cols-[auto_1fr] gap-6 py-8">
-              <span className="font-display text-3xl font-semibold text-primary">0{i + 1}</span>
-              <div>
-                <h3 className="flex items-center gap-2 text-lg font-semibold">
-                  <b.icon className="h-5 w-5 text-primary" /> {b.title}
-                </h3>
-                <p className="mt-2 text-muted-foreground">{b.text}</p>
-              </div>
-            </article>
-          ))}
+      {/* Avantages */}
+      <section id="avantages" className="py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeading eyebrow="Pourquoi l'or" title="Un pilier pour votre patrimoine" text="Un actif tangible, universel et durable pour diversifier votre épargne en dehors des marchés financiers." />
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {BENEFITS.map((b) => (
+              <article key={b.title} className="rounded-2xl border border-border bg-card p-6">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                  <b.icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-5 text-lg font-semibold">{b.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{b.text}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Lingots ou pièces */}
-      <section id="projet" className="mx-auto grid max-w-7xl gap-6 px-6 lg:grid-cols-2">
-        <img src={goldCoins} alt="Pièces d'or d'investissement" width={1280} height={960} loading="lazy" className="h-full min-h-[360px] w-full rounded-3xl object-cover" />
-        <div className="rounded-3xl bg-surface px-6 py-16 lg:px-14">
-          <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Lingots ou pièces</p>
-          <h2 className="font-display mt-4 text-3xl font-semibold">Le bon format pour votre projet</h2>
-          <ul className="mt-8 space-y-6">
+      <section id="projet" className="bg-surface py-24">
+        <SplitSection image={goldCoins} alt="Pièces d'or d'investissement">
+          <SectionHeading eyebrow="Lingots ou pièces" title="Le bon format pour votre projet" />
+          <ul className="mt-8 space-y-4">
             {[
               ["Les lingots pour les montants importants", "Une prime réduite et un or pur 999,9 ‰ certifié."],
               ["Les pièces pour plus de souplesse", "Napoléon, Krugerrand, Maple Leaf : faciles à revendre par petites quantités."],
@@ -227,48 +220,41 @@ export function CapRefugeLanding() {
               </li>
             ))}
           </ul>
-        </div>
+        </SplitSection>
       </section>
 
       {/* Brochure */}
-      <section id="brochure" className="mx-auto max-w-7xl px-6 pb-24">
-        <div className="grid items-center gap-10 overflow-hidden rounded-3xl bg-surface lg:grid-cols-2">
-          <img src={goldBrochure} alt="Brochure Cap Refuge sur l'investissement dans l'or" width={1280} height={960} loading="lazy" className="h-full min-h-[320px] w-full object-cover" />
-          <div className="px-6 pb-12 lg:px-4 lg:py-12 lg:pr-14">
-            <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Brochure gratuite</p>
-            <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">Demandez votre brochure</h2>
-            <p className="mt-5 text-muted-foreground">
-              Tout ce qu&apos;il faut savoir pour investir dans l&apos;or physique, réuni dans un guide clair :
-            </p>
-            <ul className="mt-6 space-y-3">
-              {["Pourquoi l'or dans un patrimoine", "Lingots ou pièces : le bon choix", "Comprendre le cours de l'or (LBMA)", "La fiscalité et la revente expliquées"].map((t) => (
-                <li key={t} className="flex items-center gap-3">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-primary">
-                    <Check className="h-3.5 w-3.5" />
-                  </span>
-                  {t}
-                </li>
-              ))}
-            </ul>
-            <Button variant="hero" size="xl" className="mt-8" asChild>
-              <a href="#formulaire">Recevoir ma brochure <ArrowRight className="h-5 w-5" /></a>
-            </Button>
-            <p className="mt-3 text-xs text-muted-foreground">Gratuit et sans engagement.</p>
-          </div>
-        </div>
+      <section id="brochure" className="py-24">
+        <SplitSection image={goldBrochure} alt="Brochure Cap Refuge sur l'investissement dans l'or" reverse>
+          <SectionHeading eyebrow="Brochure gratuite" title="Demandez votre brochure" text="Tout ce qu'il faut savoir pour investir dans l'or physique, réuni dans un guide clair :" />
+          <ul className="mt-6 space-y-3">
+            {["Pourquoi l'or dans un patrimoine", "Lingots ou pièces : le bon choix", "Comprendre le cours de l'or (LBMA)", "La fiscalité et la revente expliquées"].map((t) => (
+              <li key={t} className="flex items-center gap-3">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-primary">
+                  <Check className="h-3.5 w-3.5" />
+                </span>
+                {t}
+              </li>
+            ))}
+          </ul>
+          <Button variant="hero" size="xl" className="mt-8" asChild>
+            <a href="#formulaire">Recevoir ma brochure <ArrowRight className="h-5 w-5" /></a>
+          </Button>
+        </SplitSection>
       </section>
 
       {/* Étapes */}
       <section id="etapes" className="on-navy py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Déroulement</p>
-          <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">Trois étapes, simplement</h2>
-          <ol className="mt-12 grid gap-5 md:grid-cols-3">
+          <SectionHeading eyebrow="Déroulement" title="Trois étapes, simplement" />
+          <ol className="mt-12 grid gap-6 md:grid-cols-3">
             {STEPS.map((s, i) => (
-              <li key={s.title} className="rounded-2xl border border-border bg-card p-8">
-                <span className="text-sm font-semibold tracking-[0.2em] text-primary">ÉTAPE {i + 1}</span>
-                <h3 className="mt-4 text-xl font-semibold">{s.title}</h3>
-                <p className="mt-3 text-sm text-muted-foreground">{s.text}</p>
+              <li key={s.title} className="rounded-2xl border border-border bg-card p-6">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/15 font-display font-semibold text-primary">
+                  {i + 1}
+                </span>
+                <h3 className="mt-5 text-lg font-semibold">{s.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{s.text}</p>
               </li>
             ))}
           </ol>
@@ -276,31 +262,25 @@ export function CapRefugeLanding() {
       </section>
 
       {/* Sécurité */}
-      <section className="mx-auto grid max-w-7xl gap-6 px-6 py-24 lg:grid-cols-2">
-        <div className="order-2 px-6 py-16 lg:order-1 lg:px-16">
-          <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">Sécurité</p>
-          <h2 className="font-display mt-4 text-3xl font-semibold">Acheter en toute confiance</h2>
-          <p className="mt-5 text-muted-foreground">
-            Or certifié LBMA, prix transparents et conseils d&apos;experts : vous savez exactement ce que vous achetez,
-            à quel prix, et comment le conserver ou le revendre.
-          </p>
-          <div className="mt-8 grid grid-cols-3 overflow-hidden rounded-2xl border border-border">
+      <section className="py-24">
+        <SplitSection image={goldVault} alt="Coffre-fort rempli de lingots d'or">
+          <SectionHeading eyebrow="Sécurité" title="Acheter en toute confiance" text="Or certifié LBMA, prix transparents et conseils d'experts : vous savez exactement ce que vous achetez, à quel prix, et comment le conserver ou le revendre." />
+          <div className="mt-8 grid grid-cols-3 gap-4">
             {[["999,9 ‰", "or pur"], ["LBMA", "cours officiel"], ["100 %", "sans engagement"]].map(([v, l]) => (
-              <div key={l} className="border-r border-border p-4 last:border-r-0">
+              <div key={l} className="rounded-2xl border border-border bg-card p-4">
                 <p className="font-display text-xl font-semibold text-primary">{v}</p>
                 <p className="mt-1 text-xs text-muted-foreground">{l}</p>
               </div>
             ))}
           </div>
-        </div>
-        <img src={goldVault} alt="Coffre-fort rempli de lingots d'or" width={1280} height={960} loading="lazy" className="order-1 h-full min-h-[360px] w-full rounded-3xl object-cover lg:order-2" />
+        </SplitSection>
       </section>
 
       {/* Avis */}
       <section id="avis" className="bg-surface py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="font-display text-3xl font-semibold md:text-4xl">Ils ont investi dans l&apos;or</h2>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
+          <SectionHeading eyebrow="Témoignages" title="Ils ont investi dans l'or" />
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
             {TESTIMONIALS.map((t) => (
               <figure key={t.name} className="rounded-2xl border border-border bg-card p-6">
                 <blockquote className="text-muted-foreground">« {t.text} »</blockquote>
@@ -310,6 +290,21 @@ export function CapRefugeLanding() {
               </figure>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-24">
+        <div className="mx-auto max-w-3xl px-6">
+          <SectionHeading eyebrow="FAQ" title="Questions fréquentes" center />
+          <Accordion type="single" collapsible className="mt-10">
+            {FAQ.map((item) => (
+              <AccordionItem key={item.q} value={item.q} className="border-border">
+                <AccordionTrigger className="text-left text-base font-semibold">{item.q}</AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">{item.a}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </section>
 
@@ -362,6 +357,25 @@ export function CapRefugeLanding() {
           <a href="#formulaire">Être rappelé par un expert</a>
         </Button>
       </div>
+    </div>
+  );
+}
+
+function SectionHeading({ eyebrow, title, text, center }: { eyebrow: string; title: string; text?: string; center?: boolean }) {
+  return (
+    <div className={center ? "text-center" : "max-w-2xl"}>
+      <p className="text-xs font-semibold tracking-[0.3em] text-primary uppercase">{eyebrow}</p>
+      <h2 className="font-display mt-4 text-3xl font-semibold md:text-4xl">{title}</h2>
+      {text && <p className="mt-5 text-muted-foreground">{text}</p>}
+    </div>
+  );
+}
+
+function SplitSection({ image, alt, reverse, children }: { image: string; alt: string; reverse?: boolean; children: React.ReactNode }) {
+  return (
+    <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-2">
+      <img src={image} alt={alt} width={1280} height={960} loading="lazy" className={`aspect-[4/3] w-full rounded-3xl object-cover ${reverse ? "lg:order-2" : ""}`} />
+      <div>{children}</div>
     </div>
   );
 }
