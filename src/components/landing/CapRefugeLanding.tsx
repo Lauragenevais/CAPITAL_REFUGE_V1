@@ -148,7 +148,7 @@ export function CapRefugeLanding() {
               </li>
             ))}
           </ul>
-          <div id="formulaire" className="mt-10 max-w-md scroll-mt-24">
+          <div className="mt-10 max-w-md">
             <LeadForm consentLabel={CONSENT} />
           </div>
         </div>
