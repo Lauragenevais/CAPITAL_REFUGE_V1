@@ -5,17 +5,17 @@ import { CapRefugeLanding } from "@/components/landing/CapRefugeLanding";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Cap Refuge : investir et acheter de l'or physique" },
+      { title: "Capital Refuge : investir dans l'or physique avec un expert" },
       {
         name: "description",
         content:
-          "Lingots, pièces, cours LBMA et fiscalité : un expert Cap Refuge vous accompagne gratuitement pour investir dans l'or.",
+          "Lingots et pièces d'or au cours officiel. Un expert Capital Refuge vous rappelle gratuitement sous 24h, sans engagement, pour sécuriser votre épargne.",
       },
-      { property: "og:title", content: "Cap Refuge : investir dans l'or sereinement" },
+      { property: "og:title", content: "Capital Refuge : mettez votre épargne à l'abri avec l'or" },
       {
         property: "og:description",
         content:
-          "Faites-vous rappeler gratuitement par un expert des métaux précieux pour investir dans l'or.",
+          "Rappel gratuit sous 24h par un expert en métaux précieux. Sans engagement.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
