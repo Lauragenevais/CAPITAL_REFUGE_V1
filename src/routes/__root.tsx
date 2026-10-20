@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Vérifiez votre éligibilité au programme de pré-inscription Amazon Coin en moins de 60 secondes.",
+          "Lingots et pièces d'or au cours officiel. Un expert Capital Refuge vous rappelle gratuitement sous 24h, sans engagement.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
