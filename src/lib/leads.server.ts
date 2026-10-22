@@ -531,8 +531,12 @@ export async function processLead(
 
   // Vérification HLR (sauf sources exemptées)
   const { hlrLookup, HLR_SKIP_SOURCES } = await import("./hlr.server");
-  const skipHlr = HLR_SKIP_SOURCES.includes(data.source ?? "");
-  const hlr = skipHlr ? { valid: true, status: "NON_VERIFIE" } : await hlrLookup(data.phone);
+  // Pas de HLR pour les leads API de l'opération OR (Cap Refuge)
+  const skipHlr =
+    HLR_SKIP_SOURCES.includes(data.source ?? "") || (channel === "api" && operation === "OR");
+  const hlr: { valid: boolean; status: string; network?: string } = skipHlr
+    ? { valid: true, status: "NON_VERIFIE" }
+    : await hlrLookup(data.phone);
   console.log("HLR result:", hlr.status, skipHlr ? "(source exemptée)" : "");
   if (!hlr.valid) {
     await supabaseAdmin.from("hlr_refusals").insert({
@@ -753,11 +757,17 @@ async function finalizeLead(
 
   const sheetStatus =
     sheetStatusOverride ??
-    (await writeLeadToSheet(data, ipAddress, channel, operation, {
-      leadId: "",
-      smsStatus: "Non concerné",
-      codeStatus: "Non concerné",
-    }));
+    (await writeLeadToSheet(
+      channel === "api" && operation === "OR" ? { ...data, sheet_tab: "Or" } : data,
+      ipAddress,
+      channel,
+      operation,
+      {
+        leadId: "",
+        smsStatus: channel === "api" && operation === "OR" ? "API" : "Non concerné",
+        codeStatus: channel === "api" && operation === "OR" ? "API" : "Non concerné",
+      },
+    ));
 
   // Pixels de conversion Com&Click — un par canal
   let pixelStatus = "⏭️ Non déclenché";
