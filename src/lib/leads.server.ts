@@ -882,8 +882,9 @@ async function finalizeLead(
     }
   } else if (channel === "form" && (operation === "AMAZON" || operation === "OR")) {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=jqyvg8ky&status=P` +
+      (operation === "OR"
+        ? `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=30&CampaignID=fa85vnjh&status=P`
+        : `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}&CampaignID=jqyvg8ky&status=P`) +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
     try {
