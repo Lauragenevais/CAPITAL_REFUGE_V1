@@ -534,7 +534,7 @@ export async function processLead(
   // Pas de HLR pour les leads API de l'opération OR (Cap Refuge)
   const skipHlr =
     HLR_SKIP_SOURCES.includes(data.source ?? "") || (channel === "api" && operation === "OR");
-  const hlr: { valid: boolean; status: string; network?: string } = skipHlr
+  const hlr: { valid: boolean; status: string; network?: string | undefined } = skipHlr
     ? { valid: true, status: "NON_VERIFIE" }
     : await hlrLookup(data.phone);
   console.log("HLR result:", hlr.status, skipHlr ? "(source exemptée)" : "");
