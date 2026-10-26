@@ -771,7 +771,24 @@ async function finalizeLead(
 
   // Pixels de conversion Com&Click — un par canal
   let pixelStatus = "⏭️ Non déclenché";
-  if (channel === "form" && operation === "CHATGPT") {
+  if (channel === "api" && data.source === "7ptu0gdy") {
+    // Pixel dédié à la source 7ptu0gdy en réception API (Cap Refuge OR)
+    const pixelUrl =
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=40&ProductID=&CampaignID=fa85vnjh&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}`;
+    try {
+      const pixelResp = await fetch(pixelUrl, {
+        method: "GET",
+        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      });
+      pixelStatus = pixelResp.ok
+        ? `✅ Pixel API 7ptu0gdy déclenché (chan: ${data.source})`
+        : `❌ Pixel API 7ptu0gdy erreur HTTP ${pixelResp.status}`;
+    } catch (err) {
+      pixelStatus = `❌ Pixel API 7ptu0gdy erreur: ${err instanceof Error ? err.message : "inconnue"}`;
+      console.error("Pixel Com&Click API 7ptu0gdy error (non bloquant):", err);
+    }
+  } else if (channel === "form" && operation === "CHATGPT") {
     const pixelUrl =
       `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
       `&CampaignID=mhmcapt7&status=P` +
