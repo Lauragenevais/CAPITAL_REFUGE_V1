@@ -69,7 +69,7 @@ const FIELDS: { name: string; type: string; required: boolean; desc: string }[] 
   {
     name: "source",
     type: "string",
-    required: false,
+    required: true,
     desc: "Origine du trafic, 60 caractères max. Cette valeur doit être demandée à Com&Click.",
   },
   {
@@ -82,7 +82,7 @@ const FIELDS: { name: string; type: string; required: boolean; desc: string }[] 
     name: "operation",
     type: "string",
     required: true,
-    desc: "Type d'opération enregistrée : AMAZON, CHATGPT, NVIDIA, PAYPAL, GOOGLE, LIVRET ou ROBOT.",
+    desc: "Type d'opération enregistrée : OR",
   },
 ];
 
@@ -113,7 +113,7 @@ function ApiDocsPage() {
     "consent": true,
     "source": "partenaire-x",
     "click_id": "abc123",
-    "operation": "AMAZON"
+    "operation": "OR"
   }'`;
 
   const jsSnippet = `await fetch("${endpoint}", {
@@ -129,7 +129,7 @@ function ApiDocsPage() {
     phone: "+33 6 12 34 56 78",
     consent: true,
     source: "partenaire-x",
-    operation: "AMAZON",
+    operation: "OR",
   }),
 });`;
 
@@ -138,11 +138,6 @@ function ApiDocsPage() {
       <div className="mx-auto w-full max-w-3xl px-6 py-16">
         <p className="text-xs uppercase tracking-[0.3em] text-gold">Documentation</p>
         <h1 className="mt-3 text-4xl font-semibold">API d'enregistrement de leads</h1>
-        <p className="mt-4 text-muted-foreground">
-          Cette API permet à un partenaire externe d'envoyer des leads directement dans la base
-          Cap Refuge. Chaque lead accepté est enregistré en base, ajouté en haut de l'onglet
-          Google Sheet et déclenche une notification email — exactement comme le formulaire du site.
-        </p>
 
         <section className="mt-12 space-y-4">
           <h2 className="text-2xl font-semibold">Endpoint</h2>
@@ -159,9 +154,7 @@ X-API-Key: VOTRE_CLE_API`}</Code>
           <h2 className="text-2xl font-semibold">Authentification</h2>
           <p className="text-muted-foreground">
             Envoyez la clé d'API dans l'en-tête <code>X-API-Key</code>, ou en{" "}
-            <code>Authorization: Bearer VOTRE_CLE_API</code>. La clé est stockée côté serveur sous
-            le nom <code>LEADS_API_KEY</code> (visible dans les secrets du backend). Ne la
-            distribuez jamais dans du code client public.
+            <code>Authorization: Bearer VOTRE_CLE_API</code>
           </p>
         </section>
 

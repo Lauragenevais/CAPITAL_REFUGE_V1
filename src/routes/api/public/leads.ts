@@ -25,7 +25,7 @@ const apiLeadSchema = z.object({
     .transform((v) => v.replace(/[\s.\-()]/g, "").replace(/^\+33/, "0"))
     .refine((v) => /^0[467]\d{8}$/.test(v), "Numéro de mobile français invalide"),
   consent: z.literal(true),
-  source: z.string().max(60).optional(),
+  source: z.string().trim().min(1, "La source est obligatoire").max(60),
   click_id: z.string().max(120).optional(),
   operation: z.enum(["AMAZON", "OR", "CHATGPT", "NVIDIA", "PAYPAL", "GOOGLE", "LIVRET", "ROBOT"]),
 });
