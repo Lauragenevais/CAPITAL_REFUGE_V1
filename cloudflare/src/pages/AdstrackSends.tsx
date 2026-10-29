@@ -55,7 +55,7 @@ function loginErrorMessage(message: string): string {
 
 export default function AdstrackSends() {
   useHead({
-    title: "Suivi des envois Adstrack — Amazon Capital",
+    title: "Suivi des envois Adstrack — Cap Refuge",
     description: "Espace privé de suivi des leads transmis au webservice Adstrack CRP19.",
   });
 

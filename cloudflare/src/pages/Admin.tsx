@@ -121,7 +121,7 @@ function loginErrorMessage(message: string): string {
 
 export default function Admin() {
   useHead({
-    title: "Suivi des leads — Amazon Capital",
+    title: "Suivi des leads — Cap Refuge",
     description: "Espace privé de suivi des demandes reçues via le site.",
   });
 
@@ -349,7 +349,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-5">
           <div>
             <h1 className="font-display text-xl font-bold">Suivi des leads</h1>
-            <p className="text-sm text-muted-foreground">Espace administrateur — Amazon Capital</p>
+            <p className="text-sm text-muted-foreground">Espace administrateur — Cap Refuge</p>
           </div>
           <div className="flex gap-2">
             <Button variant={live ? "default" : "outline"} onClick={() => setLive((v) => !v)}>
