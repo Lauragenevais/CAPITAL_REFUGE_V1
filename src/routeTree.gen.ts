@@ -22,6 +22,7 @@ import { Route as MentionsLegalesGoogleRouteImport } from './routes/mentions-leg
 import { Route as MentionsLegalesNvidiaRouteImport } from './routes/mentions-legales-nvidia'
 import { Route as MentionsLegalesPaypalRouteImport } from './routes/mentions-legales-paypal'
 import { Route as NvidiaRouteImport } from './routes/nvidia'
+import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as PaypalRouteImport } from './routes/paypal'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
 import { Route as PolitiqueConfidentialiteChatgptRouteImport } from './routes/politique-confidentialite-chatgpt'
@@ -98,6 +99,11 @@ const MentionsLegalesPaypalRoute = MentionsLegalesPaypalRouteImport.update({
 const NvidiaRoute = NvidiaRouteImport.update({
   id: '/nvidia',
   path: '/nvidia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartenairesRoute = PartenairesRouteImport.update({
+  id: '/partenaires',
+  path: '/partenaires',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PaypalRoute = PaypalRouteImport.update({
@@ -181,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
   '/mentions-legales-paypal': typeof MentionsLegalesPaypalRoute
   '/nvidia': typeof NvidiaRoute
+  '/partenaires': typeof PartenairesRoute
   '/paypal': typeof PaypalRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByTo {
   '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
   '/mentions-legales-paypal': typeof MentionsLegalesPaypalRoute
   '/nvidia': typeof NvidiaRoute
+  '/partenaires': typeof PartenairesRoute
   '/paypal': typeof PaypalRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
@@ -236,6 +244,7 @@ export interface FileRoutesById {
   '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
   '/mentions-legales-paypal': typeof MentionsLegalesPaypalRoute
   '/nvidia': typeof NvidiaRoute
+  '/partenaires': typeof PartenairesRoute
   '/paypal': typeof PaypalRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
   '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
@@ -265,6 +274,7 @@ export interface FileRouteTypes {
     | '/mentions-legales-nvidia'
     | '/mentions-legales-paypal'
     | '/nvidia'
+    | '/partenaires'
     | '/paypal'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
     | '/mentions-legales-nvidia'
     | '/mentions-legales-paypal'
     | '/nvidia'
+    | '/partenaires'
     | '/paypal'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
@@ -319,6 +330,7 @@ export interface FileRouteTypes {
     | '/mentions-legales-nvidia'
     | '/mentions-legales-paypal'
     | '/nvidia'
+    | '/partenaires'
     | '/paypal'
     | '/politique-confidentialite'
     | '/politique-confidentialite-chatgpt'
@@ -347,6 +359,7 @@ export interface RootRouteChildren {
   MentionsLegalesNvidiaRoute: typeof MentionsLegalesNvidiaRoute
   MentionsLegalesPaypalRoute: typeof MentionsLegalesPaypalRoute
   NvidiaRoute: typeof NvidiaRoute
+  PartenairesRoute: typeof PartenairesRoute
   PaypalRoute: typeof PaypalRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
   PolitiqueConfidentialiteChatgptRoute: typeof PolitiqueConfidentialiteChatgptRoute
@@ -454,6 +467,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NvidiaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/partenaires': {
+      id: '/partenaires'
+      path: '/partenaires'
+      fullPath: '/partenaires'
+      preLoaderRoute: typeof PartenairesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/paypal': {
       id: '/paypal'
       path: '/paypal'
@@ -555,6 +575,7 @@ const rootRouteChildren: RootRouteChildren = {
   MentionsLegalesNvidiaRoute: MentionsLegalesNvidiaRoute,
   MentionsLegalesPaypalRoute: MentionsLegalesPaypalRoute,
   NvidiaRoute: NvidiaRoute,
+  PartenairesRoute: PartenairesRoute,
   PaypalRoute: PaypalRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
   PolitiqueConfidentialiteChatgptRoute: PolitiqueConfidentialiteChatgptRoute,

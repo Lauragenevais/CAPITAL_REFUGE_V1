@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useHead } from "@/hooks/useHead";
+import { ControlsCard, LeadDetailPanel, OperatorChart, copyText, isHot, relativeTime, type InsightLead } from "@/components/admin/LeadInsights";
 import { apiUrl } from "@/lib/api";
 
 const TOKEN_KEY = "ac-admin-token";
@@ -86,6 +87,7 @@ type AdminLead = {
   sms_last_reason?: string;
   hlr_status?: string;
   hlr_network?: string;
+  invest_amount?: string;
   refused?: boolean;
 };
 
@@ -205,9 +207,11 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
   const [statusFilter, setStatusFilter] = useState("tous");
   const [sourceFilter, setSourceFilter] = useState("toutes");
   const [period, setPeriod] = useState("tout");
+  const [live, setLive] = useState(true);
+  const [selected, setSelected] = useState<AdminLead | null>(null);
 
-  async function load() {
-    setLoading(true);
+  async function load(silent = false) {
+    if (!silent) setLoading(true);
     try {
       const res = await callAdmin<{ leads: AdminLead[] }>({ action: "list" }, token);
       setLeads(res.leads);
@@ -227,6 +231,13 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
     void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!live) return;
+    const t = setInterval(() => void load(true), 60000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [live]);
 
   const sources = useMemo(
     () => Array.from(new Set(leads.map((l) => l.source).filter(Boolean))).sort(),
@@ -341,6 +352,10 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
             <p className="text-sm text-muted-foreground">Espace administrateur — Amazon Capital</p>
           </div>
           <div className="flex gap-2">
+            <Button variant={live ? "default" : "outline"} onClick={() => setLive((v) => !v)}>
+              <span className={`mr-2 inline-block h-2 w-2 rounded-full ${live ? "animate-pulse bg-primary-foreground" : "bg-muted-foreground"}`} />
+              {live ? "En direct" : "Direct en pause"}
+            </Button>
             <Button variant="outline" onClick={() => void load()} disabled={loading}>
               <RefreshCw className="mr-2 h-4 w-4" /> Actualiser
             </Button>
@@ -368,6 +383,11 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
               <p className="mt-2 text-3xl font-bold">{s.value}</p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <ControlsCard />
+          <OperatorChart leads={leads as InsightLead[]} />
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
@@ -448,7 +468,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                 </tr>
               )}
               {filtered.map((lead) => (
-                <tr key={lead.id} className="border-b border-border/40 align-top last:border-0">
+                <tr key={lead.id} onClick={(e) => { if ((e.target as HTMLElement).closest("input,select,button,a,[role=combobox]")) return; setSelected(lead); }} className="border-b border-border/40 align-top last:border-0 cursor-pointer hover:bg-muted/40">
                   <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
                     {new Date(lead.created_at).toLocaleString("fr-FR", {
                       day: "2-digit",
@@ -457,14 +477,15 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
+                  <p className="text-xs">{isHot(lead.created_at) ? "🔥 " : ""}{relativeTime(lead.created_at)}</p>
                   </td>
                   <td className="px-4 py-3">
                     <p className="font-medium">
                       {lead.first_name} {lead.last_name}
                     </p>
-                    <p className="text-xs text-muted-foreground">{lead.email}</p>
+                    <button type="button" onClick={() => copyText(lead.email, "Email")} className="text-xs text-muted-foreground hover:text-foreground">{lead.email}</button>
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3">{lead.phone}</td>
+                  <td className="whitespace-nowrap px-4 py-3"><a href={`tel:${lead.phone}`} className="font-medium hover:underline">{lead.phone}</a> <button type="button" aria-label="Copier le téléphone" onClick={() => copyText(lead.phone, "Téléphone")} className="text-xs text-muted-foreground">⧉</button></td>
                   <td className="whitespace-nowrap px-4 py-3 text-xs">
                     <p className={lead.refused ? "font-semibold text-destructive" : ""}>{hlrLabel(lead.hlr_status)}</p>
                     {lead.hlr_network && <p className="text-muted-foreground">{lead.hlr_network}</p>}
@@ -508,7 +529,9 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
             </tbody>
           </table>
         </div>
+        <p className="mt-3 text-xs text-muted-foreground">Cliquez sur une ligne pour ouvrir la fiche complète du lead.</p>
       </main>
+      <LeadDetailPanel lead={selected as InsightLead | null} hlrLabel={hlrLabel} onClose={() => setSelected(null)} />
     </div>
   );
 }
