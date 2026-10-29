@@ -1,0 +1,1 @@
+ALTER TABLE public.leads ADD COLUMN IF NOT EXISTS clarity_id text NOT NULL DEFAULT '';

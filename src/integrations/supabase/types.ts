@@ -115,6 +115,7 @@ export type Database = {
       }
       leads: {
         Row: {
+          clarity_id: string
           click_id: string
           consent: boolean
           created_at: string
@@ -144,6 +145,7 @@ export type Database = {
           verified_at: string | null
         }
         Insert: {
+          clarity_id?: string
           click_id?: string
           consent?: boolean
           created_at?: string
@@ -173,6 +175,7 @@ export type Database = {
           verified_at?: string | null
         }
         Update: {
+          clarity_id?: string
           click_id?: string
           consent?: boolean
           created_at?: string
