@@ -48,6 +48,11 @@ type LeadFormProps = {
   sheetTab?: "Or";
 };
 
+function formatPhoneFr(raw: string) {
+  const d = raw.replace(/\D/g, "").replace(/^33/, "0");
+  return d.length === 10 ? d.replace(/(\d{2})(?=\d)/g, "$1 ") : raw;
+}
+
 const DEFAULT_CONSENT_LABEL =
   "J'accepte les conditions générales d'utilisation et d'être recontacté par nos partenaires afin de recevoir des informations sur l'Amazon Coin.";
 
@@ -194,11 +199,24 @@ export function LeadForm({ operation, consentLabel, badge, title, subtitle, amou
         <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gold shadow-gold">
           <CheckCircle2 className="h-10 w-10 text-primary-foreground" />
         </div>
-        <h3 className="text-2xl font-bold">Votre demande est bien enregistrée</h3>
-        <p className={`mt-3 ${isGoogle ? "text-base text-muted-foreground" : "text-sm opacity-70"}`}>
-          Un conseiller spécialisé vous rappelle sous 24 heures ouvrées pour valider votre profil
-          investisseur.
-        </p>
+        {enhanced ? (
+          <>
+            <h3 className="text-2xl font-bold">Merci pour votre demande !</h3>
+            <p className="mt-3 text-sm opacity-80">
+              Un expert va vous recontacter entre 24 et 48h au numéro{" "}
+              <strong className="whitespace-nowrap">{formatPhoneFr(phoneShown || watch("phone") || "")}</strong>
+              {" "}pour faire le point sur votre projet.
+            </p>
+          </>
+        ) : (
+          <>
+            <h3 className="text-2xl font-bold">Votre demande est bien enregistrée</h3>
+            <p className={`mt-3 ${isGoogle ? "text-base text-muted-foreground" : "text-sm opacity-70"}`}>
+              Un conseiller spécialisé vous rappelle sous 24 heures ouvrées pour valider votre profil
+              investisseur.
+            </p>
+          </>
+        )}
       </div>
     );
   }
