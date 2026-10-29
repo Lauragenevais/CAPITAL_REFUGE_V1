@@ -156,6 +156,19 @@ export const updateLead = createServerFn({ method: "POST" })
     return { ok: true as const };
   });
 
+export const deleteLead = createServerFn({ method: "POST" })
+  .inputValidator((data: { id: string; refused?: boolean }) =>
+    z.object({ id: z.string().uuid(), refused: z.boolean().optional() }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const table = data.refused ? "hlr_refusals" : "leads";
+    const { error } = await supabaseAdmin.from(table).delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
+
 export type AdstrackSend = {
   id: string;
   channel: string;

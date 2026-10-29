@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useMemo, useState } from "react";
-import { Download, LockKeyhole, LogOut, RefreshCw, Search } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Download, LockKeyhole, LogOut, RefreshCw, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,10 +13,12 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { clarityReplayUrl } from "@/lib/clarity";
+import { playNewLeadSound } from "@/lib/new-lead-sound";
 import {
   adminIsUnlocked,
   adminLogin,
   adminLogout,
+  deleteLead,
   listLeads,
   updateLead,
   type AdminLead,
@@ -173,6 +175,7 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
 function Dashboard({ onLogout }: { onLogout: () => void }) {
   const fetchLeads = useServerFn(listLeads);
   const patchLead = useServerFn(updateLead);
+  const delLead = useServerFn(deleteLead);
   const logout = useServerFn(adminLogout);
 
   const [leads, setLeads] = useState<AdminLead[]>([]);
@@ -183,15 +186,35 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [period, setPeriod] = useState("tout");
   const [live, setLive] = useState(true);
   const [selected, setSelected] = useState<AdminLead | null>(null);
+  const knownIds = useRef<Set<string> | null>(null);
 
   async function load(silent = false) {
     if (!silent) setLoading(true);
     try {
-      setLeads(await fetchLeads());
+      const rows = await fetchLeads();
+      const prev = knownIds.current;
+      if (prev && rows.some((r) => !prev.has(r.id))) {
+        playNewLeadSound();
+        toast.success("Nouveau lead reçu !");
+      }
+      knownIds.current = new Set(rows.map((r) => r.id));
+      setLeads(rows);
     } catch {
       toast.error("Impossible de charger les leads");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function removeLead(lead: AdminLead) {
+    if (!window.confirm(`Supprimer définitivement le lead ${lead.first_name} ${lead.last_name} ?`)) return;
+    try {
+      await delLead({ data: { id: lead.id, refused: Boolean(lead.refused) } });
+      setLeads((ls) => ls.filter((l) => l.id !== lead.id));
+      if (selected?.id === lead.id) setSelected(null);
+      toast.success("Lead supprimé");
+    } catch {
+      toast.error("Suppression impossible");
     }
   }
 
@@ -387,14 +410,15 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                 <th className="px-4 py-3">Replay</th>
                 <th className="px-4 py-3">Statut</th>
                 <th className="px-4 py-3">Notes</th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
               {loading && (
-                <tr><td colSpan={10} className="px-4 py-10 text-center text-muted-foreground">Chargement…</td></tr>
+                <tr><td colSpan={11} className="px-4 py-10 text-center text-muted-foreground">Chargement…</td></tr>
               )}
               {!loading && filtered.length === 0 && (
-                <tr><td colSpan={10} className="px-4 py-10 text-center text-muted-foreground">Aucun lead</td></tr>
+                <tr><td colSpan={11} className="px-4 py-10 text-center text-muted-foreground">Aucun lead</td></tr>
               )}
               {filtered.map((lead) => (
                 <tr key={lead.id} onClick={(e) => { if ((e.target as HTMLElement).closest("input,select,button,a,[role=combobox]")) return; setSelected(lead); }} className="border-b border-border/40 last:border-0 align-top cursor-pointer hover:bg-muted/40">
@@ -444,6 +468,11 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                       className="h-8 w-56 text-xs"
                       onBlur={(e) => void saveNotes(lead, e.target.value)}
                     />
+                  </td>
+                  <td className="px-4 py-3">
+                    <button type="button" aria-label="Supprimer le lead" title="Supprimer" onClick={() => void removeLead(lead)} className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </td>
                 </tr>
               ))}
