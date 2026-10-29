@@ -59,8 +59,8 @@ const SECTIONS = [
 
 export default function PolitiqueConfidentialite() {
   useHead({
-    title: 'Politique de confidentialité — Amazon Capital',
-    description: 'Politique de confidentialité du site Amazon Capital : données collectées, finalités, durée de conservation et exercice de vos droits RGPD.',
+    title: 'Politique de confidentialité — Cap Refuge',
+    description: 'Politique de confidentialité du site Cap Refuge : données collectées, finalités, durée de conservation et exercice de vos droits RGPD.',
   });
 
   return (
@@ -71,7 +71,7 @@ export default function PolitiqueConfidentialite() {
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold shadow-gold">
               <TrendingUp className="h-5 w-5 text-primary-foreground" />
             </span>
-            <span className="font-display text-lg font-bold">Amazon Capital</span>
+            <span className="font-display text-lg font-bold">Cap Refuge</span>
           </Link>
           <Link
             to="/"
@@ -110,7 +110,7 @@ export default function PolitiqueConfidentialite() {
 
       <footer className="border-t border-border/60 bg-surface/60 py-8">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-4 text-sm text-muted-foreground">
-          <span className="font-display text-base font-bold text-foreground">Amazon Capital</span>
+          <span className="font-display text-base font-bold text-foreground">Cap Refuge</span>
           <nav className="flex gap-6">
             <Link to="/mentions-legales" className="transition-colors hover:text-primary">
               Mentions légales

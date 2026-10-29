@@ -42,8 +42,8 @@ const SECTIONS = [
 
 export default function MentionsLegales() {
   useHead({
-    title: 'Mentions légales — Amazon Capital',
-    description: 'Mentions légales du site Amazon Capital : éditeur, hébergement, propriété intellectuelle et limites de responsabilité.',
+    title: 'Mentions légales — Cap Refuge',
+    description: 'Mentions légales du site Cap Refuge : éditeur, hébergement, propriété intellectuelle et limites de responsabilité.',
   });
 
   return (
@@ -54,7 +54,7 @@ export default function MentionsLegales() {
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold shadow-gold">
               <TrendingUp className="h-5 w-5 text-primary-foreground" />
             </span>
-            <span className="font-display text-lg font-bold">Amazon Capital</span>
+            <span className="font-display text-lg font-bold">Cap Refuge</span>
           </Link>
           <Link
             to="/"
@@ -91,7 +91,7 @@ export default function MentionsLegales() {
 
       <footer className="border-t border-border/60 bg-surface/60 py-8">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-4 text-sm text-muted-foreground">
-          <span className="font-display text-base font-bold text-foreground">Amazon Capital</span>
+          <span className="font-display text-base font-bold text-foreground">Cap Refuge</span>
           <nav className="flex gap-6">
             <Link to="/mentions-legales" className="text-primary">
               Mentions légales

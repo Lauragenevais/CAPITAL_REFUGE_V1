@@ -27,7 +27,7 @@ const apiLeadSchema = z.object({
   consent: z.literal(true),
   source: z.string().trim().min(1, "La source est obligatoire").max(60),
   click_id: z.string().max(120).optional(),
-  operation: z.enum(["AMAZON", "OR", "CHATGPT", "NVIDIA", "PAYPAL", "GOOGLE", "LIVRET", "ROBOT"]),
+  operation: z.enum(["OR"]).default("OR"),
 });
 
 function safeEqual(a: string, b: string): boolean {
