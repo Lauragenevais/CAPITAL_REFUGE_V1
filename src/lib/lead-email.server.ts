@@ -53,6 +53,7 @@ export function buildLeadEmailHtml(p: {
   source?: string | undefined;
   clickId?: string | undefined;
   ip: string;
+  clarityId?: string | undefined;
   hlrStatus?: string | undefined;
   hlrNetwork?: string | undefined;
   hlrSkipped?: boolean | undefined;
@@ -70,6 +71,7 @@ export function buildLeadEmailHtml(p: {
     infoRow("📌 Provenance", `${esc(origin)} <span style="font-size:12px;color:#64748b;font-weight:400;">(${esc(p.operation)})</span>`),
     infoRow("🎯 Source", `<span style="font-weight:700;">${esc(val(p.source))}</span> <span style="font-size:12px;color:#64748b;font-weight:400;">(ClickID : ${esc(p.clickId || "aucun")})</span>`),
     infoRow("🌐 IP visiteur", esc(val(p.ip))),
+    p.clarityId ? infoRow("🎬 Replay Clarity", `<a href="https://clarity.microsoft.com/projects/view/z5cc4zgs3q/recordings" style="color:#059669;font-weight:700;">Voir le replay</a> <span style="font-size:12px;color:#64748b;font-weight:400;">(filtre ID utilisateur : ${esc(p.clarityId)})</span>`) : "",
   ].join("");
 
   const hlrOk = p.hlrStatus === "CONNECTED" || p.hlrStatus === "ABSENT";

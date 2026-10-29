@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { apiUrl } from "@/lib/api";
+import { identifyLead, loadClarity } from "@/lib/clarity";
 
 const INVEST_AMOUNTS = ["100 à 500 €", "500 à 2 000 €", "2 000 à 5 000 €", "5 000 € et plus"] as const;
 
@@ -79,9 +80,11 @@ export function LeadForm({ operation, consentLabel, badge, title, subtitle, amou
   });
 
   const consentValue = watch("consent");
+  useEffect(() => { loadClarity(); }, []);
 
   const onSubmit = async (values: FormData) => {
     const { clickId, source } = getTrackingParams();
+    const clarityId = identifyLead(values.email, `${values.firstName} ${values.lastName}`, { source, click_id: clickId });
     try {
       const response = await fetch(apiUrl("/api/public/lead-form"), {
         method: "POST",
@@ -94,6 +97,7 @@ export function LeadForm({ operation, consentLabel, badge, title, subtitle, amou
           consent: true,
           source,
           click_id: clickId,
+          clarity_id: clarityId,
           operation: operation ?? "OR",
           invest_amount: values.investAmount,
           ...(sheetTab ? { sheet_tab: sheetTab } : {}),
