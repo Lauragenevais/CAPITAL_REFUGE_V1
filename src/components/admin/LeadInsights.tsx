@@ -116,7 +116,7 @@ export function ControlsCard() {
   );
 }
 
-function Row({ label, value, copy }: { label: string; value?: string | number | null; copy?: boolean }) {
+function Row({ label, value, copy }: { label: string; value?: string | number | null | undefined; copy?: boolean }) {
   const v = value === undefined || value === null || value === "" ? "—" : String(value);
   return (
     <div className="flex items-start justify-between gap-3 border-b border-border/40 py-2 text-sm last:border-0">
