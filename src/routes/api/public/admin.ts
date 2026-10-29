@@ -76,6 +76,7 @@ const bodySchema = z.discriminatedUnion("action", [
     status: z.enum(["nouveau", "contacté", "converti", "perdu"]).optional(),
     notes: z.string().max(2000).optional(),
   }),
+  z.object({ action: z.literal("delete"), id: z.string().uuid(), refused: z.boolean().optional() }),
 ]);
 
 export const Route = createFileRoute("/api/public/admin")({
@@ -164,6 +165,15 @@ export const Route = createFileRoute("/api/public/admin")({
               .limit(2000);
             if (error) throw new Error(error.message);
             return json({ ok: true, sends: data ?? [] });
+          }
+
+          if (body.action === "delete") {
+            const { error } = await supabaseAdmin
+              .from(body.refused ? "hlr_refusals" : "leads")
+              .delete()
+              .eq("id", body.id);
+            if (error) throw new Error(error.message);
+            return json({ ok: true });
           }
 
           const patch: { status?: string; notes?: string } = {};

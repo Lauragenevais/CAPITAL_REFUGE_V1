@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { Download, LockKeyhole, LogOut, RefreshCw, Search } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Download, LockKeyhole, LogOut, RefreshCw, Search, Trash2 } from "lucide-react";
+import { playNewLeadSound } from "@/lib/new-lead-sound";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -209,11 +210,18 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
   const [period, setPeriod] = useState("tout");
   const [live, setLive] = useState(true);
   const [selected, setSelected] = useState<AdminLead | null>(null);
+  const knownIds = useRef<Set<string> | null>(null);
 
   async function load(silent = false) {
     if (!silent) setLoading(true);
     try {
       const res = await callAdmin<{ leads: AdminLead[] }>({ action: "list" }, token);
+      const prev = knownIds.current;
+      if (prev && res.leads.some((r) => !prev.has(r.id))) {
+        playNewLeadSound();
+        toast.success("Nouveau lead reçu !");
+      }
+      knownIds.current = new Set(res.leads.map((r) => r.id));
       setLeads(res.leads);
     } catch (err) {
       if ((err as Error).message === "unauthorized") {
@@ -277,6 +285,18 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
       refused: leads.filter((l) => l.refused).length,
     };
   }, [leads]);
+
+  async function removeLead(lead: AdminLead) {
+    if (!window.confirm(`Supprimer définitivement le lead ${lead.first_name} ${lead.last_name} ?`)) return;
+    try {
+      await callAdmin({ action: "delete", id: lead.id, refused: Boolean(lead.refused) }, token);
+      setLeads((ls) => ls.filter((l) => l.id !== lead.id));
+      if (selected?.id === lead.id) setSelected(null);
+      toast.success("Lead supprimé");
+    } catch {
+      toast.error("Suppression impossible");
+    }
+  }
 
   async function setStatus(lead: AdminLead, status: string) {
     setLeads((prev) => prev.map((l) => (l.id === lead.id ? { ...l, status } : l)));
@@ -450,19 +470,20 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                 <th className="px-4 py-3">Source</th>
                 <th className="px-4 py-3">Statut</th>
                 <th className="px-4 py-3">Notes</th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
               {loading && (
                 <tr>
-                  <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
+                  <td colSpan={10} className="px-4 py-10 text-center text-muted-foreground">
                     Chargement…
                   </td>
                 </tr>
               )}
               {!loading && filtered.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
+                  <td colSpan={10} className="px-4 py-10 text-center text-muted-foreground">
                     Aucun lead
                   </td>
                 </tr>
@@ -523,6 +544,11 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                       className="h-8 w-56 text-xs"
                       onBlur={(e) => void saveNotes(lead, e.target.value)}
                     />
+                  </td>
+                  <td className="px-4 py-3">
+                    <button type="button" aria-label="Supprimer le lead" title="Supprimer" onClick={() => void removeLead(lead)} className="rounded-md p-1.5 text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </td>
                 </tr>
               ))}
