@@ -3,6 +3,7 @@
   "name": "capital-refuge",
   "main": "./worker/index.ts",
   "compatibility_date": "2026-09-01",
+  "vars": {},
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
