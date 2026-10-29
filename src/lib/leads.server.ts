@@ -12,9 +12,8 @@ const OPERATION = "OR";
  *
  * "LEGACY" (configuration historique conservée) :
  *   - Google Sheet / onglet définis par GOOGLE_SHEET_ID / GOOGLE_SHEET_TAB
- *     (+ onglet "Livret - Robot" pour les leads API LIVRET/ROBOT)
  *   - Pas d'envoi adstrack
- *   - Pixels Com&Click aux montants historiques (35, et 20 pour l'API ROBOT)
+ *   - Pixels Com&Click (opération OR)
  *
  * Pour rebasculer sur l'ancienne configuration : mettre LEAD_ROUTING_MODE = "LEGACY".
  */
@@ -23,15 +22,6 @@ const LEAD_ROUTING_MODE = "LEGACY" as "CRYPTO_EMAILING" | "LEGACY";
 const CRYPTO_EMAILING_SHEET_ID = "1704kzFDOEHbp0I-B1DvhD2hQbH_CjSzZAKjLGKv9k_g";
 const CRYPTO_EMAILING_SHEET_TAB = "Crypto - Emailing";
 const CRYPTO_EMAILING_COM_AND_CLICK_COST = 30;
-
-/** Montant Com&Click : 30 en mode Crypto - Emailing, montant historique sinon. */
-function comAndClickCost(
-  _channel: "form" | "api",
-  _operation: string,
-  legacyCost: number,
-): number {
-  return LEAD_ROUTING_MODE === "CRYPTO_EMAILING" ? CRYPTO_EMAILING_COM_AND_CLICK_COST : legacyCost;
-}
 
 /** Journalise l'envoi adstrack en base (non bloquant). */
 async function logAdstrackSend(entry: {
@@ -601,13 +591,11 @@ export async function processLead(
 function sheetTarget(channel: "form" | "api", operation: string, tabOverride?: string) {
   const legacySheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
   const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
-  const isLivretRobotApi =
-    channel === "api" && (operation === "LIVRET" || operation === "ROBOT");
   const isCryptoEmailing = LEAD_ROUTING_MODE === "CRYPTO_EMAILING";
   if (tabOverride && !isCryptoEmailing) return { sheetId: legacySheetId, tab: tabOverride };
   return {
     sheetId: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_ID : legacySheetId,
-    tab: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_TAB : isLivretRobotApi ? "Livret - Robot" : sheetTab,
+    tab: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_TAB : sheetTab,
   };
 }
 
@@ -840,7 +828,6 @@ async function finalizeLead(
       const sheetOk = sheetStatus.startsWith("✅");
       const pixelOk = pixelStatus.startsWith("✅");
       const adkOk = adkPixelStatus.startsWith("✅");
-      const campCdOk = campCdStatus.startsWith("✅");
       const adstrackOk = adstrackStatus.startsWith("✅");
 
       const triggered: string[] = [];
@@ -848,7 +835,6 @@ async function finalizeLead(
       if (sheetOk) triggered.push("Google Sheet"); else notTriggered.push("Google Sheet");
       if (pixelOk) triggered.push("Pixel Com&Click"); else notTriggered.push("Pixel Com&Click");
       if (adkOk) triggered.push("Pixel AdkConvert"); else notTriggered.push("Pixel AdkConvert");
-      if (campCdOk) triggered.push("Pixel CampCDTrack01"); else notTriggered.push("Pixel CampCDTrack01");
       const adstrackLabel = `Adstrack ${ADSTRACK_CAMPNAME_BY_OPERATION[operation] ?? "CRP19"}`;
       if (adstrackOk) triggered.push(adstrackLabel); else notTriggered.push(adstrackLabel);
 
@@ -876,7 +862,6 @@ async function finalizeLead(
             `Google Sheet: ${sheetStatus}\n` +
             `Pixel Com&Click: ${pixelStatus}\n` +
             `Pixel AdkConvert: ${adkPixelStatus}\n` +
-            `Pixel CampCDTrack01: ${campCdStatus}\n` +
             `Webservice Adstrack: ${adstrackStatus}`,
         }),
       });
