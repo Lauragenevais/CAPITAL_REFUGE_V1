@@ -105,7 +105,7 @@ const FAQ = [
 ];
 
 const CONSENT =
-  "J'accepte les conditions générales d'utilisation et d'être recontacté afin de recevoir des informations sur l'investissement dans l'or.";
+  "J'accepte que mes coordonnées soient transmises aux partenaires de Capital Refuge, afin qu'ils puissent me contacter par téléphone pour me présenter des solutions d'investissement dans l'or physique adaptées à mes besoins. Mon consentement est valable pendant 12 mois et peut être retiré à tout moment, gratuitement, selon les modalités indiquées dans la politique de confidentialité.";
 
 export function CapRefugeLanding() {
   return (
