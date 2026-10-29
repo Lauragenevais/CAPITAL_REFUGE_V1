@@ -172,7 +172,7 @@ function LoginScreen({ onSuccess }: { onSuccess: (token: string) => void }) {
   }
 
   return (
-    <div className="theme-caprefuge flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="theme-caprefuge text-foreground flex min-h-screen items-center justify-center bg-background px-4">
       <form
         onSubmit={submit}
         className="w-full max-w-sm rounded-2xl border border-border/70 bg-card p-8"
