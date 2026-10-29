@@ -63,7 +63,7 @@ export function LeadForm({ operation, consentLabel, badge, title, subtitle, amou
   const [code, setCode] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
-  const isGoogle = operation === "GOOGLE";
+  const isGoogle = false;
 
   const {
     register,

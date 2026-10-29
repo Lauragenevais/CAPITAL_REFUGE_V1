@@ -21,7 +21,6 @@ const LEAD_ROUTING_MODE = "LEGACY" as "CRYPTO_EMAILING" | "LEGACY";
 
 const CRYPTO_EMAILING_SHEET_ID = "1704kzFDOEHbp0I-B1DvhD2hQbH_CjSzZAKjLGKv9k_g";
 const CRYPTO_EMAILING_SHEET_TAB = "Crypto - Emailing";
-const CRYPTO_EMAILING_COM_AND_CLICK_COST = 30;
 
 /** Journalise l'envoi adstrack en base (non bloquant). */
 async function logAdstrackSend(entry: {
