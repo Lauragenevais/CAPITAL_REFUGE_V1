@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "capital-refuge",
+  "name": "capital-refuge-v1",
   "main": "./worker/index.ts",
   "compatibility_date": "2026-09-01",
   "keep_vars": true,
