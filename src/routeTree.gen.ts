@@ -16,7 +16,6 @@ import { Route as EmailTemplateRouteImport } from './routes/email-template'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
-import { Route as AdminAdstrackRouteImport } from './routes/admin_.adstrack'
 import { Route as ApiPublicAdminRouteImport } from './routes/api/public/admin'
 import { Route as ApiPublicBrevoSmsWebhookRouteImport } from './routes/api/public/brevo-sms-webhook'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
@@ -59,11 +58,6 @@ const PolitiqueConfidentialiteRoute =
     path: '/politique-confidentialite',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AdminAdstrackRoute = AdminAdstrackRouteImport.update({
-  id: '/admin_/adstrack',
-  path: '/admin/adstrack',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiPublicAdminRoute = ApiPublicAdminRouteImport.update({
   id: '/api/public/admin',
   path: '/api/public/admin',
@@ -99,7 +93,6 @@ export interface FileRoutesByFullPath {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/partenaires': typeof PartenairesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
-  '/admin/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/brevo-sms-webhook': typeof ApiPublicBrevoSmsWebhookRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
@@ -114,7 +107,6 @@ export interface FileRoutesByTo {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/partenaires': typeof PartenairesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
-  '/admin/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/brevo-sms-webhook': typeof ApiPublicBrevoSmsWebhookRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
@@ -130,7 +122,6 @@ export interface FileRoutesById {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/partenaires': typeof PartenairesRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
-  '/admin_/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/brevo-sms-webhook': typeof ApiPublicBrevoSmsWebhookRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
@@ -147,7 +138,6 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/partenaires'
     | '/politique-confidentialite'
-    | '/admin/adstrack'
     | '/api/public/admin'
     | '/api/public/brevo-sms-webhook'
     | '/api/public/lead-form'
@@ -162,7 +152,6 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/partenaires'
     | '/politique-confidentialite'
-    | '/admin/adstrack'
     | '/api/public/admin'
     | '/api/public/brevo-sms-webhook'
     | '/api/public/lead-form'
@@ -177,7 +166,6 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/partenaires'
     | '/politique-confidentialite'
-    | '/admin_/adstrack'
     | '/api/public/admin'
     | '/api/public/brevo-sms-webhook'
     | '/api/public/lead-form'
@@ -193,7 +181,6 @@ export interface RootRouteChildren {
   MentionsLegalesRoute: typeof MentionsLegalesRoute
   PartenairesRoute: typeof PartenairesRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
-  AdminAdstrackRoute: typeof AdminAdstrackRoute
   ApiPublicAdminRoute: typeof ApiPublicAdminRoute
   ApiPublicBrevoSmsWebhookRoute: typeof ApiPublicBrevoSmsWebhookRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
@@ -252,13 +239,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PolitiqueConfidentialiteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin_/adstrack': {
-      id: '/admin_/adstrack'
-      path: '/admin/adstrack'
-      fullPath: '/admin/adstrack'
-      preLoaderRoute: typeof AdminAdstrackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/public/admin': {
       id: '/api/public/admin'
       path: '/api/public/admin'
@@ -305,7 +285,6 @@ const rootRouteChildren: RootRouteChildren = {
   MentionsLegalesRoute: MentionsLegalesRoute,
   PartenairesRoute: PartenairesRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
-  AdminAdstrackRoute: AdminAdstrackRoute,
   ApiPublicAdminRoute: ApiPublicAdminRoute,
   ApiPublicBrevoSmsWebhookRoute: ApiPublicBrevoSmsWebhookRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
