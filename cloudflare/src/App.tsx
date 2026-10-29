@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
+import Partenaires from "./pages/Partenaires";
 import Home from "@/pages/Home";
 import Chatgpt from "@/pages/Chatgpt";
 import Nvidia from "@/pages/Nvidia";
@@ -30,6 +31,7 @@ export default function App() {
       <Route path="/nvidia" element={<Nvidia />} />
       <Route path="/paypal" element={<Paypal />} />
       <Route path="/google" element={<Google />} />
+      <Route path="/partenaires" element={<Partenaires />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/admin/adstrack" element={<AdstrackSends />} />
       <Route path="/api-docs" element={<ApiDocs />} />
