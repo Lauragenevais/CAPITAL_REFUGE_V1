@@ -1,3 +1,4 @@
+import { buildLeadEmailHtml, statusRow } from "./lead-email.server";
 import { z } from "zod";
 
 const OPERATION = "OR";
@@ -433,6 +434,7 @@ export async function verifyLeadCode(
     "form",
     lead.operation,
     "✅ Déjà dans le Google Sheet (code SMS passé à « Validé »)",
+    { status: lead.hlr_status || undefined, network: lead.hlr_network || undefined },
   );
   return { ok: true };
 }
@@ -480,6 +482,12 @@ async function notifyHlrRefusal(
         from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Cap Refuge <onboarding@resend.dev>",
         to: [notifyTo],
         subject: `[LEAD ${channel === "api" ? "API" : "FORMULAIRE"} ${operation}] ❌ HLR refusé - ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
+        html: buildLeadEmailHtml({
+          refused: true, channel, operation,
+          firstName: data.first_name, lastName: data.last_name, email: data.email, phone: data.phone,
+          investAmount: data.invest_amount, source: data.source, clickId: data.click_id, ip: ipAddress,
+          hlrStatus: status, hlrNetwork: network,
+        }),
         text:
           `Lead refusé (non enregistré) :\n\n📱 HLR : ❌ Refusé (${status}${network ? " - " + network : ""})\n\n` +
           `Nom: ${data.last_name}\nPrénom: ${data.first_name}\nEmail: ${data.email}\nTéléphone: ${data.phone}\n` +
@@ -583,7 +591,9 @@ export async function processLead(
     return { ok: true, pendingVerification: true, leadId: inserted.id, smsSent };
   }
 
-  return finalizeLead(data, ipAddress, channel, operation);
+  return finalizeLead(data, ipAddress, channel, operation, undefined, {
+    status: hlr.status, network: hlr.network, skipped: skipHlr,
+  });
 }
 
 /** Onglet cible selon le canal / l'opération / le mode de routage. */
@@ -738,6 +748,7 @@ async function finalizeLead(
   channel: "form" | "api",
   operation: string,
   sheetStatusOverride?: string,
+  hlrInfo?: { status?: string; network?: string; skipped?: boolean },
 ): Promise<ProcessLeadResult> {
 
   const sheetStatus =
@@ -849,6 +860,19 @@ async function finalizeLead(
           from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Cap Refuge <onboarding@resend.dev>",
           to: [notifyTo],
           subject: `[LEAD ${channel === "api" ? "API" : "FORMULAIRE"} ${operation}] ${sheetOk ? "✅" : "❌"} Sheet ${pixelOk ? "✅" : "❌"} Pixel - ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
+          html: buildLeadEmailHtml({
+            channel, operation,
+            firstName: data.first_name, lastName: data.last_name, email: data.email, phone: data.phone,
+            investAmount: data.invest_amount, source: data.source, clickId: data.click_id, ip: ipAddress,
+            hlrStatus: hlrInfo?.status, hlrNetwork: hlrInfo?.network, hlrSkipped: hlrInfo?.skipped,
+            smsValidated: channel === "form",
+            actions: [
+              statusRow("Google Sheet", sheetStatus),
+              statusRow("Pixel Com&Click", pixelStatus),
+              statusRow("Pixel AdkConvert", adkPixelStatus),
+              ...(LEAD_ROUTING_MODE === "CRYPTO_EMAILING" ? [statusRow("Webservice Adstrack", adstrackStatus)] : []),
+            ],
+          }),
           text:
             `Nouveau lead enregistré:\n\n` +
             `📌 Provenance: ${origin} (${operation})\n\n` +
