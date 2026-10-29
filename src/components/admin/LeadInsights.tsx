@@ -205,7 +205,7 @@ export function LeadDetailPanel({
             <Row label="Google Sheet" value={lead.refused ? "Non inscrit" : lead.operation === "OR" ? "Onglet « Or »" : "Inscrit"} />
             <Row
               label="Pixel Com&Click"
-              value={lead.refused ? "Non déclenché" : lead.phone_verified ? "Déclenché" : "En attente de validation"}
+              value={lead.refused ? "Non déclenché" : isApi ? (lead.source === "7ptu0gdy" ? "Déclenché" : "Non concerné") : lead.phone_verified ? "Déclenché" : "En attente de validation"}
             />
           </Block>
           <p className="text-xs text-muted-foreground">ID : {lead.id}</p>
