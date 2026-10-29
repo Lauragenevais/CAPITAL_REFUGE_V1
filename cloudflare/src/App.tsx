@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 import Partenaires from "./pages/Partenaires";
 import Home from "@/pages/Home";
 import Admin from "@/pages/Admin";
-import AdstrackSends from "@/pages/AdstrackSends";
 import ApiDocs from "@/pages/ApiDocs";
 import EmailTemplate from "@/pages/EmailTemplate";
 import MentionsLegales from "@/pages/MentionsLegales";
@@ -16,7 +15,6 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/partenaires" element={<Partenaires />} />
       <Route path="/admin" element={<Admin />} />
-      <Route path="/admin/adstrack" element={<AdstrackSends />} />
       <Route path="/api-docs" element={<ApiDocs />} />
       <Route path="/email-template" element={<EmailTemplate />} />
       <Route path="/mentions-legales" element={<MentionsLegales />} />
