@@ -141,7 +141,7 @@ export default function Admin() {
 
   if (!ready) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-muted-foreground">
+      <div className="theme-caprefuge flex min-h-screen bg-background items-center justify-center text-muted-foreground">
         Chargement…
       </div>
     );
@@ -172,7 +172,7 @@ function LoginScreen({ onSuccess }: { onSuccess: (token: string) => void }) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="theme-caprefuge flex min-h-screen items-center justify-center bg-background px-4">
       <form
         onSubmit={submit}
         className="w-full max-w-sm rounded-2xl border border-border/70 bg-card p-8"
@@ -344,7 +344,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="theme-caprefuge min-h-screen bg-background text-foreground">
       <header className="border-b border-border/60 bg-surface/60">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-5">
           <div>
