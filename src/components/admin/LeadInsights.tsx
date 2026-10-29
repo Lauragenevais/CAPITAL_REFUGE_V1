@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Copy, Phone, X } from "lucide-react";
 import { toast } from "sonner";
+import { clarityReplayUrl } from "@/lib/clarity";
 
 export type InsightLead = {
   id: string;
@@ -10,6 +11,7 @@ export type InsightLead = {
   phone: string;
   source: string;
   click_id: string;
+  clarity_id?: string;
   pays: string;
   ip_address: string;
   operation: string;
@@ -195,6 +197,13 @@ export function LeadDetailPanel({
             <Row label="Canal" value={lead.refused ? "Refusé avant enregistrement" : isApi ? "API" : "Formulaire"} />
             <Row label="Source" value={lead.source} copy />
             <Row label="Click ID" value={lead.click_id} copy />
+          </Block>
+          <Block title="Replay Clarity">
+            {lead.clarity_id ? (
+              <a href={clarityReplayUrl()} target="_blank" rel="noreferrer" className="text-sm text-primary underline">🎬 Voir le replay (filtre ID utilisateur : {lead.clarity_id})</a>
+            ) : (
+              <span className="text-sm text-muted-foreground">— Aucune session enregistrée</span>
+            )}
             <Row label="Pays" value={lead.pays} />
             <Row label="Adresse IP" value={lead.ip_address} copy />
           </Block>
