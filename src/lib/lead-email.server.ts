@@ -17,7 +17,7 @@ const badge = (tone: Tone, label: string) =>
 const infoRow = (k: string, v: string) =>
   `<tr><td style="padding:5px 0;color:#64748b;width:150px;font-size:14px;vertical-align:top;">${k}</td><td style="padding:5px 0;font-weight:600;color:#0f172a;font-size:14px;word-break:break-word;">${v}</td></tr>`;
 
-export type Row = { name: string; tone: Tone; label: string; detail?: string };
+export type Row = { name: string; tone: Tone; label: string; detail?: string | undefined };
 
 function section(title: string, rows: Row[]) {
   const body = rows
@@ -49,13 +49,13 @@ export function buildLeadEmailHtml(p: {
   lastName: string;
   email: string;
   phone: string;
-  investAmount?: string;
-  source?: string;
-  clickId?: string;
+  investAmount?: string | undefined;
+  source?: string | undefined;
+  clickId?: string | undefined;
   ip: string;
-  hlrStatus?: string;
-  hlrNetwork?: string;
-  hlrSkipped?: boolean;
+  hlrStatus?: string | undefined;
+  hlrNetwork?: string | undefined;
+  hlrSkipped?: boolean | undefined;
   smsValidated?: boolean;
   actions?: Row[];
 }): string {

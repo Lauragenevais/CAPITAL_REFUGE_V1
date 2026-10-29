@@ -748,7 +748,7 @@ async function finalizeLead(
   channel: "form" | "api",
   operation: string,
   sheetStatusOverride?: string,
-  hlrInfo?: { status?: string; network?: string; skipped?: boolean },
+  hlrInfo?: { status?: string | undefined; network?: string | undefined; skipped?: boolean | undefined },
 ): Promise<ProcessLeadResult> {
 
   const sheetStatus =
