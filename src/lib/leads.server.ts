@@ -773,8 +773,9 @@ async function finalizeLead(
   if (channel === "api" && data.source === "7ptu0gdy") {
     // Pixel dédié à la source 7ptu0gdy en réception API (Cap Refuge OR)
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=40&ProductID=&CampaignID=fa85vnjh&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}`;
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=40&CampaignID=fa85vnjh&status=P` +
+      `&chan=${encodeURIComponent(data.source ?? "")}` +
+      `&ProductID=${encodeURIComponent(data.source ?? "")}`;
     try {
       const pixelResp = await fetch(pixelUrl, {
         method: "GET",
