@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { clarityReplayUrl } from "@/lib/clarity";
 import {
   adminIsUnlocked,
   adminLogin,
@@ -383,16 +384,17 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                 <th className="px-4 py-3">SMS</th>
                 <th className="px-4 py-3">Opération</th>
                 <th className="px-4 py-3">Source</th>
+                <th className="px-4 py-3">Replay</th>
                 <th className="px-4 py-3">Statut</th>
                 <th className="px-4 py-3">Notes</th>
               </tr>
             </thead>
             <tbody>
               {loading && (
-                <tr><td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">Chargement…</td></tr>
+                <tr><td colSpan={10} className="px-4 py-10 text-center text-muted-foreground">Chargement…</td></tr>
               )}
               {!loading && filtered.length === 0 && (
-                <tr><td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">Aucun lead</td></tr>
+                <tr><td colSpan={10} className="px-4 py-10 text-center text-muted-foreground">Aucun lead</td></tr>
               )}
               {filtered.map((lead) => (
                 <tr key={lead.id} onClick={(e) => { if ((e.target as HTMLElement).closest("input,select,button,a,[role=combobox]")) return; setSelected(lead); }} className="border-b border-border/40 last:border-0 align-top cursor-pointer hover:bg-muted/40">
@@ -418,6 +420,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{lead.source || "—"}</td>
+                  <td className="px-4 py-3 text-xs" onClick={(e) => e.stopPropagation()}>{lead.clarity_id ? <a href={clarityReplayUrl()} target="_blank" rel="noreferrer" title={`ID utilisateur : ${lead.clarity_id}`} className="text-primary underline">🎬 Replay</a> : <span className="text-muted-foreground">—</span>}</td>
                   <td className="px-4 py-3">
                     <Select value={lead.status}
                       disabled={Boolean(lead.refused)} onValueChange={(v) => void setStatus(lead, v)}>

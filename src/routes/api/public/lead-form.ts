@@ -45,6 +45,7 @@ const schema = z.object({
   consent: z.literal(true),
   source: z.string().max(60).optional(),
   click_id: z.string().max(120).optional(),
+  clarity_id: z.string().max(200).optional(),
   operation: z.enum(["OR"]).default("OR"),
   invest_amount: z.enum(["100 à 500 €", "500 à 2 000 €", "2 000 à 5 000 €", "5 000 € et plus"]),
   sheet_tab: z.enum(["Or"]).optional(),

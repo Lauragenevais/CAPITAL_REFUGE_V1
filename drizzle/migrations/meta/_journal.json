@@ -8,6 +8,13 @@
       "when": 1791397806812,
       "tag": "0000_hlr_tracking",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793284338525,
+      "tag": "0001_add_clarity_id",
+      "breakpoints": true
     }
   ]
 }

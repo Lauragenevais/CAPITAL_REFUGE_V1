@@ -124,6 +124,7 @@ export const leadSchema = z.object({
   consent: z.literal(true),
   source: z.string().max(60).optional(),
   click_id: z.string().max(120).optional(),
+  clarity_id: z.string().max(200).optional(),
   operation: z.enum(["OR"]).default("OR"),
   invest_amount: z.enum(INVEST_AMOUNTS).optional(),
   /** Onglet spécifique du Google Sheet (ex. « Or » pour la page d'accueil Cap Refuge). */
@@ -427,6 +428,7 @@ export async function verifyLeadCode(
       consent: true,
       source: lead.source || undefined,
       click_id: lead.click_id || undefined,
+      clarity_id: lead.clarity_id || undefined,
       operation: lead.operation as LeadInput["operation"],
       invest_amount: (lead.invest_amount || undefined) as LeadInput["invest_amount"],
     } as LeadInput,
@@ -555,6 +557,7 @@ export async function processLead(
       consent: data.consent,
       source: data.source ?? "",
       click_id: data.click_id ?? "",
+      clarity_id: data.clarity_id ?? "",
       ip_address: ipAddress,
       pays: "FR",
       operation,
@@ -864,6 +867,7 @@ async function finalizeLead(
             channel, operation,
             firstName: data.first_name, lastName: data.last_name, email: data.email, phone: data.phone,
             investAmount: data.invest_amount, source: data.source, clickId: data.click_id, ip: ipAddress,
+            clarityId: data.clarity_id,
             hlrStatus: hlrInfo?.status, hlrNetwork: hlrInfo?.network, hlrSkipped: hlrInfo?.skipped,
             smsValidated: channel === "form",
             actions: [
