@@ -87,6 +87,7 @@ type AdminLead = {
   sms_last_reason?: string;
   hlr_status?: string;
   hlr_network?: string;
+  invest_amount?: string;
   refused?: boolean;
 };
 
