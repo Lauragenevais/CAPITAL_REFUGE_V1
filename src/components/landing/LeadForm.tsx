@@ -36,7 +36,7 @@ function getTrackingParams() {
 }
 
 type LeadFormProps = {
-  operation?: "AMAZON" | "OR" | "CHATGPT" | "NVIDIA" | "PAYPAL" | "GOOGLE" | "LIVRET" | "ROBOT";
+  operation?: "OR";
   consentLabel?: string;
   badge?: string;
   title?: string;
@@ -54,7 +54,7 @@ function formatPhoneFr(raw: string) {
 }
 
 const DEFAULT_CONSENT_LABEL =
-  "J'accepte les conditions générales d'utilisation et d'être recontacté par nos partenaires afin de recevoir des informations sur l'Amazon Coin.";
+  "J'accepte les conditions générales d'utilisation et d'être recontacté par nos partenaires afin de recevoir des informations sur l'investissement dans l'or.";
 
 export function LeadForm({ operation, consentLabel, badge, title, subtitle, amountQuestion, enhanced, sheetTab }: LeadFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -63,7 +63,7 @@ export function LeadForm({ operation, consentLabel, badge, title, subtitle, amou
   const [code, setCode] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
-  const isGoogle = operation === "GOOGLE";
+  const isGoogle = false;
 
   const {
     register,
@@ -94,7 +94,7 @@ export function LeadForm({ operation, consentLabel, badge, title, subtitle, amou
           consent: true,
           source,
           click_id: clickId,
-          operation: operation ?? "AMAZON",
+          operation: operation ?? "OR",
           invest_amount: values.investAmount,
           ...(sheetTab ? { sheet_tab: sheetTab } : {}),
         }),

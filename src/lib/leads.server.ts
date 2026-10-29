@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const OPERATION = "AMAZON";
+const OPERATION = "OR";
 
 /**
  * ---------- Configuration de routage des leads ----------
@@ -12,9 +12,8 @@ const OPERATION = "AMAZON";
  *
  * "LEGACY" (configuration historique conservée) :
  *   - Google Sheet / onglet définis par GOOGLE_SHEET_ID / GOOGLE_SHEET_TAB
- *     (+ onglet "Livret - Robot" pour les leads API LIVRET/ROBOT)
  *   - Pas d'envoi adstrack
- *   - Pixels Com&Click aux montants historiques (35, et 20 pour l'API ROBOT)
+ *   - Pixels Com&Click (opération OR)
  *
  * Pour rebasculer sur l'ancienne configuration : mettre LEAD_ROUTING_MODE = "LEGACY".
  */
@@ -22,16 +21,6 @@ const LEAD_ROUTING_MODE = "LEGACY" as "CRYPTO_EMAILING" | "LEGACY";
 
 const CRYPTO_EMAILING_SHEET_ID = "1704kzFDOEHbp0I-B1DvhD2hQbH_CjSzZAKjLGKv9k_g";
 const CRYPTO_EMAILING_SHEET_TAB = "Crypto - Emailing";
-const CRYPTO_EMAILING_COM_AND_CLICK_COST = 30;
-
-/** Montant Com&Click : 30 en mode Crypto - Emailing, montant historique sinon. */
-function comAndClickCost(
-  _channel: "form" | "api",
-  _operation: string,
-  legacyCost: number,
-): number {
-  return LEAD_ROUTING_MODE === "CRYPTO_EMAILING" ? CRYPTO_EMAILING_COM_AND_CLICK_COST : legacyCost;
-}
 
 /** Journalise l'envoi adstrack en base (non bloquant). */
 async function logAdstrackSend(entry: {
@@ -67,8 +56,6 @@ async function logAdstrackSend(entry: {
 
 /** Campagne adstrack selon l'opération (défaut : CRP19). */
 const ADSTRACK_CAMPNAME_BY_OPERATION: Record<string, string> = {
-  CHATGPT: "CHT",
-  NVIDIA: "NVIDIA",
 };
 
 /** Envoi du lead au webservice adstrack (campagne selon l'opération). */
@@ -90,7 +77,7 @@ async function sendToAdstrack(
   try {
     const resp = await fetch(url, {
       method: "GET",
-      headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+      headers: { "User-Agent": "CapRefuge-Lead/1.0" },
     });
     const body = (await resp.text()).slice(0, 200).trim();
     await logAdstrackSend({
@@ -136,7 +123,7 @@ export const leadSchema = z.object({
   consent: z.literal(true),
   source: z.string().max(60).optional(),
   click_id: z.string().max(120).optional(),
-  operation: z.enum(["AMAZON", "OR", "CHATGPT", "NVIDIA", "PAYPAL", "GOOGLE", "LIVRET", "ROBOT"]),
+  operation: z.enum(["OR"]).default("OR"),
   invest_amount: z.enum(INVEST_AMOUNTS).optional(),
   /** Onglet spécifique du Google Sheet (ex. « Or » pour la page d'accueil Cap Refuge). */
   sheet_tab: z.enum(["Or"]).optional(),
@@ -490,7 +477,7 @@ async function notifyHlrRefusal(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Amazon <onboarding@resend.dev>",
+        from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Cap Refuge <onboarding@resend.dev>",
         to: [notifyTo],
         subject: `[LEAD ${channel === "api" ? "API" : "FORMULAIRE"} ${operation}] ❌ HLR refusé - ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
         text:
@@ -603,13 +590,11 @@ export async function processLead(
 function sheetTarget(channel: "form" | "api", operation: string, tabOverride?: string) {
   const legacySheetId = normalizeSheetId(process.env["GOOGLE_SHEET_ID"]);
   const sheetTab = process.env["GOOGLE_SHEET_TAB"] ?? "";
-  const isLivretRobotApi =
-    channel === "api" && (operation === "LIVRET" || operation === "ROBOT");
   const isCryptoEmailing = LEAD_ROUTING_MODE === "CRYPTO_EMAILING";
   if (tabOverride && !isCryptoEmailing) return { sheetId: legacySheetId, tab: tabOverride };
   return {
     sheetId: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_ID : legacySheetId,
-    tab: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_TAB : isLivretRobotApi ? "Livret - Robot" : sheetTab,
+    tab: isCryptoEmailing ? CRYPTO_EMAILING_SHEET_TAB : sheetTab,
   };
 }
 
@@ -779,7 +764,7 @@ async function finalizeLead(
     try {
       const pixelResp = await fetch(pixelUrl, {
         method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+        headers: { "User-Agent": "CapRefuge-Lead/1.0" },
       });
       pixelStatus = pixelResp.ok
         ? `✅ Pixel API 7ptu0gdy déclenché (chan: ${data.source})`
@@ -788,126 +773,15 @@ async function finalizeLead(
       pixelStatus = `❌ Pixel API 7ptu0gdy erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click API 7ptu0gdy error (non bloquant):", err);
     }
-  } else if (channel === "form" && operation === "CHATGPT") {
+  } else if (channel === "form" && operation === "OR") {
     const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=mhmcapt7&status=P` +
+      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=30&CampaignID=fa85vnjh&status=P` +
       `&chan=${encodeURIComponent(data.source ?? "")}` +
       `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
     try {
       const pixelResp = await fetch(pixelUrl, {
         method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel ChatGPT déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel ChatGPT erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel ChatGPT erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click ChatGPT error (non bloquant):", err);
-    }
-  } else if (channel === "form" && operation === "NVIDIA") {
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=s9e5x30u&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel Nvidia déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel Nvidia erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel Nvidia erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click Nvidia error (non bloquant):", err);
-    }
-  } else if (operation === "PAYPAL") {
-    const label = channel === "api" ? "Pixel API PayPal" : "Pixel PayPal";
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=u5by4qir&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ ${label} déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ ${label} erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ ${label} erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click PayPal error (non bloquant):", err);
-    }
-  } else if (channel === "form" && operation === "GOOGLE") {
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=8tdluw02&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel Google déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel Google erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel Google erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click Google error (non bloquant):", err);
-    }
-  } else if (channel === "form" && operation === "LIVRET") {
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=klq5hwj1&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel Livret déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel Livret erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel Livret erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click Livret error (non bloquant):", err);
-    }
-  } else if (channel === "form" && operation === "ROBOT") {
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=7p2u1h5l&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel Robot déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel Robot erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel Robot erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click Robot error (non bloquant):", err);
-    }
-  } else if (channel === "form" && (operation === "AMAZON" || operation === "OR")) {
-    const pixelUrl =
-      (operation === "OR"
-        ? `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=30&CampaignID=fa85vnjh&status=P`
-        : `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}&CampaignID=jqyvg8ky&status=P`) +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+        headers: { "User-Agent": "CapRefuge-Lead/1.0" },
       });
       pixelStatus = pixelResp.ok
         ? `✅ Pixel formulaire déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
@@ -915,114 +789,6 @@ async function finalizeLead(
     } catch (err) {
       pixelStatus = `❌ Pixel formulaire erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel Com&Click formulaire error (non bloquant):", err);
-    }
-  } else if (channel === "api" && operation === "LIVRET") {
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=klq5hwj1&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel API Livret déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel API Livret erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel API Livret erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click API Livret error (non bloquant):", err);
-    }
-  } else if (channel === "api" && operation === "GOOGLE") {
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=8tdluw02&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel API Google déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel API Google erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel API Google erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click API Google error (non bloquant):", err);
-    }
-  } else if (channel === "api" && operation === "ROBOT") {
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 20)}` +
-      `&CampaignID=7p2u1h5l&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel API Robot déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel API Robot erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel API Robot erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click API Robot error (non bloquant):", err);
-    }
-  } else if (channel === "api" && operation === "CHATGPT") {
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=mhmcapt7&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel API ChatGPT déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel API ChatGPT erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel API ChatGPT erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click API ChatGPT error (non bloquant):", err);
-    }
-  } else if (channel === "api" && operation === "NVIDIA") {
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=s9e5x30u&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel API Nvidia déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel API Nvidia erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel API Nvidia erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click API Nvidia error (non bloquant):", err);
-    }
-  } else if (channel === "api" && operation === "AMAZON") {
-    const pixelUrl =
-      `https://comandclick.com/scripts/postback.php?AccountId=5db4e65a&TotalCost=${comAndClickCost(channel, operation, 35)}` +
-      `&CampaignID=jqyvg8ky&status=P` +
-      `&chan=${encodeURIComponent(data.source ?? "")}` +
-      `&ProductID=${encodeURIComponent(data.click_id ?? "")}`;
-    try {
-      const pixelResp = await fetch(pixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      pixelStatus = pixelResp.ok
-        ? `✅ Pixel API déclenché (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`
-        : `❌ Pixel API erreur HTTP ${pixelResp.status} (chan: ${data.source || "-"}, ProductID: ${data.click_id || "-"})`;
-    } catch (err) {
-      pixelStatus = `❌ Pixel API erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel Com&Click API error (non bloquant):", err);
     }
   }
 
@@ -1034,7 +800,7 @@ async function finalizeLead(
     try {
       const adkResp = await fetch(adkPixelUrl, {
         method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
+        headers: { "User-Agent": "CapRefuge-Lead/1.0" },
       });
       adkPixelStatus = adkResp.ok
         ? `✅ Pixel AdkConvert déclenché (clickid: ${adkClickId || "-"})`
@@ -1042,28 +808,6 @@ async function finalizeLead(
     } catch (err) {
       adkPixelStatus = `❌ Pixel AdkConvert erreur: ${err instanceof Error ? err.message : "inconnue"}`;
       console.error("Pixel AdkConvert error (non bloquant):", err);
-    }
-  }
-
-  // Pixel CampCDTrack01 — source jqs8buxy, identifiant selon l'opération
-  let campCdStatus = "⏭️ Non déclenché (source non concernée)";
-  if (data.source === "jqs8buxy" && (operation === "CHATGPT" || operation === "NVIDIA")) {
-    const campCdClickId = data.click_id || "";
-    const campCdId = operation === "CHATGPT" ? "5999" : "6000";
-    const campCdPixelUrl =
-      `https://www.camp-cd-track01.com/tracking/cpx.php?idc=${campCdId}&type=cpl&tracking=nodata` +
-      `&direct=${encodeURIComponent(campCdClickId)}`;
-    try {
-      const campCdResp = await fetch(campCdPixelUrl, {
-        method: "GET",
-        headers: { "User-Agent": "AmazonCapital-Lead/1.0" },
-      });
-      campCdStatus = campCdResp.ok
-        ? `✅ Pixel CampCDTrack01 ${operation} déclenché (direct: ${campCdClickId || "-"})`
-        : `❌ Pixel CampCDTrack01 ${operation} erreur HTTP ${campCdResp.status} (direct: ${campCdClickId || "-"})`;
-    } catch (err) {
-      campCdStatus = `❌ Pixel CampCDTrack01 ${operation} erreur: ${err instanceof Error ? err.message : "inconnue"}`;
-      console.error("Pixel CampCDTrack01 error (non bloquant):", err);
     }
   }
 
@@ -1083,7 +827,6 @@ async function finalizeLead(
       const sheetOk = sheetStatus.startsWith("✅");
       const pixelOk = pixelStatus.startsWith("✅");
       const adkOk = adkPixelStatus.startsWith("✅");
-      const campCdOk = campCdStatus.startsWith("✅");
       const adstrackOk = adstrackStatus.startsWith("✅");
 
       const triggered: string[] = [];
@@ -1091,7 +834,6 @@ async function finalizeLead(
       if (sheetOk) triggered.push("Google Sheet"); else notTriggered.push("Google Sheet");
       if (pixelOk) triggered.push("Pixel Com&Click"); else notTriggered.push("Pixel Com&Click");
       if (adkOk) triggered.push("Pixel AdkConvert"); else notTriggered.push("Pixel AdkConvert");
-      if (campCdOk) triggered.push("Pixel CampCDTrack01"); else notTriggered.push("Pixel CampCDTrack01");
       const adstrackLabel = `Adstrack ${ADSTRACK_CAMPNAME_BY_OPERATION[operation] ?? "CRP19"}`;
       if (adstrackOk) triggered.push(adstrackLabel); else notTriggered.push(adstrackLabel);
 
@@ -1104,7 +846,7 @@ async function finalizeLead(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Amazon <onboarding@resend.dev>",
+          from: process.env["LEAD_NOTIFICATION_FROM"] ?? "Lead Cap Refuge <onboarding@resend.dev>",
           to: [notifyTo],
           subject: `[LEAD ${channel === "api" ? "API" : "FORMULAIRE"} ${operation}] ${sheetOk ? "✅" : "❌"} Sheet ${pixelOk ? "✅" : "❌"} Pixel - ${data.last_name} - ${data.first_name} - ${data.email} - ${data.source || "direct"}`,
           text:
@@ -1119,7 +861,6 @@ async function finalizeLead(
             `Google Sheet: ${sheetStatus}\n` +
             `Pixel Com&Click: ${pixelStatus}\n` +
             `Pixel AdkConvert: ${adkPixelStatus}\n` +
-            `Pixel CampCDTrack01: ${campCdStatus}\n` +
             `Webservice Adstrack: ${adstrackStatus}`,
         }),
       });

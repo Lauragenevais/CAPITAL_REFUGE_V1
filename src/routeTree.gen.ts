@@ -11,24 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AmazonRouteImport } from './routes/amazon'
 import { Route as ApiDocsRouteImport } from './routes/api-docs'
-import { Route as ChatgptRouteImport } from './routes/chatgpt'
 import { Route as EmailTemplateRouteImport } from './routes/email-template'
-import { Route as GoogleRouteImport } from './routes/google'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
-import { Route as MentionsLegalesChatgptRouteImport } from './routes/mentions-legales-chatgpt'
-import { Route as MentionsLegalesGoogleRouteImport } from './routes/mentions-legales-google'
-import { Route as MentionsLegalesNvidiaRouteImport } from './routes/mentions-legales-nvidia'
-import { Route as MentionsLegalesPaypalRouteImport } from './routes/mentions-legales-paypal'
-import { Route as NvidiaRouteImport } from './routes/nvidia'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
-import { Route as PaypalRouteImport } from './routes/paypal'
 import { Route as PolitiqueConfidentialiteRouteImport } from './routes/politique-confidentialite'
-import { Route as PolitiqueConfidentialiteChatgptRouteImport } from './routes/politique-confidentialite-chatgpt'
-import { Route as PolitiqueConfidentialiteGoogleRouteImport } from './routes/politique-confidentialite-google'
-import { Route as PolitiqueConfidentialiteNvidiaRouteImport } from './routes/politique-confidentialite-nvidia'
-import { Route as PolitiqueConfidentialitePaypalRouteImport } from './routes/politique-confidentialite-paypal'
 import { Route as AdminAdstrackRouteImport } from './routes/admin_.adstrack'
 import { Route as ApiPublicAdminRouteImport } from './routes/api/public/admin'
 import { Route as ApiPublicBrevoSmsWebhookRouteImport } from './routes/api/public/brevo-sms-webhook'
@@ -46,19 +33,9 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AmazonRoute = AmazonRouteImport.update({
-  id: '/amazon',
-  path: '/amazon',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiDocsRoute = ApiDocsRouteImport.update({
   id: '/api-docs',
   path: '/api-docs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChatgptRoute = ChatgptRouteImport.update({
-  id: '/chatgpt',
-  path: '/chatgpt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmailTemplateRoute = EmailTemplateRouteImport.update({
@@ -66,39 +43,9 @@ const EmailTemplateRoute = EmailTemplateRouteImport.update({
   path: '/email-template',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GoogleRoute = GoogleRouteImport.update({
-  id: '/google',
-  path: '/google',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
   id: '/mentions-legales',
   path: '/mentions-legales',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MentionsLegalesChatgptRoute = MentionsLegalesChatgptRouteImport.update({
-  id: '/mentions-legales-chatgpt',
-  path: '/mentions-legales-chatgpt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MentionsLegalesGoogleRoute = MentionsLegalesGoogleRouteImport.update({
-  id: '/mentions-legales-google',
-  path: '/mentions-legales-google',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MentionsLegalesNvidiaRoute = MentionsLegalesNvidiaRouteImport.update({
-  id: '/mentions-legales-nvidia',
-  path: '/mentions-legales-nvidia',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MentionsLegalesPaypalRoute = MentionsLegalesPaypalRouteImport.update({
-  id: '/mentions-legales-paypal',
-  path: '/mentions-legales-paypal',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NvidiaRoute = NvidiaRouteImport.update({
-  id: '/nvidia',
-  path: '/nvidia',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartenairesRoute = PartenairesRouteImport.update({
@@ -106,39 +53,10 @@ const PartenairesRoute = PartenairesRouteImport.update({
   path: '/partenaires',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PaypalRoute = PaypalRouteImport.update({
-  id: '/paypal',
-  path: '/paypal',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PolitiqueConfidentialiteRoute =
   PolitiqueConfidentialiteRouteImport.update({
     id: '/politique-confidentialite',
     path: '/politique-confidentialite',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PolitiqueConfidentialiteChatgptRoute =
-  PolitiqueConfidentialiteChatgptRouteImport.update({
-    id: '/politique-confidentialite-chatgpt',
-    path: '/politique-confidentialite-chatgpt',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PolitiqueConfidentialiteGoogleRoute =
-  PolitiqueConfidentialiteGoogleRouteImport.update({
-    id: '/politique-confidentialite-google',
-    path: '/politique-confidentialite-google',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PolitiqueConfidentialiteNvidiaRoute =
-  PolitiqueConfidentialiteNvidiaRouteImport.update({
-    id: '/politique-confidentialite-nvidia',
-    path: '/politique-confidentialite-nvidia',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PolitiqueConfidentialitePaypalRoute =
-  PolitiqueConfidentialitePaypalRouteImport.update({
-    id: '/politique-confidentialite-paypal',
-    path: '/politique-confidentialite-paypal',
     getParentRoute: () => rootRouteImport,
   } as any)
 const AdminAdstrackRoute = AdminAdstrackRouteImport.update({
@@ -176,24 +94,11 @@ const ApiPublicLeadsRoute = ApiPublicLeadsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/amazon': typeof AmazonRoute
   '/api-docs': typeof ApiDocsRoute
-  '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
-  '/google': typeof GoogleRoute
   '/mentions-legales': typeof MentionsLegalesRoute
-  '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
-  '/mentions-legales-google': typeof MentionsLegalesGoogleRoute
-  '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
-  '/mentions-legales-paypal': typeof MentionsLegalesPaypalRoute
-  '/nvidia': typeof NvidiaRoute
   '/partenaires': typeof PartenairesRoute
-  '/paypal': typeof PaypalRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
-  '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
-  '/politique-confidentialite-google': typeof PolitiqueConfidentialiteGoogleRoute
-  '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
-  '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
   '/admin/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/brevo-sms-webhook': typeof ApiPublicBrevoSmsWebhookRoute
@@ -204,24 +109,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/amazon': typeof AmazonRoute
   '/api-docs': typeof ApiDocsRoute
-  '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
-  '/google': typeof GoogleRoute
   '/mentions-legales': typeof MentionsLegalesRoute
-  '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
-  '/mentions-legales-google': typeof MentionsLegalesGoogleRoute
-  '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
-  '/mentions-legales-paypal': typeof MentionsLegalesPaypalRoute
-  '/nvidia': typeof NvidiaRoute
   '/partenaires': typeof PartenairesRoute
-  '/paypal': typeof PaypalRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
-  '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
-  '/politique-confidentialite-google': typeof PolitiqueConfidentialiteGoogleRoute
-  '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
-  '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
   '/admin/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/brevo-sms-webhook': typeof ApiPublicBrevoSmsWebhookRoute
@@ -233,24 +125,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/amazon': typeof AmazonRoute
   '/api-docs': typeof ApiDocsRoute
-  '/chatgpt': typeof ChatgptRoute
   '/email-template': typeof EmailTemplateRoute
-  '/google': typeof GoogleRoute
   '/mentions-legales': typeof MentionsLegalesRoute
-  '/mentions-legales-chatgpt': typeof MentionsLegalesChatgptRoute
-  '/mentions-legales-google': typeof MentionsLegalesGoogleRoute
-  '/mentions-legales-nvidia': typeof MentionsLegalesNvidiaRoute
-  '/mentions-legales-paypal': typeof MentionsLegalesPaypalRoute
-  '/nvidia': typeof NvidiaRoute
   '/partenaires': typeof PartenairesRoute
-  '/paypal': typeof PaypalRoute
   '/politique-confidentialite': typeof PolitiqueConfidentialiteRoute
-  '/politique-confidentialite-chatgpt': typeof PolitiqueConfidentialiteChatgptRoute
-  '/politique-confidentialite-google': typeof PolitiqueConfidentialiteGoogleRoute
-  '/politique-confidentialite-nvidia': typeof PolitiqueConfidentialiteNvidiaRoute
-  '/politique-confidentialite-paypal': typeof PolitiqueConfidentialitePaypalRoute
   '/admin_/adstrack': typeof AdminAdstrackRoute
   '/api/public/admin': typeof ApiPublicAdminRoute
   '/api/public/brevo-sms-webhook': typeof ApiPublicBrevoSmsWebhookRoute
@@ -263,24 +142,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
-    | '/amazon'
     | '/api-docs'
-    | '/chatgpt'
     | '/email-template'
-    | '/google'
     | '/mentions-legales'
-    | '/mentions-legales-chatgpt'
-    | '/mentions-legales-google'
-    | '/mentions-legales-nvidia'
-    | '/mentions-legales-paypal'
-    | '/nvidia'
     | '/partenaires'
-    | '/paypal'
     | '/politique-confidentialite'
-    | '/politique-confidentialite-chatgpt'
-    | '/politique-confidentialite-google'
-    | '/politique-confidentialite-nvidia'
-    | '/politique-confidentialite-paypal'
     | '/admin/adstrack'
     | '/api/public/admin'
     | '/api/public/brevo-sms-webhook'
@@ -291,24 +157,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
-    | '/amazon'
     | '/api-docs'
-    | '/chatgpt'
     | '/email-template'
-    | '/google'
     | '/mentions-legales'
-    | '/mentions-legales-chatgpt'
-    | '/mentions-legales-google'
-    | '/mentions-legales-nvidia'
-    | '/mentions-legales-paypal'
-    | '/nvidia'
     | '/partenaires'
-    | '/paypal'
     | '/politique-confidentialite'
-    | '/politique-confidentialite-chatgpt'
-    | '/politique-confidentialite-google'
-    | '/politique-confidentialite-nvidia'
-    | '/politique-confidentialite-paypal'
     | '/admin/adstrack'
     | '/api/public/admin'
     | '/api/public/brevo-sms-webhook'
@@ -319,24 +172,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
-    | '/amazon'
     | '/api-docs'
-    | '/chatgpt'
     | '/email-template'
-    | '/google'
     | '/mentions-legales'
-    | '/mentions-legales-chatgpt'
-    | '/mentions-legales-google'
-    | '/mentions-legales-nvidia'
-    | '/mentions-legales-paypal'
-    | '/nvidia'
     | '/partenaires'
-    | '/paypal'
     | '/politique-confidentialite'
-    | '/politique-confidentialite-chatgpt'
-    | '/politique-confidentialite-google'
-    | '/politique-confidentialite-nvidia'
-    | '/politique-confidentialite-paypal'
     | '/admin_/adstrack'
     | '/api/public/admin'
     | '/api/public/brevo-sms-webhook'
@@ -348,24 +188,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
-  AmazonRoute: typeof AmazonRoute
   ApiDocsRoute: typeof ApiDocsRoute
-  ChatgptRoute: typeof ChatgptRoute
   EmailTemplateRoute: typeof EmailTemplateRoute
-  GoogleRoute: typeof GoogleRoute
   MentionsLegalesRoute: typeof MentionsLegalesRoute
-  MentionsLegalesChatgptRoute: typeof MentionsLegalesChatgptRoute
-  MentionsLegalesGoogleRoute: typeof MentionsLegalesGoogleRoute
-  MentionsLegalesNvidiaRoute: typeof MentionsLegalesNvidiaRoute
-  MentionsLegalesPaypalRoute: typeof MentionsLegalesPaypalRoute
-  NvidiaRoute: typeof NvidiaRoute
   PartenairesRoute: typeof PartenairesRoute
-  PaypalRoute: typeof PaypalRoute
   PolitiqueConfidentialiteRoute: typeof PolitiqueConfidentialiteRoute
-  PolitiqueConfidentialiteChatgptRoute: typeof PolitiqueConfidentialiteChatgptRoute
-  PolitiqueConfidentialiteGoogleRoute: typeof PolitiqueConfidentialiteGoogleRoute
-  PolitiqueConfidentialiteNvidiaRoute: typeof PolitiqueConfidentialiteNvidiaRoute
-  PolitiqueConfidentialitePaypalRoute: typeof PolitiqueConfidentialitePaypalRoute
   AdminAdstrackRoute: typeof AdminAdstrackRoute
   ApiPublicAdminRoute: typeof ApiPublicAdminRoute
   ApiPublicBrevoSmsWebhookRoute: typeof ApiPublicBrevoSmsWebhookRoute
@@ -390,25 +217,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/amazon': {
-      id: '/amazon'
-      path: '/amazon'
-      fullPath: '/amazon'
-      preLoaderRoute: typeof AmazonRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api-docs': {
       id: '/api-docs'
       path: '/api-docs'
       fullPath: '/api-docs'
       preLoaderRoute: typeof ApiDocsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/chatgpt': {
-      id: '/chatgpt'
-      path: '/chatgpt'
-      fullPath: '/chatgpt'
-      preLoaderRoute: typeof ChatgptRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/email-template': {
@@ -418,53 +231,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailTemplateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/google': {
-      id: '/google'
-      path: '/google'
-      fullPath: '/google'
-      preLoaderRoute: typeof GoogleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/mentions-legales': {
       id: '/mentions-legales'
       path: '/mentions-legales'
       fullPath: '/mentions-legales'
       preLoaderRoute: typeof MentionsLegalesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mentions-legales-chatgpt': {
-      id: '/mentions-legales-chatgpt'
-      path: '/mentions-legales-chatgpt'
-      fullPath: '/mentions-legales-chatgpt'
-      preLoaderRoute: typeof MentionsLegalesChatgptRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mentions-legales-google': {
-      id: '/mentions-legales-google'
-      path: '/mentions-legales-google'
-      fullPath: '/mentions-legales-google'
-      preLoaderRoute: typeof MentionsLegalesGoogleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mentions-legales-nvidia': {
-      id: '/mentions-legales-nvidia'
-      path: '/mentions-legales-nvidia'
-      fullPath: '/mentions-legales-nvidia'
-      preLoaderRoute: typeof MentionsLegalesNvidiaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mentions-legales-paypal': {
-      id: '/mentions-legales-paypal'
-      path: '/mentions-legales-paypal'
-      fullPath: '/mentions-legales-paypal'
-      preLoaderRoute: typeof MentionsLegalesPaypalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/nvidia': {
-      id: '/nvidia'
-      path: '/nvidia'
-      fullPath: '/nvidia'
-      preLoaderRoute: typeof NvidiaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partenaires': {
@@ -474,46 +245,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartenairesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/paypal': {
-      id: '/paypal'
-      path: '/paypal'
-      fullPath: '/paypal'
-      preLoaderRoute: typeof PaypalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/politique-confidentialite': {
       id: '/politique-confidentialite'
       path: '/politique-confidentialite'
       fullPath: '/politique-confidentialite'
       preLoaderRoute: typeof PolitiqueConfidentialiteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/politique-confidentialite-chatgpt': {
-      id: '/politique-confidentialite-chatgpt'
-      path: '/politique-confidentialite-chatgpt'
-      fullPath: '/politique-confidentialite-chatgpt'
-      preLoaderRoute: typeof PolitiqueConfidentialiteChatgptRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/politique-confidentialite-google': {
-      id: '/politique-confidentialite-google'
-      path: '/politique-confidentialite-google'
-      fullPath: '/politique-confidentialite-google'
-      preLoaderRoute: typeof PolitiqueConfidentialiteGoogleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/politique-confidentialite-nvidia': {
-      id: '/politique-confidentialite-nvidia'
-      path: '/politique-confidentialite-nvidia'
-      fullPath: '/politique-confidentialite-nvidia'
-      preLoaderRoute: typeof PolitiqueConfidentialiteNvidiaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/politique-confidentialite-paypal': {
-      id: '/politique-confidentialite-paypal'
-      path: '/politique-confidentialite-paypal'
-      fullPath: '/politique-confidentialite-paypal'
-      preLoaderRoute: typeof PolitiqueConfidentialitePaypalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/adstrack': {
@@ -564,24 +300,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
-  AmazonRoute: AmazonRoute,
   ApiDocsRoute: ApiDocsRoute,
-  ChatgptRoute: ChatgptRoute,
   EmailTemplateRoute: EmailTemplateRoute,
-  GoogleRoute: GoogleRoute,
   MentionsLegalesRoute: MentionsLegalesRoute,
-  MentionsLegalesChatgptRoute: MentionsLegalesChatgptRoute,
-  MentionsLegalesGoogleRoute: MentionsLegalesGoogleRoute,
-  MentionsLegalesNvidiaRoute: MentionsLegalesNvidiaRoute,
-  MentionsLegalesPaypalRoute: MentionsLegalesPaypalRoute,
-  NvidiaRoute: NvidiaRoute,
   PartenairesRoute: PartenairesRoute,
-  PaypalRoute: PaypalRoute,
   PolitiqueConfidentialiteRoute: PolitiqueConfidentialiteRoute,
-  PolitiqueConfidentialiteChatgptRoute: PolitiqueConfidentialiteChatgptRoute,
-  PolitiqueConfidentialiteGoogleRoute: PolitiqueConfidentialiteGoogleRoute,
-  PolitiqueConfidentialiteNvidiaRoute: PolitiqueConfidentialiteNvidiaRoute,
-  PolitiqueConfidentialitePaypalRoute: PolitiqueConfidentialitePaypalRoute,
   AdminAdstrackRoute: AdminAdstrackRoute,
   ApiPublicAdminRoute: ApiPublicAdminRoute,
   ApiPublicBrevoSmsWebhookRoute: ApiPublicBrevoSmsWebhookRoute,

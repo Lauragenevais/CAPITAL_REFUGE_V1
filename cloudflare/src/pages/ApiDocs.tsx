@@ -78,7 +78,7 @@ const CODES: { code: string; label: string; desc: string }[] = [
 
 export default function ApiDocs() {
   useHead({
-    title: "API Leads — Documentation | Amazon Capital",
+    title: "API Leads — Documentation | Cap Refuge",
     description:
       "Documentation de l'API d'enregistrement de leads : authentification par clé, format JSON, codes de réponse et exemples cURL.",
   });

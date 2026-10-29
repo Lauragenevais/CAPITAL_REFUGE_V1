@@ -4,7 +4,7 @@ import { useHead } from "@/hooks/useHead";
 
 export default function NotFound() {
   useHead({
-    title: "Page introuvable — Amazon Capital",
+    title: "Page introuvable — Cap Refuge",
     description: "La page demandée n'existe pas ou a été déplacée.",
   });
 

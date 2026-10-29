@@ -5,11 +5,6 @@ import { Button } from "@/components/ui/button";
 import { useHead } from "@/hooks/useHead";
 
 const TEMPLATES = [
-  { id: "amazon", label: "Amazon Coin", path: "/email/promo-amazon.html" },
-  { id: "chatgpt", label: "ChatGPT Capital", path: "/email/promo-chatgpt.html" },
-  { id: "nvidia", label: "Nvidia Capital", path: "/email/promo-nvidia.html" },
-  { id: "paypal", label: "PayPal Capital", path: "/email/promo-paypal.html" },
-  { id: "google", label: "Google Capital", path: "/email/promo-google.html" },
   { id: "or", label: "Cap Refuge (OR)", path: "/email/promo-or.html" },
 ] as const;
 
@@ -19,10 +14,10 @@ export default function EmailTemplate() {
   useHead({
     title: "Templates email — Pré-inscriptions",
     description:
-      "Aperçu et copie des templates email promotionnels (Amazon Coin, ChatGPT Capital, Nvidia Capital, PayPal Capital, Google Capital) : visuels, accroche et boutons d'inscription.",
+      "Aperçu et copie des templates email promotionnels (Cap Refuge — or) : visuels, accroche et boutons d'inscription.",
   });
 
-  const [selected, setSelected] = useState<TemplateId>("amazon");
+  const [selected, setSelected] = useState<TemplateId>("or");
   const [html, setHtml] = useState("");
 
   const template = TEMPLATES.find((t) => t.id === selected) ?? TEMPLATES[0];
